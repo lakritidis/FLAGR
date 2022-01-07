@@ -1,0 +1,768 @@
+# depslib dependency file v1.0
+1576626532 source:/home/leo/Desktop/rankagg/main.cpp
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<cmph.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<string>
+	<vector>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+
+1575075579 nput.cpp"
+
+1547596126 /home/leo/Desktop/rankagg/src/Item.cpp
+	"Item.h"
+
+1121870426 
+
+1547596102 /home/leo/Desktop/rankagg/src/Item.h
+
+1547328543 /home/leo/Desktop/rankagg/src/VoterList.cpp
+	"VoterList.h"
+
+1575075563 .h"
+
+1547329020 /home/leo/Desktop/rankagg/src/VoterList.h
+
+1576609137 /home/leo/Desktop/rankagg/src/TRECInput.cpp
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+	"TRECInput.h"
+
+1575311834 /home/leo/Desktop/rankagg/src/TRECInput.h
+
+1547590917 /home/leo/Desktop/rankagg/src/ItemList.cpp
+	"ItemList.h"
+
+1547595981 h"
+
+1547590972 /home/leo/Desktop/rankagg/src/ItemList.h
+
+1576362533 /home/leo/Desktop/rankagg/src/Aggregator.cpp
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+	"Aggregator.h"
+
+1574818864 r.h"
+
+1575235878 /home/leo/Desktop/rankagg/src/Aggregator.h
+
+1547595981 /home/leo/Desktop/rankagg/src/ItemHash.cpp
+	"ItemHash.h"
+
+1547595394 /home/leo/Desktop/rankagg/src/ItemHash.h
+
+1575147568 /home/leo/Desktop/rankagg/src/InputItem.cpp
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+	"InputItem.h"
+
+1575147568 /home/leo/Desktop/rankagg/src/InputItem.h
+
+1575149390 /home/leo/Desktop/rankagg/src/InputList.cpp
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+	"InputList.h"
+
+1575149184 /home/leo/Desktop/rankagg/src/InputList.h
+
+1575486700 /home/leo/Desktop/rankagg/src/MergedItem.cpp
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+	"MergedItem.h"
+
+1566000414 m.h"
+
+1575486720 /home/leo/Desktop/rankagg/src/MergedItem.h
+
+1576611241 /home/leo/Desktop/rankagg/src/MergedList.cpp
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"MergedList.h"
+	"ram/BordaCount.cpp"
+	"ram/CondorcetMethod.cpp"
+	"ram/OutrankingApproach.cpp"
+	"ram/RankPosition.cpp"
+
+1576855037 osition.cpp"
+
+1575075751 t.h"
+
+1576362298 /home/leo/Desktop/rankagg/src/MergedList.h
+
+1573951490 /home/leo/Desktop/rankagg/src/Voter.cpp
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+	"Voter.h"
+
+1573951490 /home/leo/Desktop/rankagg/src/Voter.h
+
+1575668588 /home/leo/Desktop/rankagg/src/Rel.cpp
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+	"Rel.h"
+
+1549486740 /home/leo/Desktop/rankagg/src/Rel.h
+
+1575682398 /home/leo/Desktop/rankagg/src/Rels.cpp
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+	"Rels.h"
+
+1549497916 /home/leo/Desktop/rankagg/src/Rels.h
+
+1575390428 /home/leo/Desktop/rankagg/src/Evaluator.cpp
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+	"Evaluator.h"
+
+1575158898 /home/leo/Desktop/rankagg/src/Evaluator.h
+
+1576610300 /home/leo/Desktop/rankagg/src/Query.cpp
+	"Query.h"
+	"Query.h"
+	"Query.h"
+	"Query.h"
+	"Query.h"
+	"Query.h"
+	"Query.h"
+	"Query.h"
+	"Query.h"
+
+1575311656 /home/leo/Desktop/rankagg/src/Query.h
+
+1121650008 /home/leo/Desktop/rankagg/zlib/zlib.h
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+	"zconf.h"
+
+1121870426 /home/leo/Desktop/rankagg/zlib/zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1575144020 /home/leo/Desktop/rankagg/src/Ranking.cpp
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+	"Ranking.h"
+
+1569969016 "
+
+1575144020 /home/leo/Desktop/rankagg/src/Ranking.h
+
+1576854446 source:c:\users\leon\documents\rankagg\main.cpp
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<string>
+	<vector>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+
+1121639208 c:\users\leon\documents\rankagg\zlib\zlib.h
+	"zconf.h"
+
+1121859626 c:\users\leon\documents\rankagg\zlib\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1575661388 c:\users\leon\documents\rankagg\src\rel.cpp
+	"Rel.h"
+
+1549479540 c:\users\leon\documents\rankagg\src\rel.h
+
+1575675198 c:\users\leon\documents\rankagg\src\rels.cpp
+	"Rels.h"
+
+1549490716 c:\users\leon\documents\rankagg\src\rels.h
+
+1573944290 c:\users\leon\documents\rankagg\src\voter.cpp
+	"Voter.h"
+
+1573944290 c:\users\leon\documents\rankagg\src\voter.h
+
+1575140368 c:\users\leon\documents\rankagg\src\inputitem.cpp
+	"InputItem.h"
+
+1575140368 c:\users\leon\documents\rankagg\src\inputitem.h
+
+1575142190 c:\users\leon\documents\rankagg\src\inputlist.cpp
+	"InputList.h"
+
+1575141984 c:\users\leon\documents\rankagg\src\inputlist.h
+
+1575136820 c:\users\leon\documents\rankagg\src\ranking.cpp
+	"Ranking.h"
+
+1575136820 c:\users\leon\documents\rankagg\src\ranking.h
+
+1575479500 c:\users\leon\documents\rankagg\src\mergeditem.cpp
+	"MergedItem.h"
+
+1575479520 c:\users\leon\documents\rankagg\src\mergeditem.h
+
+1576855037 c:\users\leon\documents\rankagg\src\mergedlist.cpp
+	"MergedList.h"
+	"ram/BordaCount.cpp"
+	"ram/CondorcetMethod.cpp"
+	"ram/OutrankingApproach.cpp"
+	"ram/RankPosition.cpp"
+
+1576355098 c:\users\leon\documents\rankagg\src\mergedlist.h
+
+1575383228 c:\users\leon\documents\rankagg\src\evaluator.cpp
+	"Evaluator.h"
+
+1575151698 c:\users\leon\documents\rankagg\src\evaluator.h
+
+1576355332 c:\users\leon\documents\rankagg\src\aggregator.cpp
+	"Aggregator.h"
+
+1575228678 c:\users\leon\documents\rankagg\src\aggregator.h
+
+1576603100 c:\users\leon\documents\rankagg\src\query.cpp
+	"Query.h"
+
+1575304456 c:\users\leon\documents\rankagg\src\query.h
+
+1576852096 c:\users\leon\documents\rankagg\src\trecinput.cpp
+	"TRECInput.h"
+
+1575304634 c:\users\leon\documents\rankagg\src\trecinput.h
+
+1575075579 source:/home/leo/Desktop/rankagg.new/main.cpp
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+
+1121650008 /home/leo/Desktop/rankagg.new/zlib/zlib.h
+	"zconf.h"
+
+1121870426 /home/leo/Desktop/rankagg.new/zlib/zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1549486740 /home/leo/Desktop/rankagg.new/src/Rel.cpp
+	"Rel.h"
+
+1549486740 /home/leo/Desktop/rankagg.new/src/Rel.h
+
+1574276448 /home/leo/Desktop/rankagg.new/src/Rels.cpp
+	"Rels.h"
+
+1549497916 /home/leo/Desktop/rankagg.new/src/Rels.h
+
+1573951490 /home/leo/Desktop/rankagg.new/src/Voter.cpp
+	"Voter.h"
+
+1573951490 /home/leo/Desktop/rankagg.new/src/Voter.h
+
+1547600578 /home/leo/Desktop/rankagg.new/src/InputItem.cpp
+	"InputItem.h"
+
+1547598516 /home/leo/Desktop/rankagg.new/src/InputItem.h
+
+1575075751 /home/leo/Desktop/rankagg.new/src/InputList.cpp
+	"InputList.h"
+
+1575075751 /home/leo/Desktop/rankagg.new/src/InputList.h
+
+1569969016 /home/leo/Desktop/rankagg.new/src/Ranking.cpp
+	"Ranking.h"
+
+1566000222 /home/leo/Desktop/rankagg.new/src/Ranking.h
+
+1566000414 /home/leo/Desktop/rankagg.new/src/MergedItem.cpp
+	"MergedItem.h"
+
+1566000444 /home/leo/Desktop/rankagg.new/src/MergedItem.h
+
+1575075751 /home/leo/Desktop/rankagg.new/src/MergedList.cpp
+	"MergedList.h"
+
+1574817698 /home/leo/Desktop/rankagg.new/src/MergedList.h
+
+1574785182 /home/leo/Desktop/rankagg.new/src/Evaluator.cpp
+	"Evaluator.h"
+
+1574731862 /home/leo/Desktop/rankagg.new/src/Evaluator.h
+
+1574818864 /home/leo/Desktop/rankagg.new/src/Aggregator.cpp
+	"Aggregator.h"
+
+1573951490 /home/leo/Desktop/rankagg.new/src/Aggregator.h
+
+1574961862 /home/leo/Desktop/rankagg.new/src/Query.cpp
+	"Query.h"
+
+1574961862 /home/leo/Desktop/rankagg.new/src/Query.h
+
+1575075563 /home/leo/Desktop/rankagg.new/src/TRECInput.cpp
+	"TRECInput.h"
+
+1574963038 /home/leo/Desktop/rankagg.new/src/TRECInput.h
+
+1576227819 /home/leo/Desktop/rankagg/src/BordaCount.cpp
+
+1576362281 /home/leo/Desktop/rankagg/src/ram/BordaCount.cpp
+
+1576463070 /home/leo/Desktop/rankagg/src/ram/CondorcetMethod.cpp
+
+1576576643 /home/leo/Desktop/rankagg/src/ram/OutrankingApproach.cpp
+
+1576359540 /home/leo/Desktop/rankagg/src/ram/RankPosition.cpp
+
+1576762053 c:\users\leon\documents\rankagg\src\ram\bordacount.cpp
+
+1576455870 c:\users\leon\documents\rankagg\src\ram\condorcetmethod.cpp
+
+1576775628 c:\users\leon\documents\rankagg\src\ram\outrankingapproach.cpp
+
+1576352340 c:\users\leon\documents\rankagg\src\ram\rankposition.cpp
+
+1578866914 source:/home/leo/Desktop/rankagg/main.cpp
+	"stdio.h"
+	"stdlib.h"
+	<stdint.h>
+	<string.h>
+	<math.h>
+	<time.h>
+	<dirent.h>
+	<assert.h>
+	<string>
+	<vector>
+	<zlib.h>
+	"zlib/zlib.h"
+	"src/Rel.cpp"
+	"src/Rels.cpp"
+	"src/Voter.cpp"
+	"src/InputItem.cpp"
+	"src/InputList.cpp"
+	"src/Ranking.cpp"
+	"src/MergedItem.cpp"
+	"src/MergedList.cpp"
+	"src/Evaluator.cpp"
+	"src/Aggregator.cpp"
+	"src/Query.cpp"
+	"src/TRECInput.cpp"
+
+1121650008 /home/leo/Desktop/rankagg/zlib/zlib.h
+	"zconf.h"
+
+1121870426 /home/leo/Desktop/rankagg/zlib/zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1575668588 /home/leo/Desktop/rankagg/src/Rel.cpp
+	"Rel.h"
+
+1549486740 /home/leo/Desktop/rankagg/src/Rel.h
+
+1575682398 /home/leo/Desktop/rankagg/src/Rels.cpp
+	"Rels.h"
+
+1549497916 /home/leo/Desktop/rankagg/src/Rels.h
+
+1573951490 /home/leo/Desktop/rankagg/src/Voter.cpp
+	"Voter.h"
+
+1573951490 /home/leo/Desktop/rankagg/src/Voter.h
+
+1575147568 /home/leo/Desktop/rankagg/src/InputItem.cpp
+	"InputItem.h"
+
+1575147568 /home/leo/Desktop/rankagg/src/InputItem.h
+
+1575149390 /home/leo/Desktop/rankagg/src/InputList.cpp
+	"InputList.h"
+
+1575149184 /home/leo/Desktop/rankagg/src/InputList.h
+
+1575144020 /home/leo/Desktop/rankagg/src/Ranking.cpp
+	"Ranking.h"
+
+1575144020 /home/leo/Desktop/rankagg/src/Ranking.h
+
+1575486700 /home/leo/Desktop/rankagg/src/MergedItem.cpp
+	"MergedItem.h"
+
+1575486720 /home/leo/Desktop/rankagg/src/MergedItem.h
+
+1578702175 /home/leo/Desktop/rankagg/src/MergedList.cpp
+	"MergedList.h"
+	"ram/BordaCount.cpp"
+	"ram/CondorcetMethod.cpp"
+	"ram/OutrankingApproach.cpp"
+	"ram/RankPosition.cpp"
+
+1577672798 /home/leo/Desktop/rankagg/src/MergedList.h
+
+1576769254 /home/leo/Desktop/rankagg/src/ram/BordaCount.cpp
+
+1576463070 /home/leo/Desktop/rankagg/src/ram/CondorcetMethod.cpp
+
+1578866972 /home/leo/Desktop/rankagg/src/ram/OutrankingApproach.cpp
+
+1576359540 /home/leo/Desktop/rankagg/src/ram/RankPosition.cpp
+
+1577671493 /home/leo/Desktop/rankagg/src/Evaluator.cpp
+	"Evaluator.h"
+
+1577671164 /home/leo/Desktop/rankagg/src/Evaluator.h
+
+1577569091 /home/leo/Desktop/rankagg/src/Aggregator.cpp
+	"Aggregator.h"
+
+1577569105 /home/leo/Desktop/rankagg/src/Aggregator.h
+
+1578090014 /home/leo/Desktop/rankagg/src/Query.cpp
+	"Query.h"
+
+1577571803 /home/leo/Desktop/rankagg/src/Query.h
+
+1578566830 /home/leo/Desktop/rankagg/src/TRECInput.cpp
+	"TRECInput.h"
+
+1577572120 /home/leo/Desktop/rankagg/src/TRECInput.h
+
