@@ -1,9 +1,9 @@
 /// 2. CONDORCET METHOD: Assign Scores to the items of the MergedList according to the Condorcet method.
-void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, double sd_w) {
+void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, double sd_w, class InputParams * params) {
 
 	class MergedItem *p, *q;
 	bool verbose = false;
-	double p_rank = 0.0, q_rank = 0.0, wins = 0, losses = 0, ties = 0, weight = 0;
+	double p_rank = 0.0, q_rank = 0.0, wins = 0.0, losses = 0.0, ties = 0.0, weight = 1.0;
 
 	for (rank_t i = 0; i < this->num_nodes; i++) {
 		p = this->item_list[i];
@@ -14,13 +14,17 @@ void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, doub
 			wins = 0; losses = 0; ties = 0;
 
 			for (uint32_t k = 0; k < this->num_input_lists; k++) {
-				#if WEIGHTS_NORMALIZATION == 1
-					weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
-				#elif WEIGHTS_NORMALIZATION == 2
-					weight = (p->get_ranking(k)->get_input_list()->get_voter()->get_weight() - min_w) / (max_w - min_w);
-				#elif WEIGHTS_NORMALIZATION == 3
-					weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight() * sd_w * sd_w / mean_w;
-				#endif
+				weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
+
+				if (params->get_weights_normalization() == 2) {
+					weight = (weight - min_w) / (max_w - min_w); /// Min-max normalization
+
+				} else if (params->get_weights_normalization() == 3) {
+					weight = weight * sd_w * sd_w / mean_w;  /// Standardization = (w * std^2/mean)
+
+				} else if (params->get_weights_normalization() == 4) {
+					weight = weight / max_w;   /// Divide by max
+				}
 
 				p_rank = p->get_ranking(k)->get_rank();
 				q_rank = q->get_ranking(k)->get_rank();

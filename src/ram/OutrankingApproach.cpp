@@ -1,7 +1,7 @@
 /// 3. OUTRANKING: Assign Scores to the items of the MergedList according to the OutRanking Approach
 /// introduced in: M. Farah, D. Vanderpooten, "An outranking approach for rank aggregation in
 /// information retrieval", SIGIR 2009, pp. 591-598.
-void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd_w) {
+void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd_w, class InputParams * params) {
 	double PREF_THRESHOLD = 0.0, VETO_THRESHOLD = 0.75, CONC_THRESHOLD = 0.50, DISC_THRESHOLD = 0.00;
 
 	uint32_t preference_threshold = (uint32_t)(PREF_THRESHOLD * MAX_LIST_ITEMS);
@@ -25,13 +25,17 @@ void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd
 
 			if (p != q) {
 				for (uint32_t k = 0; k < this->num_input_lists; k++) {
-					#if WEIGHTS_NORMALIZATION == 1
-						weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
-					#elif WEIGHTS_NORMALIZATION == 2
-						weight = (p->get_ranking(k)->get_input_list()->get_voter()->get_weight() - min_w) / (max_w - min_w);
-					#elif WEIGHTS_NORMALIZATION == 3
-						weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight() * sd_w * sd_w / mean_w;
-					#endif
+					weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
+
+					if (params->get_weights_normalization() == 2) {
+						weight = (weight - min_w) / (max_w - min_w); /// Min-max normalization
+
+					} else if (params->get_weights_normalization() == 3) {
+						weight = weight * sd_w * sd_w / mean_w;  /// Standardization = (w * std^2/mean)
+
+					} else if (params->get_weights_normalization() == 4) {
+						weight = weight / max_w;   /// Divide by max
+					}
 
 					if (scenario == 1) {
 						p_rank = p->get_ranking(k)->get_rank() * weight;

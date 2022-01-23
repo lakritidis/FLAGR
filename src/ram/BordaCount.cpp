@@ -1,9 +1,9 @@
 /// 1. BORDA COUNT: Assign Scores to the items of the MergedList according to the Borda Count method
-void MergedList::BordaCount(double min_w, double max_w, double mean_w, double sd_w) {
+void MergedList::BordaCount(double min_w, double max_w, double mean_w, double sd_w, class InputParams * params) {
 	class MergedItem * q;
 	class Ranking * r;
 	class InputList * l;
-	double sc = 0.0, weight = 0.0;
+	double sc = 0.0, weight = 1.0, rnk = 0.0;
 
 //	printf("Weights Max: %5.3f, Min: %5.3f, Mean: %5.3f, SD: %5.3f\n", max_w, min_w, mean_w, sd_w); getchar();
 
@@ -15,20 +15,24 @@ void MergedList::BordaCount(double min_w, double max_w, double mean_w, double sd
 			l = r->get_input_list();
 
 			if(l && r->get_rank() != NOT_RANKED_ITEM_RANK) {
+				weight = l->get_voter()->get_weight();
 
-				#if WEIGHTS_NORMALIZATION == 1
-					weight = l->get_voter()->get_weight();
-				#elif WEIGHTS_NORMALIZATION == 2
-					weight = (l->get_voter()->get_weight() - min_w) / (max_w - min_w);
-				#elif WEIGHTS_NORMALIZATION == 3
-					weight = l->get_voter()->get_weight() * sd_w * sd_w / mean_w;
-				#elif WEIGHTS_NORMALIZATION == 4
-					weight = l->get_voter()->get_weight() / max_w;
-				#endif
+				if (params->get_weights_normalization() == 2) {
+					weight = (weight - min_w) / (max_w - min_w);   /// Min-max normalization
+
+				} else if (params->get_weights_normalization() == 3) {
+					weight = weight * sd_w * sd_w / mean_w;   /// Standardization = (w * std^2/mean)
+
+				} else if (params->get_weights_normalization() == 4) {
+					weight = weight / max_w;  /// Divide by max
+				}
 
 //				printf("Voter weight: Real: %5.3f - Normalized: %5.3f\n", l->get_voter()->get_weight(), weight);
 
-				sc = weight * (l->get_cutoff() - r->get_index());
+				/// Borda score: how many elements are below the current one?
+				rnk = l->get_max_rank() - r->get_rank() + 1.0;
+
+				sc = weight * rnk;
 
 				q->set_score(q->get_score() + sc);
 			}
@@ -38,10 +42,11 @@ void MergedList::BordaCount(double min_w, double max_w, double mean_w, double sd
 
 	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
 
+/*
 	for (rank_t i = 0; i < this->num_nodes; i++) {
-		this->item_list[i]->set_final_ranking(i + 1);
+		this->item_list[i]->display();
 	}
-//	this->display_list();
-//	getchar();
+*/
+//	this->display_list(); getchar();
 }
 
