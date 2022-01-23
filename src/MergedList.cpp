@@ -1,8 +1,12 @@
 #include "MergedList.h"
+
 #include "ram/BordaCount.cpp"
 #include "ram/CondorcetMethod.cpp"
 #include "ram/OutrankingApproach.cpp"
 #include "ram/RankPosition.cpp"
+#include "ram/DIBRA.cpp"
+#include "ram/PrefRel.cpp"
+#include "ram/Agglomerative.cpp"
 
 /// Constructor 1: default
 MergedList::MergedList() {
@@ -54,7 +58,7 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 		for (q = this->hash_table[HashValue]; q != NULL; q = q->get_next()) {
 			if (strcmp(q->get_code(), n->get_code()) == 0) {
 
-				q->insert_ranking(l[x], n->get_rank(), n->get_index());
+				q->insert_ranking( l[x], n->get_rank() );
 
 				return; /// Return and exit
 			}
@@ -67,11 +71,32 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 
 	/// Create a new record and re-assign the linked list's head
 	class MergedItem * record = new MergedItem(n->get_code(), n->get_rank(), this->num_input_lists, l);
-	record->insert_ranking(l[x], n->get_rank(), n->get_index());
+	record->insert_ranking(l[x], n->get_rank());
 
 	/// Reassign the chain's head
 	record->set_next(this->hash_table[HashValue]);
 	this->hash_table[HashValue] = record;
+}
+
+/// Find an element into the hash table and update its weight
+void MergedList::update_weight(char * code, score_t w) {
+	/// Find the hash value of the input term
+	uint32_t HashValue = KazLibHash(code) & this->mask;
+
+	/// Now search in the hash table to check whether this term exists or not
+	if (this->hash_table[HashValue] != NULL) {
+		class MergedItem * q;
+
+		/// Traverse the linked list that represents the chain.
+		for (q = this->hash_table[HashValue]; q != NULL; q = q->get_next()) {
+			if (strcmp(q->get_code(), code) == 0) {
+
+				q->set_score( q->get_score() + w );
+
+				return; /// Return and exit
+			}
+		}
+	}
 }
 
 /// Display the items of the MergedList object (hash_table)
@@ -91,7 +116,7 @@ void MergedList::display() {
 void MergedList::display_list() {
 	for (rank_t i = 0; i < this->num_nodes; i++) {
 		this->item_list[i]->display();
-		getchar();
+//		getchar();
 	}
 }
 
@@ -117,7 +142,6 @@ void MergedList::reset_scores() {
 		this->item_list[i]->set_score(0.0);
 	}
 }
-
 
 /// Search for an item and return its rank
 rank_t MergedList::get_item_rank(char *c) {
@@ -183,165 +207,15 @@ void MergedList::rebuild(class InputList ** inlists) {
 
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////
-/// RANK AGGREGATION METHODS //////////////////////////////////////////////////////////////////////
-/// ///////////////////////////////////////////////////////////////////////////////////////////////
-class Voter ** MergedList::DIBRA(class InputList ** inlists, uint32_t pp, uint32_t agg_method, score_t d1, score_t d2) {
-	double prev_weight = 0.0, max_w = 1.0, min_w = 0.0, l1_norm_w = 0.0, l2_norm_w = 0.0, mean_w = 0.0, sd_w = 1.0, sum_w = 0.0;
-	double max_d = 0.0, min_d = 0.0;
-	double w[this->num_input_lists], dis[this->num_input_lists];
-
-	uint32_t z = 0, iteration = 0, cutoff = 0, max_cutoff = 0;
-	class Voter ** voters_list = new Voter * [this->num_input_lists];
-
-	/// Reset the weights of all voters
-	for (z = 0; z < this->num_input_lists; z++) {
-		inlists[z]->set_voter_weight( 1.0 );
-	}
-
-#if ITERATIONS == -1
-	uint32_t conv = 1;
-
-	/// Stop the execution when convergence is achieved
-	while (1) {
-#else
-	/// Stop the execution after a predefined number of iterations
-	while (iteration < ITERATIONS) {
-#endif
-		printf("%d ", iteration); fflush(NULL);
-
-		/// Set the scores of all elements to zero
-		this->reset_scores();
-
-		/// Execute the baseline method (by taking into consideration the current voter weights)
-		if (agg_method == 1) { this->BordaCount(min_w, max_w, mean_w, sd_w); } else
-		if (agg_method == 2) { this->CondorcetMethod(min_w, max_w, mean_w, sd_w); } else
-		if (agg_method == 3) { this->Outranking(min_w, max_w, mean_w, sd_w); }
-
-		min_w = 1000.0; max_w = 0.0; min_d = 1000.0; max_d = 0.0, mean_w = 0.0, sd_w = 0.0, sum_w = 0.0;
-
-		/// Compute the similarity of each input list with the produced MergedList
-		for (z = 0; z < this->num_input_lists; z++) {
-			if (CORRELATION_METHOD == 1) { dis[z] = this->SpearmanRho(inlists[z]); } else
-			if (CORRELATION_METHOD == 2) { dis[z] = this->ScaledFootruleDistance(z, inlists[z]); } else
-			if (CORRELATION_METHOD == 3) { dis[z] = this->CosineSimilarity(z, inlists[z]); } else
-			if (CORRELATION_METHOD == 4) { dis[z] = this->LocalScaledFootruleDistance(z, inlists[z]); } else
-			if (CORRELATION_METHOD == 5) { dis[z] = this->KendallsTau(z, inlists[z]); }
-
-			/// Statistics for normalizing the distances - Generally uneeded - Normalization
-			/// takes place within the distance function itself.
-			if (dis[z] > max_d) { max_d = dis[z]; }
-			if (dis[z] < min_d) { min_d = dis[z]; }
-			if (inlists[z]->get_cutoff() > max_cutoff) { max_cutoff = inlists[z]->get_cutoff(); }
-		}
-
-#if ITERATIONS == -1
-		conv = 1;
-#endif
-
-		/// Based on the computed distances of the previous loop, compute the new weights of voters
-		for (z = 0; z < this->num_input_lists; z++) {
-
-			prev_weight = inlists[z]->get_voter()->get_weight();
-
-//			dis[z] = (dis[z] - min_d) / (max_d - min_d);
-
-			/// Compute the new weight of the voter
-			if (dis[z] > 0) {
-	//			if (z == 1) { w[z] = 1.0; } else { w[z] = 0.0; }
-	//			w[z] = prev_weight + 1.0 / ( 1.0 + exp( GAMMA * (iteration + 1.00) * dis[z] )); /// Logistic
-				w[z] = prev_weight + exp(- GAMMA * (iteration + 1.00) * dis[z] ); /// Exponential
-			} else {
-				w[z] = prev_weight;
-			}
-
-//			printf("Voter %d (%s) distance: %5.3f - weight: %5.3f (prev: %5.3f - diff: %5.3f)\n",
-//				z, inlists[z]->get_voter()->get_name(), dis[z], inlists[z]->get_voter()->get_weight(),
-//				prev_weight, w[z] - prev_weight);
-
-			/// Statistics for normalizing the weights
-			if (w[z] > max_w) { max_w = w[z]; }
-			if (w[z] < min_w) { min_w = w[z]; }
-			mean_w += w[z];
-
-#if ITERATIONS == -1
-			if (w[z] - prev_weight > CONVERGENCE_PRECISION) {
-				conv = 0;
-			}
-#endif
-		}
-
-		sum_w = 0.0;
-		mean_w /= this->num_input_lists;
-		for (z = 0; z < this->num_input_lists; z++) {
-			sum_w += (w[z] - mean_w) * (w[z] - mean_w);
-		}
-		sd_w = sqrt(sum_w / (double)this->num_input_lists);
-
-		/// Set the new voter weights
-		for (z = 0; z < this->num_input_lists; z++) {
-//			printf("Voter %d (%s) distance: %5.3f - weight: %5.3f\n", z, inlists[z]->get_voter()->get_name(), dis[z], w[z]);
-
-			inlists[z]->set_voter_weight( w[z] );
-
-			voters_list[z] = inlists[z]->get_voter();
-		}
-//getchar();
-
-		qsort(voters_list, this->num_input_lists, sizeof(Voter *), &MergedList::cmp_voter);
-		iteration++;
-
-#if ITERATIONS == -1
-		if (conv == 1 || iteration > MAX_ITERATIONS) {
-			SUM_ITERATIONS += iteration;
-			break;
-		}
-#endif
-	}
-
-//	getchar();
-
-	/// ///////////////////////////////////////////////////////////////////////////////////////////
-	/// Apply the post-processing step
-	/// ///////////////////////////////////////////////////////////////////////////////////////////
-	if (pp == 1) {
-		for (z = 0; z < this->num_input_lists; z++) {
-
-			double nw = (w[z] - min_w) / (max_w - min_w);
-
-//			cutoff = (double)this->num_nodes / (double)inlists[z]->get_num_items() +
-//				nw * this->num_input_lists * log10(10.0 + (double)inlists[z]->get_num_items());
-
-			cutoff = (d1 + d2 * nw) * inlists[z]->get_num_items();
-
-//			printf("Cutoff for voter %d (%5.3f - %s): %d\n", z, nw, inlists[z]->get_voter()->get_name(), cutoff); getchar();
-
-			if (cutoff >= inlists[z]->get_num_items()) {
-				inlists[z]->set_cutoff(inlists[z]->get_num_items());
-			} else {
-				inlists[z]->set_cutoff(cutoff);
-			}
-		}
-
-		this->rebuild(inlists);
-
-		if (agg_method == 1) { this->BordaCount(min_w, max_w, mean_w, sd_w); } else
-		if (agg_method == 2) { this->CondorcetMethod(min_w, max_w, mean_w, sd_w); } else
-		if (agg_method == 3) { this->Outranking(min_w, max_w, mean_w, sd_w); }
-	}
-	printf(" Nodes: %d", this->num_nodes);
-	return voters_list;
-}
-
-
-/// ///////////////////////////////////////////////////////////////////////////////////////////////
-/// RANK CORRELATION METHODS //////////////////////////////////////////////////////////////////////
+/// RANK CORRELATION DISTANCE METHODS /////////////////////////////////////////////////////////////
+/// Between the MergedList and an Input List///////////////////////////////////////////////////////
 /// ///////////////////////////////////////////////////////////////////////////////////////////////
 double MergedList::SpearmanRho(class InputList * in) {
 	class MergedItem * q;
 	double rho = 0.0, sum = 0.0;
 	rank_t n = this->num_nodes;
 
-	double par = pow(n, 3) - n;
+	double denom = pow(n, 3) - n;
 
 	for (rank_t i = 0; i < n; i++) {
 		q = this->item_list[i];
@@ -355,7 +229,7 @@ double MergedList::SpearmanRho(class InputList * in) {
 		}
 	}
 
-	rho = 1.0 - 6.0 * sum / par;
+	rho = 1.0 - 6.0 * sum / denom;
 //	printf("(%d-%d) - rho=%5.3f - sum:%5.3f\n", this->num_nodes, in->get_num_items(), rho, sum);
 	return rho;
 }
@@ -383,7 +257,7 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 	double l_score = 0.0, r_score = 0.0, c_score = 0.0, csim = 0.0;
 	rank_t R = in->get_cutoff(), L = this->num_nodes, l = 0, r = 0;
 
-	uint32_t scenario = 5;
+	uint32_t scenario = 2;
 
 	for (r = 0; r < R; r++) {
 		if (scenario == 1) { r_score += 1.0 / ( (r + 1.0) * (r + 1.0) ); } else /// BEST
@@ -401,7 +275,7 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 		} else if (scenario == 5) {
 			l_score += this->log10s[10 + l] * this->log10s[10 + l];
 		} else if (scenario == 6) {
-			r = this->item_list[l]->get_ranking(z)->get_index();
+			r = this->item_list[l]->get_ranking(z)->get_rank();
 			if(r < in->get_cutoff()) {
 				l_score += this->log10s[10 + l] * this->log10s[10 + l];
 			}
@@ -409,7 +283,7 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 	}
 
 	for (l = 0; l < L; l++) {
-		r = this->item_list[l]->get_ranking(z)->get_index();
+		r = this->item_list[l]->get_ranking(z)->get_rank();
 
 		if(r < in->get_cutoff()) {
 			if (scenario == 1) { c_score += (l + 1.0) / (r + 1.0); } else /// BEST
@@ -433,7 +307,7 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 //	csim = c_score / (r_score * l_score);
 
 //	printf("Csim: %5.3f\n", csim);
-	return 1.0-csim;
+	return 1.0 - csim;
 }
 
 
@@ -443,12 +317,12 @@ double MergedList::ScaledFootruleDistance(uint32_t z, class InputList * in) {
 	rank_t i = 0, r = 0, R = in->get_num_items(), L = this->num_nodes;
 
 	for (i = 0; i < L; i++) {
-		r = this->item_list[i]->get_ranking(z)->get_index();
+		r = this->item_list[i]->get_ranking(z)->get_rank();
 
 		if(r < in->get_cutoff()) {
 			d += fabs( (double) i / L - (double) r / R );
 
-//			printf("Item %d/%d of Merged List (Score: %5.3f) was ranked in place %d/%d in list %d (%s) - Sum=%5.3f\n",
+//			printf("Item %d/%d of Merged List (Score: %5.3f) ranked in place %d/%d in list %d (%s) - Sum=%5.3f\n",
 //				i, this->num_nodes, this->item_list[i]->get_score(), r, in->get_num_items(),
 // 				z, in->get_voter()->get_name(), d); getchar();
 		}
@@ -464,11 +338,12 @@ double MergedList::ScaledFootruleDistance(uint32_t z, class InputList * in) {
 
 /// Scaled Footrule Distance
 double MergedList::LocalScaledFootruleDistance(uint32_t z, class InputList * in) {
-	double d = 0.0, nd = 0.0, factor = 0.0, log11 = log10(11.0), log22 = log2(2.2);
+	double d = 0.0, nd = 0.0, factor = 0.0;
+//	double log11 = log10(11.0), log22 = log2(2.2);
 	rank_t i = 0, r = 0, R = in->get_num_items(), L = this->num_nodes;
 
 	for (i = 0; i < L; i++) {
-		r = this->item_list[i]->get_ranking(z)->get_index();
+		r = this->item_list[i]->get_ranking(z)->get_rank();
 
 		if(r < in->get_cutoff()) {
 //			factor = log10( 10.0 * (1.1 - (double) r / R ) ) / log11;  // good with GAMMA=4.5 (0.243 / 0.230)

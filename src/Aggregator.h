@@ -17,7 +17,7 @@ class Aggregator {
 		~Aggregator();
 
 		class InputList * create_list(char *, double);
-		class Voter ** aggregate(uint32_t, uint32_t, score_t, score_t);
+		class Voter ** aggregate(class InputParams *);
 		void init_weights();
 		void destroy_output_list();
 		void display();

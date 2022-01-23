@@ -47,6 +47,13 @@ class MergedList {
 			return -1;
 		}
 
+		static int cmp_edges(const void *a, const void *b) {
+			class MergedItemPair * x = * (class MergedItemPair **)a;
+			class MergedItemPair * y = * (class MergedItemPair **)b;
+
+			return strcmp (x->get_item2()->get_code(), y->get_item2()->get_code());
+		}
+
 	public:
 		MergedList();
 		MergedList(uint32_t, uint32_t);
@@ -57,6 +64,7 @@ class MergedList {
 		void display();
 		void display_list();
 		void show_weights(class InputList *);
+		void update_weight(char *, score_t);
 		void reset_scores();
 		void reset_weights();
 		void rebuild(class InputList **);
@@ -64,11 +72,13 @@ class MergedList {
 		rank_t get_item_rank(char *);
 
 		/// Rank Aggregation Methods
-		void BordaCount(double, double, double, double);
-		void CondorcetMethod(double, double, double, double);
-		void Outranking(double, double, double, double);
-		void RankPosition(double, double, double, double);
-		class Voter ** DIBRA(class InputList **, uint32_t, uint32_t, score_t, score_t);
+		void BordaCount(double, double, double, double, class InputParams *);
+		void CondorcetMethod(double, double, double, double, class InputParams *);
+		void Outranking(double, double, double, double, class InputParams *);
+		void RankPosition(double, double, double, double, class InputParams *);
+		class Voter ** DIBRA(class InputList **, class InputParams *);
+		void PrefRel(class InputList **, class InputParams *);
+		void Agglomerative(class InputList **, class InputParams *);
 
 		/// Rank Correlation Methods
 		double SpearmanRho(class InputList *);

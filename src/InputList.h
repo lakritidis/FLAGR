@@ -10,6 +10,8 @@ class InputList {
 		rank_t num_items;
 		rank_t num_alloc_items;
 		rank_t cutoff;
+		rank_t min_rank;
+		rank_t max_rank;
 
 		class InputItem ** items;
 
@@ -28,8 +30,12 @@ class InputList {
 
 		void insert_item(char *, rank_t);
 		void replace_item(char *, rank_t);
+		class InputItem * search_item(char *);
 		void display();
 		void sort_by_ranking();
+		void reverse_ranking();
+
+		score_t SpearmanRho(class InputList *);
 
 		/// Mutators
 		void set_id(uint32_t);
@@ -41,6 +47,7 @@ class InputList {
 		class Voter * get_voter();
 		rank_t get_num_items();
 		rank_t get_cutoff();
+		rank_t get_min_rank();
 		rank_t get_max_rank();
 		class InputItem * get_item(rank_t);
 };

@@ -10,7 +10,6 @@ class Ranking {
 	private:
 		class InputList * input_list;
 		rank_t rank;  /// The ranking of an item in input_list
-		rank_t index; /// The index of an item in input_list
 
 	public:
 		Ranking(class InputList *, rank_t, rank_t);
@@ -18,11 +17,9 @@ class Ranking {
 
 		void set_input_list(class InputList *);
 		void set_rank(rank_t);
-		void set_index(rank_t);
 
 		class InputList * get_input_list();
 		rank_t get_rank();
-		rank_t get_index();
 };
 
 #endif // RANKING_H

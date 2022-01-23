@@ -91,6 +91,20 @@ bool Rels::search(uint32_t i, char * n, uint32_t * r) {
 /// Accessors
 inline uint32_t Rels::get_num_nodes() { return this->num_nodes; }
 
+void Rels::display(uint32_t topic_id) {
+	class Rel * q;
+	for (uint32_t i = 0; i < this->num_slots; i++) {
+		if (this->hash_table[i] != NULL) {
+			for (q = this->hash_table[i]; q != NULL; q = q->get_next()) {
+				if (q->get_topic_id() == topic_id) {
+					q->display();
+				}
+//				getchar();
+			}
+		}
+	}
+}
+
 /// The Hash Function
 uint32_t Rels::KazLibHash (char *key) {
    static unsigned long randbox[] = {

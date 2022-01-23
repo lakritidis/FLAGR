@@ -26,10 +26,11 @@ class Query {
 		~Query();
 
 		class InputList * create_list(char *, double);
-		void aggregate(uint32_t, uint32_t, score_t, score_t);
+		void aggregate(class InputParams * params);
 
 		void insert_relev(uint32_t, char *, uint32_t);
 		void display();
+		void display_relevs();
 		void evaluate(FILE *);
 		void evaluate_input();
 		void destroy_output_list();

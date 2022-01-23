@@ -17,7 +17,7 @@ class MergedItem : public InputItem {
 		MergedItem(char *, rank_t, uint32_t, class InputList **);
 		~MergedItem();
 
-		void insert_ranking(class InputList *, rank_t, rank_t);
+		void insert_ranking(class InputList *, rank_t);
 		void display();
 
 		/// Mutators

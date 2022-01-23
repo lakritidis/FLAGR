@@ -57,6 +57,8 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 	uint32_t relevance = 0;
 	double qty = 0.0;
 
+//	this->relevs->display(tid); getchar();
+
 	this->true_positives = 0;
 	this->average_precision = 0.0;
 	this->average_ndcg = 0.0;
@@ -77,7 +79,7 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 				this->true_positives++;
 				this->average_precision += this->true_positives / (i + 1.0);
 			}
-//			printf(" * (%d) == METRICS : ", relevance);
+//			printf(" * (%d) == METRICS : \n", relevance);
 		}
 
 		/// Precision@k
@@ -88,19 +90,21 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 
 		/// DCG@k
 		if (i == 0) {
-			this->dcg[i] = (pow(2.0, relevance) - 1.0) / log2(i + 2.0);
+//			this->dcg[i] = relevance / log2(i + 2.0);  // Version 1
+			this->dcg[i] = (pow(2.0, relevance) - 1.0) / log2(i + 2.0);  // Version 2
 		} else {
-			this->dcg[i] = this->dcg[i - 1] + (pow(2.0, relevance) - 1.0) / log2(i + 2.0);
+//			this->dcg[i] = this->dcg[i - 1] + relevance / log2(i + 2.0);  // Version 1
+			this->dcg[i] = this->dcg[i - 1] + (pow(2.0, relevance) - 1.0) / log2(i + 2.0);  // Version 2
 		}
 
 		/// IdealDCG temp: needs to be sorted
 		ideal_dcg[i] = (double)relevance;
 
 		if (relevance > 0 && p->get_score() > 0) {
-			this->average_ndcg += this->dcg[i] / (i + 1.0);
+			this->average_ndcg += this->dcg[i] / (i + 2.0);
 		}
-//		printf("P@%d=%5.3f - R@%d=%5.3f - DCG@%d=%5.3f\n",
-//			i+1, this->precision[i], i+1, this->recall[i], i+1, this->dcg[i]);
+//		printf("Relevance: %d - P@%d=%5.3f - R@%d=%5.3f - DCG@%d=%5.3f\n",
+//			relevance, i+1, this->precision[i], i+1, this->recall[i], i+1, this->dcg[i]); getchar();
     }
 
 	/// Sort ideal_dcg in decreasing relevance order and obtain IdealDCG@k
@@ -109,6 +113,8 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 	/// Compute nDCG@k = DCG@k / IdealDCG@k
     for (rank_t i = 0; i < num_items; i++) {
 		qty += (pow(2.00, ideal_dcg[i]) - 1.0) / (log2(i + 2.0));
+//		qty += ideal_dcg[i] / (log2(i + 2.0));
+//		printf("%2.1f\n", ideal_dcg[i]);
 		if (qty > 0) {
 			this->ndcg[i] = this->dcg[i] / qty;
 		} else {
@@ -132,7 +138,8 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 
 	if (RESULTS_TYPE == 1) {
 		printf("| %s (%d/%d)\t| %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f  | %5.4f  |\n",
-			PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
+			PadStr(str, 10, ' '), this->true_positives, num_relevant_items,
+			this->average_precision,
 			num_items > 4 ? this->precision[4] : 0,
 			num_items > 9 ? this->precision[9] : 0,
 			num_items > 14 ? this->precision[14] : 0,
@@ -194,6 +201,44 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 				num_items > 49 ? this->ndcg[49] : 0,
 				num_items > 99 ? this->ndcg[99] : 0);
 		}
+	} else if (RESULTS_TYPE == 3) {
+		printf("| %s (%d/%d)\t| %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f |\n",
+			PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
+			num_items > 0 ? this->precision[0] : 0,
+			num_items > 1 ? this->precision[1] : 0,
+			num_items > 3 ? this->precision[3] : 0,
+			num_items > 4 ? this->precision[4] : 0,
+			num_items > 5 ? this->precision[5] : 0,
+			num_items > 7 ? this->precision[7] : 0,
+			num_items > 9 ? this->precision[9] : 0,
+			this->average_ndcg,
+			num_items > 0 ? this->ndcg[0] : 0,
+			num_items > 1 ? this->ndcg[1] : 0,
+			num_items > 3 ? this->ndcg[3] : 0,
+			num_items > 4 ? this->ndcg[4] : 0,
+			num_items > 5 ? this->ndcg[5] : 0,
+			num_items > 7 ? this->ndcg[7] : 0,
+			num_items > 9 ? this->ndcg[9] : 0);
+
+		if (eval_file) {
+			fprintf(eval_file, "| %s (%d/%d)\t| %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f |\n",
+				PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
+				num_items > 0 ? this->precision[0] : 0,
+				num_items > 1 ? this->precision[1] : 0,
+				num_items > 3 ? this->precision[3] : 0,
+				num_items > 4 ? this->precision[4] : 0,
+				num_items > 5 ? this->precision[5] : 0,
+				num_items > 7 ? this->precision[7] : 0,
+				num_items > 9 ? this->precision[9] : 0,
+				this->average_ndcg,
+				num_items > 0 ? this->ndcg[0] : 0,
+				num_items > 1 ? this->ndcg[1] : 0,
+				num_items > 3 ? this->ndcg[3] : 0,
+				num_items > 4 ? this->ndcg[4] : 0,
+				num_items > 5 ? this->ndcg[5] : 0,
+				num_items > 7 ? this->ndcg[7] : 0,
+				num_items > 9 ? this->ndcg[9] : 0);
+		}
 	}
 }
 
@@ -237,8 +282,10 @@ double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
 		/// DCG@k
 		if (i == 0) {
 			this->dcg[i] = (pow(2.0, relevance) - 1.0) / log2(i + 2.0);
+//			this->dcg[i] = relevance / log2(i + 2.0);
 		} else {
 			this->dcg[i] = this->dcg[i - 1] + (pow(2.0, relevance) - 1.0) / log2(i + 2.0);
+//			this->dcg[i] = this->dcg[i - 1] + relevance / log2(i + 2.0);
 		}
 
 		/// IdealDCG temp: needs to be sorted
@@ -257,6 +304,7 @@ double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
 	/// Compute nDCG@k = DCG@k / IdealDCG@k
     for (rank_t i = 0; i < num_items; i++) {
 		qty += (pow(2.00, ideal_dcg[i]) - 1.0) / (log2(i + 2.0));
+//		qty += ideal_dcg[i] / (log2(i + 2.0));
 		if (qty > 0) {
 			this->ndcg[i] = this->dcg[i] / qty;
 		} else {
@@ -323,6 +371,10 @@ double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
 	return this->average_ndcg;
 }
 
+void Evaluator::display_relevs(uint32_t q) {
+	this->relevs->display(q);
+}
+
 /// Accessors
 uint32_t Evaluator::get_num_nodes() { return this->relevs->get_num_nodes(); }
 uint32_t Evaluator::get_true_positives() { return this->true_positives; }
@@ -330,36 +382,36 @@ double Evaluator::get_average_precision() { return this->average_precision; }
 double Evaluator::get_average_ndcg() { return this->average_ndcg; }
 
 double Evaluator::get_precision(uint32_t i) {
-	if (i < 1 || !this->precision[i - 1]) {
+	if (i < 0 || !this->precision[i]) {
 		return 0.0;
 	}
-	return this->precision[i - 1];
+	return this->precision[i];
 }
 
 double Evaluator::get_recall(uint32_t i) {
-	if (i < 1 || !this->recall[i - 1]) {
+	if (i < 0 || !this->recall[i]) {
 		return 0.0;
 	}
-	return this->recall[i - 1];
+	return this->recall[i];
 }
 
 double Evaluator::get_F1(uint32_t i) {
-	if (i < 1 || !this->recall[i - 1] || !this->precision[i - 1]) {
+	if (i < 0 || !this->recall[i] || !this->precision[i]) {
 		return 0.0;
 	}
-	return 2 * this->precision[i-1] * this->recall[i-1] / (this->precision[i-1] + this->recall[i-1]);
+	return 2 * this->precision[i] * this->recall[i] / (this->precision[i] + this->recall[i]);
 }
 
 double Evaluator::get_dcg(uint32_t i) {
-	if (i < 1 || !this->dcg[i - 1]) {
+	if (i < 0 || !this->dcg[i]) {
 		return 0.0;
 	}
-	return this->dcg[i - 1];
+	return this->dcg[i];
 }
 
 inline double Evaluator::get_ndcg(uint32_t i) {
-	if (i < 1 || !this->ndcg[i - 1]) {
+	if (i < 0 || !this->ndcg[i]) {
 		return 0.0;
 	}
-	return this->ndcg[i - 1];
+	return this->ndcg[i];
 }

@@ -27,6 +27,10 @@ Rel::~Rel() {
 	}
 }
 
+void Rel::display() {
+	printf("%s is relevant to %d - Relevance: %d\n", this->code, this->topic_id, this->judgment);
+}
+
 
 /// Mutators
 inline void Rel::set_topic_id(uint32_t v) { this->topic_id = v; }

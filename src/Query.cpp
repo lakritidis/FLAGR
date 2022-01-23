@@ -34,8 +34,8 @@ class InputList * Query::create_list(char * v, double w) {
 }
 
 /// Apply the rank aggregation method and construct the final output list
-void Query::aggregate(uint32_t ram, uint32_t pp, score_t d1, score_t d2) {
-	this->computed_experts_list = this->agg->aggregate(ram, pp, d1, d2);
+void Query::aggregate(class InputParams * params) {
+	this->computed_experts_list = this->agg->aggregate(params);
 }
 
 /// Destroy the aggregate list
@@ -116,6 +116,12 @@ void Query::init_weights() {
 void Query::display() {
 	printf("Displaying Data for Query %d: %s\n", this->topic_id, this->topic);
 	this->agg->display();
+}
+
+/// Display the query properties and input lists
+void Query::display_relevs() {
+	printf("Displaying Rels for Query %d: %s\n", this->topic_id, this->topic);
+	this->eval->display_relevs(this->topic_id);
 }
 
 /// Accessors

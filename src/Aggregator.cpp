@@ -52,7 +52,6 @@ void Aggregator::merge_input_lists() {
 	}
 
 	this->output_list->convert_to_array();
-//	this->output_list->display(); getchar();
 }
 
 /// Set the initial voter weights
@@ -71,24 +70,52 @@ void Aggregator::destroy_output_list() {
 }
 
 /// Apply the rank aggregation method and construct the final output list
-class Voter ** Aggregator::aggregate(uint32_t ram, uint32_t pp, score_t d1, score_t d2) {
-	/// Merge the results of the input lists into one fused list with duplicates removed
-	this->merge_input_lists();
+class Voter ** Aggregator::aggregate(class InputParams * params) {
 
 	class Voter ** voters_list = NULL;
 
 	/// Apply the aggregation method of the argument
-#if ITERATIONS == 0
-	if (ram == 1) { this->output_list->BordaCount(0.0, 1.0, 0.0, 1.0); } else
-	if (ram == 2) { this->output_list->CondorcetMethod(0.0, 1.0, 0.0, 1.0); } else
-	if (ram == 3) { this->output_list->Outranking(0.0, 1.0, 0.0, 1.0); } else
-	if (ram == 4) { this->output_list->RankPosition(0.0, 1.0, 0.0, 1.0); }
-#else
-	voters_list = this->output_list->DIBRA(this->input_lists, pp, ram, d1, d2);
-#endif
+	/// 1. Borda Count
+	if (params->get_aggregation_method() == 1) {
+		this->merge_input_lists();
+		this->output_list->BordaCount(0.0, 1.0, 0.0, 1.0, params);
 
+	/// 2. Condorcet Method
+	} else if (params->get_aggregation_method() == 2) {
+		this->merge_input_lists();
+		this->output_list->CondorcetMethod(0.0, 1.0, 0.0, 1.0, params);
+
+	/// 3. The outranking approach of Vanderpooten et al., (SIGIR 2007)
+	} else if (params->get_aggregation_method() == 3) {
+		this->merge_input_lists();
+		this->output_list->Outranking(0.0, 1.0, 0.0, 1.0, params);
+
+	/// 4. Rank Position
+	} else if (params->get_aggregation_method() == 4) {
+		this->merge_input_lists();
+		this->output_list->RankPosition(0.0, 1.0, 0.0, 1.0, params);
+
+	/// 5-8. The DIBRA method of Akritidis et al. (Web Intelligence 2019/ESWA 2022)
+	} else if (params->get_aggregation_method() == 5 || params->get_aggregation_method() == 6 ||
+				params->get_aggregation_method() == 7 || params->get_aggregation_method() == 8) {
+
+		this->merge_input_lists();
+		voters_list = this->output_list->DIBRA(this->input_lists, params);
+
+	/// 9. The preference relations method of Desarkar et al. (ESWA 2016)
+	} else if (params->get_aggregation_method() == 9) {
+		this->merge_input_lists();
+		this->output_list->PrefRel(this->input_lists, params);
+
+	/// 10. The weighted agglomerative algorithm of Chatterjee et al. (Knowledge-Based Systems 2018)
+	} else if (params->get_aggregation_method() == 10) {
+		this->output_list = new MergedList(1024, this->num_lists);
+		this->output_list->Agglomerative(this->input_lists, params);
+	}
+
+
+//	this->output_list->display_list(); getchar();
 	return voters_list;
-//	this->output_list->display(); getchar();
 }
 
 void Aggregator::display() {

@@ -19,6 +19,8 @@ class Rel {
 		Rel(uint32_t, char *, uint32_t);
 		~Rel();
 
+		void display();
+
 		/// Mutators
 		void set_topic_id(uint32_t );
 		void set_code(char *);

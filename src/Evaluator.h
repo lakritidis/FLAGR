@@ -34,6 +34,8 @@ class Evaluator {
 		void evaluate(uint32_t, class MergedList *, FILE *);
 		double evaluate_input(uint32_t, class InputList *);
 
+		void display_relevs(uint32_t);
+
 		/// Accessors
 		uint32_t get_num_nodes();
 		uint32_t get_true_positives();

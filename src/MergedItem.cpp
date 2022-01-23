@@ -11,7 +11,7 @@ MergedItem::MergedItem() {
 }
 
 /// Constructor 2
-MergedItem::MergedItem(char * c, rank_t r, uint32_t nal, class InputList ** l) : InputItem(c, r, 0) {
+MergedItem::MergedItem(char * c, rank_t r, uint32_t nal, class InputList ** l) : InputItem(c, r) {
 	this->score = 0.0;
 	this->final_ranking = 0;
 	this->num_rankings = 0;
@@ -36,10 +36,9 @@ MergedItem::~MergedItem() {
 }
 
 /// Insert a ranking into the MergedItem
-void MergedItem::insert_ranking(class InputList * l, rank_t r, rank_t i) {
-	this->rankings[l->get_id()]->set_input_list(l);
-	this->rankings[l->get_id()]->set_rank(r);
-	this->rankings[l->get_id()]->set_index(i);
+void MergedItem::insert_ranking(class InputList * l, rank_t r) {
+	this->rankings[ l->get_id() ]->set_input_list (l);
+	this->rankings[ l->get_id() ]->set_rank (r);
 	this->num_rankings++;
 }
 

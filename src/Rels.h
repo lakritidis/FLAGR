@@ -21,6 +21,7 @@ class Rels {
 		Rels(uint32_t);
 		~Rels();
 
+		void display(uint32_t);
 		void insert(uint32_t, char *, uint32_t);
 		bool search(uint32_t, char *, uint32_t *);
 

@@ -4,14 +4,12 @@
 InputItem::InputItem() {
 	this->code = NULL;
 	this->rank = 0;
-	this->index = 0;
 }
 
 /// Constructor 2: overloaded
-InputItem::InputItem(char * c, rank_t r, rank_t i) {
+InputItem::InputItem(char * c, rank_t r) {
 	this->copy_code(c);
 	this->rank = r;
-	this->index = i;
 }
 
 /// Destructor
@@ -29,15 +27,13 @@ void InputItem::copy_code(char *v) {
 
 /// Display InputItem Object
 void InputItem::display() {
-	printf("ITEM %d: %s, RANKING: %d\n", this->index, this->code, this->rank);
+	printf("ITEM: %s, RANKING: %d\n", this->code, this->rank);
 }
 
 /// Mutators
 void InputItem::set_code(char * v) { this->copy_code(v); }
 void InputItem::set_rank(rank_t v) { this->rank = v; }
-void InputItem::set_index(rank_t v) { this->index = v; }
 
 /// Accessors
 char * InputItem::get_code() { return this->code; }
 rank_t InputItem::get_rank() { return this->rank; }
-rank_t InputItem::get_index() { return this->index; }
