@@ -44,24 +44,29 @@ PyFLAGR groups its supported rank aggregation methods in four modules:
  3. The Iterative, Distance-Based method of Akritidis et.al, 2022.
 
 The following statements demonstrate the imports of all PyFLAGR rank aggregation methods in a typical jupyter notebook.
+```
+	import pyflagr.Comb as SCORE_BASED
+	import pyflagr.Majoritarian as ORDER_BASED
+	import pyflagr.MarkovChains as MARKOV_CHAINS
+	import pyflagr.Weighted as WGT
+```
 
-`import pyflagr.Comb as SCORE_BASED
-import pyflagr.Majoritarian as ORDER_BASED
-import pyflagr.MarkovChains as MARKOV_CHAINS
-import pyflagr.Weighted as WGT`
+All PyFLAGR rank aggregation methods include:
+* a standard class constructor: several hyper-parameters of the corresponding algorithm  and other execution arguments can be passed through the constructor. All the constructor inputs have default values, therefore, they are considered optional. This means that all constructors can be called *any* argument at all.
+* an `aggregate` method that runs the algorithm on the selected input and (optionally) evaluates the generated aggregate list. In all algorithms, `aggregate` method accepts the following arguments:
 
-## 	References:
-	[1] Renda E., Straccia U., "Web metasearch: rank vs. score based rank aggregation methods", In
-		Proceedings of the 2003 ACM symposium on Applied computing, pp. 841-846, 2003.
-	[2] Farah, M., Vanderpooten, D., "An outranking approach for rank aggregation in information
-		retrieval", In Proceedings of the 30th ACM Conference on Research and Development in
-		Information Retrieval, pp. 591-598, 2007.
-	[3] Desarkar, M. S., Sarkar, S., Mitra, P., "Preference relations based unsupervised rank
-		aggregation for metasearch", Expert Systems with Applications, vol. 49, pp. 86-98, 2016.
-	[4] Chatterjee, S., Mukhopadhyay, A., Bhattacharyya, M., "A weighted rank aggregation approach
-		towards crowd opinion analysis", Knowledge-Based Systems, vol. 149, pp. 47-60, 2018.
-	[5] Akritidis L., Fevgas A., Bozanis P., Manolopoulos Y., "An Unsupervised Distance-Based Model
-		for Weighted Rank Aggregation with List Pruning", Expert Systems with Applications,
-		vol. 202, pp. 117435, 2022.
-	[6] Dwork C., Kumar R., Naor M., Sivakumar D., "Rank Aggregation Methods for the Web", In
-		Proceedings of the 10th International Conference on World Wide Web, pp. 613-622, 2001.
+| Parameter    | Type                                         | Default Value  | Values  |
+| :----------- | :--------------------------------------------| :--------------| :------ |
+| `input_file` | String - Required, unless `input_df` is set. | Empty String   | A CSV file that contains the input lists to be aggregated. |
+| `input_df` | Pandas DataFrame - Required, unless `input_file` is set. | `None` | A Pandas DataFrame that contains the input lists to be aggregated. **Note:** If both `input_file` and `input_df` are set, only the former is used; the latter is ignored. |
+| `rels_file`  | String, Optional. | Empty String | A CSV file that contains the relevance judgements of the involved list elements. If such a file is passed, FLAGR will evaluate the generated aggregate list/s by computing several retrieval effectiveness evaluation measures. The results of the evaluation will be stored in the `eval_df` DataFrame. Otherwise, no evaluation will take place and `eval_df` will be empty. Read more on the evaluation of rank aggregation quality. |
+| `rels_df`    | Pandas DataFrame, Optional. | `None` | A Pandas DataFrame that contains the relevance judgements of the involved list elements. If such a dataframe is passed, FLAGR will evaluate the generated aggregate list/s by computing several retrieval effectiveness evaluation measures. The results of the evaluation will be stored in the `eval_df` DataFrame. Otherwise, no evaluation will take place and `eval_df` will be empty. Read more on the evaluation of rank aggregation quality. **Note:** If both `rels_file` and `rels_df` are set, only the former is used; the latter is ignored. |
+| `output_dir` | String, Optional. | Temporary directory (OS-specific) | The directory where the output files (aggregate lists and evaluation) will be stored. If it is not set, the default location will be used. |
+
+## References:
+\[1\] Renda E., Straccia U., "Web metasearch: rank vs. score based rank aggregation methods", In Proceedings of the 2003 ACM symposium on Applied computing, pp. 841-846, 2003.
+\[2\] Farah, M., Vanderpooten, D., "An outranking approach for rank aggregation in information retrieval", In Proceedings of the 30th ACM Conference on Research and Development in Information Retrieval, pp. 591-598, 2007.
+\[3\] Desarkar, M. S., Sarkar, S., Mitra, P., "Preference relations based unsupervised rank aggregation for metasearch", Expert Systems with Applications, vol. 49, pp. 86-98, 2016.
+\[4\] Chatterjee, S., Mukhopadhyay, A., Bhattacharyya, M., "A weighted rank aggregation approach towards crowd opinion analysis", Knowledge-Based Systems, vol. 149, pp. 47-60, 2018.
+\[5\] Akritidis L., Fevgas A., Bozanis P., Manolopoulos Y., "An Unsupervised Distance-Based Model for Weighted Rank Aggregation with List Pruning", Expert Systems with Applications, vol. 202, pp. 117435, 2022.
+\[6\] Dwork C., Kumar R., Naor M., Sivakumar D., "Rank Aggregation Methods for the Web", In Proceedings of the 10th International Conference on World Wide Web, pp. 613-622, 2001.
