@@ -1,18 +1,23 @@
-/// 3. OUTRANKING: Assign Scores to the items of the MergedList according to the OutRanking Approach
-/// introduced in: M. Farah, D. Vanderpooten, "An outranking approach for rank aggregation in
-/// information retrieval", SIGIR 2009, pp. 591-598.
-void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd_w, class InputParams * params) {
-	double PREF_THRESHOLD = 0.0, VETO_THRESHOLD = 0.75, CONC_THRESHOLD = 0.50, DISC_THRESHOLD = 0.00;
+/// The Outranking Approach of [2]: Assign Scores to the items of MergedList w.r.t to the method of [2]
 
-	uint32_t preference_threshold = (uint32_t)(PREF_THRESHOLD * MAX_LIST_ITEMS);
-	uint32_t veto_threshold = (uint32_t)(VETO_THRESHOLD * MAX_LIST_ITEMS);
+void MergedList::Outranking(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
+	score_t PREF_THRESHOLD = prms->get_pref_thr();
+	score_t VETO_THRESHOLD = prms->get_veto_thr();
+	score_t CONC_THRESHOLD = prms->get_conc_thr();
+	score_t DISC_THRESHOLD = prms->get_disc_thr();
+
+	uint32_t preference_threshold = (uint32_t)(PREF_THRESHOLD * this->num_nodes);
+	uint32_t veto_threshold = (uint32_t)(VETO_THRESHOLD * this->num_nodes);
 	uint32_t concordance_threshold = (uint32_t)(CONC_THRESHOLD * this->num_input_lists);
 	uint32_t discordance_threshold = (uint32_t)(DISC_THRESHOLD * this->num_input_lists);
 
 	class MergedItem *p, *q;
-	double temp_score_1 = 0.0, temp_score_2 = 0.0, p_rank = 0.0, q_rank = 0.0, weight = 0.0;
+	score_t temp_score_1 = 0.0, temp_score_2 = 0.0, p_rank = 0.0, q_rank = 0.0;
 	bool verbose = false;
-	uint32_t scenario = 1;
+	uint32_t scenario = 2;
+
+	score_t voter_weight = 0.0;
+	uint32_t weights_norm = prms->get_weights_normalization();
 
 	for (rank_t i = 0; i < this->num_nodes; i++) {
 		p = this->item_list[i];
@@ -25,21 +30,25 @@ void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd
 
 			if (p != q) {
 				for (uint32_t k = 0; k < this->num_input_lists; k++) {
-					weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
+					voter_weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
 
-					if (params->get_weights_normalization() == 2) {
-						weight = (weight - min_w) / (max_w - min_w); /// Min-max normalization
+					/// Min-max normalization of voter weights
+					if (weights_norm == 2) {
+						voter_weight = (voter_weight - s->get_min_val()) / (s->get_max_val() - s->get_min_val());
 
-					} else if (params->get_weights_normalization() == 3) {
-						weight = weight * sd_w * sd_w / mean_w;  /// Standardization = (w * std^2/mean)
+					/// Z normalization of voter weights
+					} else if (weights_norm == 3) {
+						voter_weight = voter_weight * s->get_std_val() * s->get_std_val() / s->get_max_val();
 
-					} else if (params->get_weights_normalization() == 4) {
-						weight = weight / max_w;   /// Divide by max
+					/// Division of the voter weights by the maximum voter score
+					} else if (weights_norm == 4) {
+						voter_weight = voter_weight / s->get_max_val();
 					}
 
 					if (scenario == 1) {
-						p_rank = p->get_ranking(k)->get_rank() * weight;
-						q_rank = q->get_ranking(k)->get_rank() * weight;
+						p_rank = p->get_ranking(k)->get_rank() * voter_weight;
+						q_rank = q->get_ranking(k)->get_rank() * voter_weight;
+
 					} else if (scenario == 2) {
 						p_rank = p->get_ranking(k)->get_rank();
 						q_rank = q->get_ranking(k)->get_rank();
@@ -49,13 +58,13 @@ void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd
 //						q->get_ranking(k)->get_input_list()->get_voter()->get_weight(), p_rank, q_rank);
 
 					if (p_rank <= q_rank - preference_threshold) {
-						if (scenario == 1) { temp_score_1 ++; }
-						else if (scenario == 2) { temp_score_1 += weight; }
+						if (scenario == 1) { temp_score_1++; }
+						else if (scenario == 2) { temp_score_1 += voter_weight; }
 					}
 
 					if (p_rank >= q_rank + veto_threshold) {
 						if (scenario == 1) { temp_score_2 ++; }
-						else if (scenario == 2) { temp_score_2 += weight; }
+						else if (scenario == 2) { temp_score_2 += voter_weight; }
 					}
 
 					if (verbose) {
@@ -73,14 +82,13 @@ void MergedList::Outranking(double min_w, double max_w, double mean_w, double sd
 			/// Compute the final concordance/discordance score
 			if (temp_score_1 >= concordance_threshold && temp_score_2 <= discordance_threshold) {
 				if (scenario == 1) {
-					p->set_score(p->get_score() + 1);
+					p->set_final_score(p->get_final_score() + 1.0);
 				} else if (scenario == 2) {
-					p->set_score(p->get_score() + temp_score_1);
+					p->set_final_score(p->get_final_score() + temp_score_1);
 				}
 			}
 		}
 	}
 
 	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
-//	printf("\nnormalization=%d and scenario no %d\n", WEIGHTS_NORMALIZATION, scenario); getchar();
 }

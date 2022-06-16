@@ -1,4 +1,4 @@
-void MergedList::PrefRel(class InputList ** inlists, class InputParams * params) {
+void MergedList::PrefRel(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
 	uint32_t i = 0, j = 0, p = 0;
 	uint32_t num_pairs = this->num_nodes * (this->num_nodes - 1) / 2;
 	score_t DisagreementScore = 0.0, ListScore = 0.0, ItemScore = 0.0;
@@ -12,7 +12,7 @@ void MergedList::PrefRel(class InputList ** inlists, class InputParams * params)
 		for (j = i + 1; j < this->num_nodes; j++) {
 			ItemPair->set_item1( this->item_list[i] );
 			ItemPair->set_item2( this->item_list[j] );
-			ItemPair->compute_a_majority_opinion(params->get_alpha(), params->get_beta(), this->num_input_lists);
+			ItemPair->compute_a_majority_opinion(prms->get_alpha(), prms->get_beta(), this->num_input_lists);
 		}
 	}
 
@@ -78,4 +78,3 @@ void MergedList::PrefRel(class InputList ** inlists, class InputParams * params)
 	}
 	delete [] edges;
 }
-

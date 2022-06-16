@@ -1,9 +1,13 @@
-/// 2. CONDORCET METHOD: Assign Scores to the items of the MergedList according to the Condorcet method.
-void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, double sd_w, class InputParams * params) {
+/// The method of Condorcet Winners: Assign Scores to the items of MergedList w.r.t to Condorcet criterion.
+
+void MergedList::CondorcetMethod(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
 
 	class MergedItem *p, *q;
 	bool verbose = false;
-	double p_rank = 0.0, q_rank = 0.0, wins = 0.0, losses = 0.0, ties = 0.0, weight = 1.0;
+	rank_t p_rank = 0, q_rank = 0;
+	score_t wins = 0.0, losses = 0.0, ties = 0.0, voter_weight = 1.0;
+
+	uint32_t weights_norm = prms->get_weights_normalization();
 
 	for (rank_t i = 0; i < this->num_nodes; i++) {
 		p = this->item_list[i];
@@ -14,38 +18,41 @@ void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, doub
 			wins = 0; losses = 0; ties = 0;
 
 			for (uint32_t k = 0; k < this->num_input_lists; k++) {
-				weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
+				voter_weight = p->get_ranking(k)->get_input_list()->get_voter()->get_weight();
 
-				if (params->get_weights_normalization() == 2) {
-					weight = (weight - min_w) / (max_w - min_w); /// Min-max normalization
+				/// Min-max normalization of voter weights
+				if (weights_norm == 2) {
+					voter_weight = (voter_weight - s->get_min_val()) / (s->get_max_val() - s->get_min_val());
 
-				} else if (params->get_weights_normalization() == 3) {
-					weight = weight * sd_w * sd_w / mean_w;  /// Standardization = (w * std^2/mean)
+				/// Z normalization of voter weights
+				} else if (weights_norm == 3) {
+					voter_weight = voter_weight * s->get_std_val() * s->get_std_val() / s->get_max_val();
 
-				} else if (params->get_weights_normalization() == 4) {
-					weight = weight / max_w;   /// Divide by max
+				/// Division of the voter weights by the maximum voter score
+				} else if (weights_norm == 4) {
+					voter_weight = voter_weight / s->get_max_val();
 				}
 
 				p_rank = p->get_ranking(k)->get_rank();
 				q_rank = q->get_ranking(k)->get_rank();
 
-//				printf("%d: %5.3f-%5.3f - (%5.3f,%5.3f)\n",
+//				printf("%d: %5.3f-%5.3f - (%d,%d)\n",
 //					k, p->get_ranking(k)->get_input_list()->get_voter()->get_weight(),
 //					q->get_ranking(k)->get_input_list()->get_voter()->get_weight(), p_rank, q_rank);
 
 				if (p_rank < q_rank) {
-					wins += weight;
+					wins += voter_weight;
 					if (verbose) { printf("WIN %5.3f: ", wins); }
 				} else if (p_rank == q_rank) {
-					ties += weight;
+					ties += voter_weight;
 					if (verbose) { printf("TIE %5.3f: ", ties); }
 				} else {
-					losses += weight;
+					losses += voter_weight;
 					if (verbose) { printf("LOSS %5.3f: ", losses); }
 				}
 
 				if (verbose) {
-					printf("LIST %d: Item %d (%s) rank %5.3f (VS) item %d (%s) rank %5.3f\n",
+					printf("\nLIST %d: Item %d (%s) rank %d (VS) item %d (%s) rank %d\n",
 						k, i, p->get_code(), p_rank, j, q->get_code(), q_rank);
 				}
 			}
@@ -56,7 +63,7 @@ void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, doub
 						j, q->get_code(), wins, ties, losses); getchar();
 				}
 
-				p->set_score(p->get_score() + 1);
+				p->set_final_score(p->get_final_score() + 1);
 
 			} else if (wins < losses) {
 				if (verbose) {
@@ -64,10 +71,11 @@ void MergedList::CondorcetMethod(double min_w, double max_w, double mean_w, doub
 						i, p->get_code(), j, q->get_code(), wins, ties, losses);
 					getchar();
 				}
-				q->set_score(q->get_score() + 1);
+				q->set_final_score(q->get_final_score() + 1);
 			}
 		}
 	}
 
 	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
 }
+
