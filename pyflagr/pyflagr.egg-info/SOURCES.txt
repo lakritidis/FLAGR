@@ -1,0 +1,14 @@
+setup.py
+pyflagr/Comb.py
+pyflagr/Majoritarian.py
+pyflagr/MarkovChains.py
+pyflagr/RAM.py
+pyflagr/Weighted.py
+pyflagr/__init__.py
+pyflagr/flagr.so
+pyflagr/test_local.py
+pyflagr.egg-info/PKG-INFO
+pyflagr.egg-info/SOURCES.txt
+pyflagr.egg-info/dependency_links.txt
+pyflagr.egg-info/requires.txt
+pyflagr.egg-info/top_level.txt
