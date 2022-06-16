@@ -1,156 +1,70 @@
 #include "InputData.h"
 
-#include "input/InputDataTREC.cpp"
-#include "input/InputDataLETOR.cpp"
+// #include "InputDataTSV.cpp"
+#include "InputDataCSV.cpp"
 
 /// Default Constructor
-InputData::InputData() {
-	this->params = NULL;
-	this->num_queries = 0;
-	this->queries = NULL;
-	this->mean_F1 = NULL;
-	this->mean_precision = NULL;
-	this->mean_recall = NULL;
-	this->mean_dcg = NULL;
-	this->MAP = 0.0;
-	this->MNDCG = 0.0;
-	this->LetorMaxLength = 0;
-	this->LetorNumVoters = 0;
-	this->avg_sprho = 0.0;
-}
+InputData::InputData() :
+		params(NULL),
+		num_queries(0),
+		queries(NULL),
+		MAP(0.0),
+		MNDCG(0.0),
+		avg_sprho(0.0),
+		mean_precision(NULL),
+		mean_recall(NULL),
+		mean_F1(NULL),
+		mean_dcg(NULL),
+		mean_ndcg(NULL),
+		eval_file(NULL) { }
 
-/// Constructor 2
-/// t: Constructor type
-/// t==1: TREC2009-TREC2013 Adhoc Task of Web Track
-/// t==2: MQ2007-agg
-/// t==3: MQ2008-agg
-InputData::InputData(class InputParams * pr) {
-	this->params = pr;
-	uint32_t no_file = 0;
+/// Constructor 2 receives the input parameters as argument
+InputData::InputData(class InputParams * pr) :
+		params(pr),
+		num_queries(0),
+		queries(NULL),
+		MAP(0.0),
+		MNDCG(0.0),
+		avg_sprho(0.0),
+		mean_precision(new double[MAX_LIST_ITEMS]),
+		mean_recall(new double[MAX_LIST_ITEMS]),
+		mean_F1(new double[MAX_LIST_ITEMS]),
+		mean_dcg(new double[MAX_LIST_ITEMS]),
+		mean_ndcg(new double[MAX_LIST_ITEMS]),
+		eval_file(NULL) {
 
-	this->MAP = 0.0;
-	this->MNDCG = 0.0;
-	this->mean_precision = new double[MAX_LIST_ITEMS];
-	this->mean_recall = new double[MAX_LIST_ITEMS];
-	this->mean_F1 = new double[MAX_LIST_ITEMS];
-	this->mean_dcg = new double[MAX_LIST_ITEMS];
-	this->mean_ndcg = new double[MAX_LIST_ITEMS];
-	this->eval_file = fopen(pr->get_eval_file(), "w+");
-	this->initialize_stats();
+			char * out;
+			long file_size = 0;
 
-	/// Read a TREC-style file
-	if (this->params->get_dataset_type() == 1) {
-		DIR *dir;
-		struct dirent *ent;
-
-		if ((dir = opendir( this->params->get_data_dir() )) != NULL) {
-			char filename[1024];
-
-			this->num_queries = DATASET_NUM_QUERIES;
-			this->queries = new Query * [this->num_queries];
-			for (uint32_t i = 0; i < this->num_queries; i++) {
-				this->queries[i] = new Query(1);
+			if (pr->get_rels_file()) {
+				this->eval_file = fopen(pr->get_eval_file(), "w+");
+				this->initialize_stats();
+			} else {
+				this->eval_file = NULL;
 			}
 
-			while ((ent = readdir(dir)) != NULL) {
-				if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0) {
+			/// Read a single CSV file (all voters and all queries in the same file)
+			FILE * datafile = fopen(this->params->get_input_file(), "r");
+			if (datafile) {
+				out = this->read_file(datafile, &file_size);
 
-					sprintf(filename, "%s%s", this->params->get_data_dir(), ent->d_name);
+				this->preprocess_CSV(out, file_size);
+				this->construct_CSV_lists(out, file_size);
 
-					FILE * f = fopen(filename, "rb");
-					if (f) {
-						printf("Reading Run %d: %s (Items: ", ++no_file, filename); fflush(NULL);
-						if (this->params->get_dataset_compressed()) {
-							this->decompress_TREC_file(f, ent->d_name);
-						} else {
-							this->read_TREC_file(f, ent->d_name);
-						}
-						printf("%d)\n", this->compute_avg_list_length()); fflush(NULL);
-						fclose(f);
-					} else {
-						printf("Error Opening Input File %s\n", filename);
-					}
+				free(out);
+				fclose(datafile);
+
+				for (uint32_t i = 0; i < this->num_queries; i++) {
+					this->queries[i]->init_weights();
 				}
+
+				if (this->params->get_rels_file()) {
+					this->read_CSV_qrels();
+				}
+			} else {
+				printf("Error Opening Input File %s\n", this->params->get_input_file());
+				exit(0);
 			}
-			closedir(dir);
-		} else {
-			printf("Error Opening Input Directory %s\n", this->params->get_data_dir());
-			exit(-1);
-		}
-
-		for (uint32_t i = 0; i < this->num_queries; i++) {
-			this->queries[i]->init_weights();
-		}
-
-		this->read_TREC_qrels();
-
-	/// Read a LETOR-style file
-	} else if (this->params->get_dataset_type() == 2) {
-		this->num_queries = 0;
-
-		uint32_t init_buf_len = 16777216, nread = 0, cur_buf_len = 0;
-		class InputList * inlist = NULL;
-		char voter[100], res[100];
-		char * buf = (char *)malloc(init_buf_len * sizeof(char));
-
-		printf("Preprocessing LETOR Input..."); fflush(NULL);
-
-		FILE * f = fopen(params->get_data_dir(), "rb");
-		if (f) {
-			while(!feof(f)) {
-				nread = fread(buf + cur_buf_len, sizeof(char), 4096, f);
-				if (nread == 0) {
-					break;
-				}
-
-				cur_buf_len += nread;
-				if (cur_buf_len >= init_buf_len) {
-					init_buf_len *= 2;
-					buf = (char *)realloc(buf, init_buf_len * sizeof(char));
-				}
-			}
-			this->preprocess_LETOR_lists(buf, cur_buf_len);
-
-//			printf("%s\n", buf);
-			fclose(f);
-		} else {
-			printf("Error Opening Input File %s\n", this->params->get_data_dir());
-			exit(-1);
-		}
-
-		printf("\t[ OK, %d queries, %d voters, max list length: %d ]\n", this->num_queries,
-				this->LetorNumVoters, this->LetorMaxLength);
-
-		/// Initialize 1692 queries and 21 Input lists with 500 random elements each
-		printf("Initializing Data..."); fflush(NULL);
-
-		this->queries = new Query * [this->num_queries];
-
-		for (uint32_t q = 0; q < this->num_queries; q++) {
-//			printf("QUERY %d\n", q);
-			this->queries[q] = new Query(1);
-			this->queries[q]->set_topic_id(q + 1);
-
-			for (uint32_t v = 0; v < this->LetorNumVoters; v++) {
-				sprintf(voter, "voter-%d", v + 1);
-
-				inlist = this->queries[q]->create_list(voter, 1.00);
-/*
-				for (uint32_t i = 0; i < this->LetorMaxLength; i++) {
-					sprintf(res, "ELEMENT-%d-%d-%d", q, v + 1, i + 1);
-//					printf("ELEMENT-%d-%d-%d\n", q, v, i);
-                    inlist->insert_item(res, i + 1);
-				}
-*/
-			}
-		}
-
-		printf("\t [ OK ]\nReading Input..."); fflush(NULL);
-
-		this->process_LETOR_lists(buf, cur_buf_len);
-
-		free(buf);
-	}
 }
 
 /// Destructor
@@ -172,7 +86,7 @@ InputData::~InputData() {
 	}
 
 	if (this->eval_file) {
-		fclose(eval_file);
+		fclose(this->eval_file);
 	}
 }
 
@@ -181,6 +95,7 @@ void InputData::initialize_stats() {
 	this->avg_sprho = 0.0;
 	this->MAP = 0.0;
 	this->MNDCG = 0.0;
+
 	for (rank_t i = 0; i < MAX_LIST_ITEMS; i++) {
 		this->mean_precision[i] = 0.0;
 		this->mean_recall[i] = 0.0;
@@ -203,21 +118,56 @@ void InputData::destroy_output_lists() {
 	}
 }
 
+/// Read the contents of a file into a char buffer
+char * InputData::read_file(FILE * source, long * file_size) {
+	fseek(source , 0L, SEEK_END);
+	*file_size = ftell(source);
+	rewind(source);
+
+	char * out = (char *)malloc((*file_size + 1) * sizeof(char));
+
+	if (fread(out, *file_size, 1 , source) != 1) {
+		fclose(source);
+		free(out);
+		fputs("entire read fails",stderr);
+		exit(1);
+	}
+	out[*file_size - 1] = 0;
+
+//	printf("contents: %s", out); getchar();
+
+	return out;
+}
+
+/// Print execution information in stdout
 void InputData::print_header() {
-	char m1[1024], m2[1024], m3[1024], m4[1024], m5[1024];
+	char m1[1024], m3[1024], m4[1024], m5[1024];
+	uint32_t ram = this->params->get_aggregation_method();
 
-	if (this->params->get_aggregation_method() == 1) { strcpy(m1, "BORDA COUNT (BASELINE)"); } else
-	if (this->params->get_aggregation_method() == 2) { strcpy(m1, "CONDORCET METHOD (BASELINE)"); } else
-	if (this->params->get_aggregation_method() == 3) { strcpy(m1, "OUTRANKING (BASELINE)"); } else
-	if (this->params->get_aggregation_method() == 4) { strcpy(m1, "RANK POSITION (BASELINE)"); } else
-	if (this->params->get_aggregation_method() == 5) { strcpy(m1, "DIBRA @ BORDA COUNT"); } else
-	if (this->params->get_aggregation_method() == 6) { strcpy(m1, "DIBRA @ CONDORCET METHOD"); } else
-	if (this->params->get_aggregation_method() == 7) { strcpy(m1, "DIBRA @ OUTRANKING"); } else
-	if (this->params->get_aggregation_method() == 8) { strcpy(m1, "DIBRA @ RANK POSITION"); } else
-	if (this->params->get_aggregation_method() == 9) { strcpy(m1, "PREFERENCE RELATIONS (ESWA2016)"); } else
-	if (this->params->get_aggregation_method() == 10) { strcpy(m1, "AGGLOMERATIVE (KBS 2018)"); }
+	if (ram == 100) { strcpy(m1, "CombSUM with Borda normalization"); } else
+	if (ram == 101) { strcpy(m1, "CombSUM with Rank normalization"); } else
+	if (ram == 102) { strcpy(m1, "CombSUM with Score normalization"); } else
+	if (ram == 103) { strcpy(m1, "CombSUM with Z-Score normalization"); } else
+	if (ram == 110) { strcpy(m1, "CombMNZ with Borda normalization"); } else
+	if (ram == 111) { strcpy(m1, "CombMNZ with Rank normalization"); } else
+	if (ram == 112) { strcpy(m1, "CombMNZ with Score normalization"); } else
+	if (ram == 113) { strcpy(m1, "CombMNZ with Z-Score normalization"); } else
+	if (ram == 200) { strcpy(m1, "Condorcet Winners Method"); } else
+	if (ram == 300) { strcpy(m1, "Outranking Approach"); } else
+	if (ram == 5100) { strcpy(m1, "DIBRA @ CombSUM with Borda normalization"); } else
+	if (ram == 5101) { strcpy(m1, "DIBRA @ CombSUM with Rank normalization"); } else
+	if (ram == 5102) { strcpy(m1, "DIBRA @ CombSUM with Score normalization"); } else
+	if (ram == 5103) { strcpy(m1, "DIBRA @ CombSUM with Z-Score normalization"); } else
+	if (ram == 5110) { strcpy(m1, "DIBRA @ CombMNZ with Borda normalization"); } else
+	if (ram == 5111) { strcpy(m1, "DIBRA @ CombMNZ with Rank normalization"); } else
+	if (ram == 5112) { strcpy(m1, "DIBRA @ CombMNZ with Score normalization"); } else
+	if (ram == 5113) { strcpy(m1, "DIBRA @ CombMNZ with Z-Score normalization"); } else
+	if (ram == 5200) { strcpy(m1, "DIBRA @ Condorcet Winners Method"); } else
+	if (ram == 5300) { strcpy(m1, "DIBRA @ Outranking Approach"); } else
+	if (ram == 600) { strcpy(m1, "Preference Relations Method"); } else
+	if (ram == 700) { strcpy(m1, "Agglomerative Aggregation"); }
 
-	printf("| %s / %s / %s", this->params->get_dataset_name(), this->params->get_dataset_track(), m1);
+	printf("| %s / %s", m1, this->params->get_input_file());
 
 	if (this->params->get_aggregation_method() == 5 || this->params->get_aggregation_method() == 6 ||
 		this->params->get_aggregation_method() == 7 || this->params->get_aggregation_method() == 8) {
@@ -244,24 +194,25 @@ void InputData::print_header() {
 	printf("%s - %s\n", m4, m5); fflush(NULL);
 
 	if (this->eval_file) {
-		fprintf(eval_file, "| %s / %s / %s %s", this->params->get_dataset_name(), this->params->get_dataset_track(), m1, m2);
-		fprintf(eval_file, "%s - %s\n", m4, m5); fflush(NULL);
+		fprintf(this->eval_file, "| %s / %s", m1, this->params->get_input_file());
+		fprintf(this->eval_file, "%s - %s\n", m4, m5); fflush(NULL);
 	}
 }
 
-/// Evaluate the output lists of each query
+
+/// Evaluate the aggregate lists that have been constructed for each query. This one must be called
+/// the aggregate function of each query.
 void InputData::evaluate() {
-	double precision_acc[MAX_LIST_ITEMS], recall_acc[MAX_LIST_ITEMS], F1_acc[MAX_LIST_ITEMS];
-	double dcg_acc[MAX_LIST_ITEMS], ndcg_acc[MAX_LIST_ITEMS];
+	rank_t max_pts = this->params->get_eval_points();
+	double precision_acc[max_pts], recall_acc[max_pts], F1_acc[max_pts], dcg_acc[max_pts], ndcg_acc[max_pts];
 	double sum_avep = 0.0, sum_aven = 0.0;
 	uint32_t m = 0;
 	rank_t i = 0, cutoff = 0;
-	char dash[151], lit[151]; dash[0] = 0; lit[0] = 0;
 
 	/// Initialize the retrieval effectiveness metrics
 	this->initialize_stats();
 
-	for (i = 0; i < MAX_LIST_ITEMS; i++) {
+	for (i = 0; i < max_pts; i++) {
 		precision_acc[i] = 0.0;
 		recall_acc[i] = 0.0;
 		F1_acc[i] = 0.0;
@@ -269,85 +220,32 @@ void InputData::evaluate() {
 		ndcg_acc[i] = 0.0;
 	}
 
-	/// Print the column headers of the results (according to RESULTS_TYPE)
-	if (RESULTS_TYPE == 1) {
-		printf("%s\n", PadStr(dash, 137, '-'));
-		if (eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); }
-
-		this->print_header();
-		strcpy(lit, "Topic");
-		printf("%s\n", PadStr(dash, 137, '-'));
-		printf("%s\n", PadStr(dash, 137, '-'));
-		if (this->eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); }
-
-		printf("| %s\t(Rel)\t|  AveP  |   P@5  |  P@10  |  P@15  |  P@20  |  P@30  |  P@100 |  P@200 |  P@500 | P@1000 | nDCG@10 | nDCG@20 |\n",
-			PadStr(lit, 10, ' '));
-
-		if (this->eval_file) {
-			fprintf(eval_file, "| %s\t(Rel)\t|  AveP  |   P@5  |  P@10  |  P@15  |  P@20  |  P@30  |  P@100 |  P@200 |  P@500 | P@1000 | nDCG@10 | nDCG@20 |\n",
-				PadStr(lit, 10, ' '));
-			fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); fflush(NULL);
+	/// Write the header row in the CSV evaluation file
+	fprintf(eval_file, "Query,AvgPrecision,");
+	for (rank_t i = 0; i < this->params->get_eval_points(); i++) { fprintf(eval_file, "P@%d,", i + 1); }
+	for (rank_t i = 0; i < this->params->get_eval_points(); i++) {
+		if (i < this->params->get_eval_points() - 1) {
+			fprintf(eval_file, "N@%d,", i + 1);
+		} else {
+			fprintf(eval_file, "N@%d", i + 1);
 		}
-
-		printf("%s\n", PadStr(dash, 137, '-')); fflush(NULL);
-		if (this->eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); fflush(NULL); }
-
-	} else if (RESULTS_TYPE == 2) {
-		printf("%s\n", PadStr(dash, 137, '-'));
-		if (eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); }
-
-		this->print_header();
-		strcpy(lit, "Topic");
-		printf("%s\n", PadStr(dash, 137, '-'));
-		printf("%s\n", PadStr(dash, 137, '-'));
-		if (this->eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); }
-
-		printf("| %s\t(Rel)\t| AvePr |  P@5  |  P@10 |  P@20 |  P@30 |  P@50 | P@100 | ANGCG |  N@5  |  N@10 |  N@20 |  N@30 |  N@50 | N@100 |\n",
-			PadStr(lit, 10, ' '));
-		printf("%s\n", PadStr(dash, 137, '-')); fflush(NULL);
-
-		if (this->eval_file) {
-			fprintf(eval_file, "| %s\t(Rel)\t| AvePr |  P@5  |  P@10 |  P@20 |  P@30 |  P@50 | P@100 | ANGCG |  N@5  |  N@10 |  N@20 |  N@30 |  N@50 | N@100 |\n",
-				PadStr(lit, 10, ' '));
-		}
-
-		printf("%s\n", PadStr(dash, 137, '-')); fflush(NULL);
-		if (this->eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); fflush(NULL); }
-
-	} else if (RESULTS_TYPE == 3) {
-		printf("%s\n", PadStr(dash, 153, '-'));
-		if (eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); }
-
-		this->print_header();
-		strcpy(lit, "Topic");
-		printf("%s\n", PadStr(dash, 153, '-'));
-		printf("%s\n", PadStr(dash, 153, '-'));
-		if (this->eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 137, '-')); }
-
-		printf("| %s\t(Rel)\t| AvePr |  P@1  |  P@2  |  P@4  |  P@5  |  P@6  |  P@8  |  P@10 | ANGCG |  N@1  |  N@2  |  N@4  |  N@5  |  N@6  |  N@8  |  N@10 |\n",
-			PadStr(lit, 10, ' '));
-		printf("%s\n", PadStr(dash, 153, '-')); fflush(NULL);
-
-		if (this->eval_file) {
-			fprintf(eval_file, "| %s\t(Rel)\t| AvePr |  P@1  |  P@2 |  P@4 |  P@5 |  P@6 |  P@8  |  P@10  | ANGCG |  N@1  |  N@2  |  N@4  |  N@5  |  N@6  |  N@8  |  N@10  |\n",
-				PadStr(lit, 10, ' '));
-		}
-
-		printf("%s\n", PadStr(dash, 153, '-')); fflush(NULL);
-		if (this->eval_file) { fprintf(eval_file, "%s\n", PadStr(dash, 153, '-')); fflush(NULL); }
 	}
+	fprintf(eval_file, "\n");
 
-	/// Start the evaluation
+	/// Evaluate each query
 	for (m = 0; m < this->num_queries; m++) {
-//		printf("Evaluating Query %d (%d items)\n", m + 1, this->queries[m]->get_num_items());
-		this->queries[m]->evaluate(this->eval_file);
+//		printf("Evaluating Query %d: %s (%d items)\n", m + 1,
+//				this->queries[m]->get_topic(), this->queries[m]->get_num_items());
 
-		if (this->queries[m]->get_num_items() > MAX_LIST_ITEMS) {
-			cutoff = MAX_LIST_ITEMS;
+		this->queries[m]->evaluate(this->params->get_eval_points(), this->eval_file);
+
+		if (this->queries[m]->get_num_items() > this->params->get_eval_points()) {
+			cutoff = this->params->get_eval_points();
 		} else {
 			cutoff = this->queries[m]->get_num_items();
 		}
 
+		/// Update the accumulators so that we can compute the mean values in the end
 		for (i = 0; i < cutoff; i++) {
 			precision_acc[i] += this->queries[m]->get_precision(i);
 			recall_acc[i] += this->queries[m]->get_recall(i);
@@ -362,10 +260,8 @@ void InputData::evaluate() {
 		this->avg_sprho += this->queries[m]->evaluate_experts_list();
 	}
 
-	if (RESULTS_TYPE == 1) { printf("%s\n", PadStr(dash, 137, '-')); } else
-	if (RESULTS_TYPE == 2) { printf("%s\n", PadStr(dash, 105, '-')); }
-
-	for (i = 0; i < MAX_LIST_ITEMS; i++) {
+	/// Compute the mean values
+	for (i = 0; i < max_pts; i++) {
 		this->mean_precision[i] = precision_acc[i] / (double) this->num_queries;
 		this->mean_recall[i] = recall_acc[i] / (double) this->num_queries;
 		this->mean_F1[i] = F1_acc[i] / (double) this->num_queries;
@@ -375,7 +271,23 @@ void InputData::evaluate() {
 	this->MAP = sum_avep / (double) this->num_queries;
 	this->MNDCG = sum_aven / (double) this->num_queries;
 	this->avg_sprho = this->avg_sprho / (double) this->num_queries;
+
+	/// Create a last row in the CSV evaluation file with the mean values
+	fprintf(eval_file, "MEAN,%7.6f,", this->MAP);
+	for (rank_t i = 0; i < this->params->get_eval_points(); i++) {
+		fprintf(eval_file, "%7.6f,", this->mean_precision[i]);
+	}
+
+	for (rank_t i = 0; i < this->params->get_eval_points(); i++) {
+		if (i < this->params->get_eval_points() - 1) {
+			fprintf(eval_file, "%7.6f,", this->mean_ndcg[i]);
+		} else {
+			fprintf(eval_file, "%7.6f", this->mean_ndcg[i]);
+		}
+	}
+	fprintf(eval_file, "\n");
 }
+
 
 /// Evaluate the input lists of each query
 void InputData::evaluate_input() {
@@ -384,28 +296,22 @@ void InputData::evaluate_input() {
 	/// Initialize the retrieval effectiveness metrics
 	this->initialize_stats();
 
-//	char dash[151], lit[151]; dash[0] = 0; lit[0] = 0;
-//	strcpy(lit, "Run - Topic");
-//	printf("%s\n", PadStr(dash, 145, '-'));
-//	printf("| %s |  AveP  |   P@5  |  P@10  |  P@15  |  P@20  |  P@30  |  P@100 |  P@200 |  P@500 | nDCG@10 | nDCG@20 |\n",
-//		PadStr(lit, 40, ' '));
-//	printf("%s\n", PadStr(dash, 145, '-'));
-
 	for (m = 0; m < this->num_queries; m++) {
 		this->queries[m]->evaluate_input();
 	}
 }
 
-/// Apply the rank aggregation method and construct the output lists of each Aggregator
+/// Apply the selected rank aggregation method and construct the output lists of each Aggregator
 void InputData::aggregate() {
+/*
 	printf("\nPerforming Aggregation...\nParameters ");
 	this->print_header();
 	printf("\n");
-
+*/
 	for (uint32_t m = 0; m < this->num_queries; m++) {
-		printf("Processing Query %d / %d... [ ", m + 1, this->num_queries); fflush(NULL);
+//		printf("Processing Query %d / %d... [ ", m + 1, this->num_queries); fflush(NULL);
 		this->queries[m]->aggregate(this->params);
-		printf(" OK ]\n"); fflush(NULL);
+//		printf(" OK ]\n"); fflush(NULL);
 	}
 }
 
@@ -432,4 +338,3 @@ double InputData::get_mean_ndcg(uint32_t i) { return this->mean_ndcg[i]; }
 double InputData::get_MAP() { return this->MAP; }
 double InputData::get_MNDCG() { return this->MNDCG; }
 double InputData::get_avg_sprho() { return this->avg_sprho; }
-FILE * InputData::get_eval_file() { return this->eval_file; }

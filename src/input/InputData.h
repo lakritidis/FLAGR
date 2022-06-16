@@ -8,9 +8,6 @@ class InputData {
 		uint32_t num_queries;
 		class Query ** queries;
 
-		uint32_t LetorNumVoters;
-		uint32_t LetorMaxLength;
-
 		/// Evaluation Metrics
 		double MAP;
 		double MNDCG;
@@ -24,13 +21,15 @@ class InputData {
 		FILE * eval_file;
 
 	private:
-		char * decompress_TREC_file(FILE *, char *);
-		char * read_TREC_file(FILE *, char *);
-		void process_TREC_lists(char *, uint32_t, char *);
-		void read_TREC_qrels();
+		char * read_file(FILE *, long *);
+		void get_TSV_queries(char *, uint32_t);
+		void process_TSV_lists(char *, uint32_t, char *);
+		void read_TSV_qrels();
+		void read_CSV_qrels();
 
-		void preprocess_LETOR_lists(char *, uint32_t);
-		void process_LETOR_lists(char *, uint32_t);
+		void preprocess_CSV(char *, uint32_t);
+		void construct_CSV_lists(char *, uint32_t);
+
 		void initialize_stats();
 
 	public:
