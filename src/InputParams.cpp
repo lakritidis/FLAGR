@@ -1,111 +1,175 @@
 #include "InputParams.h"
 
 /// Default Constructor
-InputParams::InputParams() {
-	this->base_path = NULL;
-	this->data_dir = NULL;
-	this->dataset_type = 0;
-	this->dataset_name = NULL;
-	this->dataset_track = NULL;
-	this->dataset_compressed = NULL;
+InputParams::InputParams() :
+		input_file(NULL),
+		rels_file(NULL),
+		output_file(NULL),
+		eval_file(NULL),
+		random_string(NULL),
+		aggregation_method(0),
+		correlation_method(0),
+		weights_normalization(0),
+		max_iterations(0),
+		max_list_items(0),
+		eval_points(0),
+		list_pruning(false),
+		convergence_precision(0.0),
+		alpha(0.0),
+		beta(0.0),
+		gamma(0.0),
+		delta1(0.0),
+		delta2(0.0),
+		c1(0.0),
+		c2(0.0),
+		pref_thr(0.0),
+		veto_thr(0.0),
+		conc_thr(0.0),
+		disc_thr(0.0) { }
 
-	this->aggregation_method = 0;
-	this->correlation_method = 0;
-	this->weights_normalization = 0;
-	this->max_iterations = 0;
-	this->iterations = 0;
-	this->max_list_items = 0;
-	this->list_pruning = false;
+/// Default Constructor
+InputParams::InputParams(struct PythonParams PyParams) :
+		input_file(NULL),
+		rels_file(NULL),
+		output_file(NULL),
+		eval_file(NULL),
+		random_string(NULL),
+		aggregation_method(PyParams.rank_aggregation_method),
+		correlation_method(PyParams.distance),
+		weights_normalization(PyParams.weight_normalization),
+		max_iterations(PyParams.max_iter),
+		max_list_items(0),
+		eval_points(PyParams.eval_points),
+		list_pruning(PyParams.prune),
+		convergence_precision(PyParams.tol),
+		alpha(PyParams.alpha),
+		beta(PyParams.beta),
+		gamma(PyParams.gamma),
+		delta1(PyParams.delta1),
+		delta2(PyParams.delta2),
+		c1(PyParams.c1),
+		c2(PyParams.c2),
+		pref_thr(PyParams.pref_thr),
+		veto_thr(PyParams.veto_thr),
+		conc_thr(PyParams.conc_thr),
+		disc_thr(PyParams.disc_thr) {
 
-	this->convergence_precision = 0.0;
-	this->alpha = 0.0;
-	this->beta = 0.0;
-	this->gamma = 0.0;
-	this->delta1 = 0.0;
-	this->delta2 = 0.0;
+			this->set_input_file(PyParams.input_file);
+			if (PyParams.rels_file) {
+				this->set_rels_file(PyParams.rels_file);
+			}
 
-	this->eval_file = NULL;
-	this->dvar_file = NULL;
-}
-
-/// Constructor
-InputParams::InputParams(char * bp, uint32_t dtype, char * dname, char * dtrack, bool dcomp,
-	uint32_t amet, uint32_t cmet, uint32_t wnrm, int32_t mit, int32_t it, uint32_t mli, bool lp,
-	score_t conv_p, score_t a, score_t b, score_t g, score_t d1, score_t d2)
-	{
-		this->set_base_path(bp);
-		this->dataset_type = dtype;
-		this->set_dataset_name(dname);
-		this->set_dataset_track(dtrack);
-		this->dataset_compressed = dcomp;
-
-		this->aggregation_method = amet;
-		this->correlation_method = cmet;
-		this->weights_normalization = wnrm;
-		this->max_iterations = mit;
-		this->iterations = it;
-		this->max_list_items = mli;
-		this->list_pruning = lp;
-
-		this->convergence_precision = conv_p;
-		this->alpha = a;
-		this->beta = b;
-		this->gamma = g;
-		this->delta1 = d1;
-		this->delta2 = d2;
-
-		this->build_filenames();
-}
+			this->set_random_string(PyParams.random_string);
+			this->set_output_files(PyParams.output_dir);
+		}
 
 /// Destructor
 InputParams::~InputParams() {
-	if (this->base_path) { delete [] this->base_path; }
-	if (this->data_dir) { delete [] this->data_dir; }
-	if (this->dataset_name) { delete [] this->dataset_name; }
-	if (this->dataset_track) { delete [] this->dataset_track; }
+	if (this->input_file) { delete [] this->input_file; }
+	if (this->rels_file) { delete [] this->rels_file; }
+	if (this->output_file) { delete [] this->output_file; }
 	if (this->eval_file) { delete [] this->eval_file; }
-	if (this->dvar_file) { delete [] this->dvar_file; }
+	if (this->random_string) { delete [] this->random_string; }
 }
 
-void InputParams::build_filenames() {
-	this->data_dir = new char[1024];
-	if (this->dataset_type == 1) {
-		sprintf(this->data_dir, "%s%s/%s_%s_Input/",
-			this->base_path, this->dataset_name, this->dataset_name, this->dataset_track);
+/// Display members
+void InputParams::display() {
+	printf("Dumping FLAGR execution parameters:\n");
+	if (input_file)    { printf("\tInput file:         %s\n", this->input_file); }
+				else   { printf("\tInput file:         [not set]\n"); }
 
-	} else if (this->dataset_type == 2) {
-		sprintf(this->data_dir, "%s%s-agg/%s", this->base_path, this->dataset_name, this->dataset_track);
+	if (rels_file)     { printf("\tQ-Rels file:        %s\n", this->rels_file); }
+				else   { printf("\tQ-Rels file:        [not set]\n"); }
+
+	if (output_file)   { printf("\tOutput file:        %s\n", this->output_file); }
+				else   { printf("\tOutput file:        [not set]\n"); }
+
+	if (eval_file)     { printf("\tEvaluation file:    %s\n", this->eval_file); }
+				else   { printf("\tEvaluation file:    [not set]\n"); }
+
+	if (random_string) { printf("\tRandom string:      %s\n", this->random_string); }
+				else   { printf("\tRandom string:      [not set]\n"); }
+
+	printf("\tAggregation method: %d\n", this->aggregation_method);
+	printf("\tDistance measure:   %d\n", this->correlation_method);
+	printf("\tVoter weights norm: %d\n", this->weights_normalization);
+	printf("\tMax iterations:     %d\n", this->max_iterations);
+	printf("\tMax list items:     %d\n", this->max_list_items);
+	printf("\tEvaluation points:  %d\n", this->eval_points);
+
+	printf("\nDumping FLAGR hyper-parameters:\n");
+	printf("\tList pruning:       %d\n", this->list_pruning);
+	printf("\tConvergence precis: %7.6f\n", this->convergence_precision);
+	printf("\talpha:              %4.3f\n", this->alpha);
+	printf("\tbeta:               %4.3f\n", this->beta);
+	printf("\tc_1:                %4.3f\n", this->c1);
+	printf("\tc_2:                %4.3f\n", this->c2);
+	printf("\tgamma:              %4.3f\n", this->gamma);
+	printf("\tdelta_1:            %4.3f\n", this->delta1);
+	printf("\tdelta_2:            %4.3f\n", this->delta2);
+	printf("\tPreference thresh:  %4.3f\n", this->pref_thr);
+	printf("\tVeto threshold:     %4.3f\n", this->veto_thr);
+	printf("\tConcordance thresh: %4.3f\n", this->conc_thr);
+	printf("\tDiscordance thresh: %4.3f\n", this->disc_thr);
+	printf("\n"); fflush(NULL);
+}
+
+/// Random String generator: it will be used for the output filename and the evaluation filename
+void InputParams::generate_random_string(size_t size) {
+
+    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJK0123456789";
+	this->random_string = new char[size + 1];
+
+    if (size) {
+        --size;
+        for (size_t n = 0; n < size; n++) {
+            int key = rand() % (int) (sizeof charset - 1);
+            this->random_string[n] = charset[key];
+        }
+        this->random_string[size] = '\0';
+    }
+}
+
+/// Prepare the output files (aggregation output and evaluation report)
+void InputParams::set_output_files(char * out_dir) {
+	if (!this->random_string) {
+		this->generate_random_string(16);
 	}
 
-	this->eval_file = new char[1024];
-	sprintf(this->eval_file, "/home/leo/Desktop/code/rankagg/results/eval_%d_%d_%s_%s.txt",
-		this->aggregation_method, this->correlation_method,
-		this->dataset_name, this->dataset_track);
+	this->output_file = new char[1024];
+	sprintf(this->output_file, "%s/out_%s.csv", out_dir, this->random_string);
 
-	this->dvar_file = new char[1024];
-	sprintf(this->dvar_file, "/home/leo/Desktop/code/rankagg/results/dvar_%d_%d_%s_%s.txt",
-		this->aggregation_method, this->correlation_method,
-		this->dataset_name, this->dataset_track);
+	if (this->rels_file) {
+		this->eval_file = new char[1024];
+		sprintf(this->eval_file, "%s/eval_%s.csv", out_dir, this->random_string);
+	}
+
+	FILE * fp = NULL;
+	fp = fopen(this->output_file, "w+");
+	if (fp) {
+		fprintf(fp, "Query,Voter,ItemID,Score\n");
+		fclose(fp);
+	}
+
+	fp = fopen(this->eval_file, "w+");
+	if (fp) { fclose(fp); }
 }
 
-/// Acessors
-char * InputParams::get_base_path() { return this->base_path; }
-char * InputParams::get_data_dir() { return this->data_dir; }
-uint32_t InputParams::get_dataset_type() { return this->dataset_type; }
-char * InputParams::get_dataset_name() { return this->dataset_name; }
-char * InputParams::get_dataset_track() { return this->dataset_track; }
-bool InputParams::get_dataset_compressed() { return this->dataset_compressed; }
+
+/// Accessors
+char * InputParams::get_input_file() { return this->input_file; }
+char * InputParams::get_rels_file() { return this->rels_file; }
+char * InputParams::get_output_file() { return this->output_file; }
+char * InputParams::get_eval_file() { return this->eval_file; }
+char * InputParams::get_random_string() { return this->random_string; }
 
 uint32_t InputParams::get_aggregation_method() { return this->aggregation_method; }
 uint32_t InputParams::get_correlation_method() { return this->correlation_method; }
 uint32_t InputParams::get_weights_normalization() { return this->weights_normalization; }
 int32_t InputParams::get_max_iterations() { return this->max_iterations; }
-int32_t InputParams::get_iterations() { return this->iterations; }
 uint32_t InputParams::get_max_list_items() { return this->max_list_items; }
+rank_t InputParams::get_eval_points() { return this->eval_points; }
 bool InputParams::get_list_pruning() { return this->list_pruning; }
-
-char * InputParams::get_eval_file() { return this->eval_file; }
-char * InputParams::get_dvar_file() { return this->dvar_file; }
 
 score_t InputParams::get_convergence_precision() { return this->convergence_precision; }
 score_t InputParams::get_alpha() { return this->alpha; }
@@ -113,50 +177,48 @@ score_t InputParams::get_beta() { return this->beta; }
 score_t InputParams::get_gamma() { return this->gamma; }
 score_t InputParams::get_delta1() { return this->delta1; }
 score_t InputParams::get_delta2() { return this->delta2; }
+score_t InputParams::get_c1() { return this->c1; }
+score_t InputParams::get_c2() { return this->c2; }
+score_t InputParams::get_pref_thr() { return this->pref_thr; }
+score_t InputParams::get_veto_thr() { return this->veto_thr; }
+score_t InputParams::get_conc_thr() { return this->conc_thr; }
+score_t InputParams::get_disc_thr() { return this->disc_thr; }
+
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////
 /// Mutators
-void InputParams::set_base_path(char * v) {
-	this->base_path = new char[strlen(v) + 1];
-	strcpy(this->base_path, v);
+void InputParams::set_input_file(char * v) {
+	this->input_file = new char[strlen(v) + 1];
+	strcpy(this->input_file, v);
 }
 
-void InputParams::set_data_dir(char * v) {
-	this->data_dir = new char[strlen(v) + 1];
-	strcpy(this->data_dir, v);
+void InputParams::set_rels_file(char * v) {
+	this->rels_file = new char[strlen(v) + 1];
+	strcpy(this->rels_file, v);
 }
 
-void InputParams::set_dataset_type(uint32_t v) { this->dataset_type = v; }
-
-void InputParams::set_dataset_name(char * v) {
-	this->dataset_name = new char[strlen(v) + 1];
-	strcpy(this->dataset_name, v);
+void InputParams::set_output_file(const char * v) {
+	this->output_file = new char[strlen(v) + 1];
+	strcpy(this->output_file, v);
 }
 
-void InputParams::set_dataset_track(char * v) {
-	this->dataset_track = new char[strlen(v) + 1];
-	strcpy(this->dataset_track, v);
+void InputParams::set_eval_file(const char * v) {
+	this->eval_file = new char[strlen(v) + 1];
+	strcpy(this->eval_file, v);
 }
 
-void InputParams::set_dataset_compressed(bool v) { this->dataset_compressed = v; }
+void InputParams::set_random_string(const char * v) {
+	this->random_string = new char[strlen(v) + 1];
+	strcpy(this->random_string, v);
+}
 
 void InputParams::set_aggregation_method(uint32_t v) { this->aggregation_method = v; }
 void InputParams::set_correlation_method(uint32_t v) { this->correlation_method = v; }
 void InputParams::set_weights_normalization(uint32_t v) { this->weights_normalization = v; }
 void InputParams::set_max_iterations(int32_t v) { this->max_iterations = v; }
-void InputParams::set_iterations(int32_t v) { this->iterations = v; }
 void InputParams::set_max_list_items(uint32_t v) { this->max_list_items = v; }
+void InputParams::set_eval_points(rank_t v) { this->eval_points = v; }
 void InputParams::set_list_pruning(bool v) { this->list_pruning = v; }
-
-void InputParams::set_eval_file(char * v) {
-	this->eval_file = new char[strlen(v) + 1];
-	strcpy(this->eval_file, v);
-}
-
-void InputParams::set_dvar_file(char * v) {
-	this->dvar_file = new char[strlen(v) + 1];
-	strcpy(this->dvar_file, v);
-}
 
 void InputParams::set_convergence_precision(score_t v) { this->convergence_precision = v; }
 void InputParams::set_alpha(score_t v) { this->alpha = v; }
@@ -164,3 +226,9 @@ void InputParams::set_beta(score_t v) { this->beta = v; }
 void InputParams::set_gamma(score_t v) { this->gamma = v; }
 void InputParams::set_delta1(score_t v) { this->delta1 = v; }
 void InputParams::set_delta2(score_t v) { this->delta2 = v; }
+void InputParams::set_c1(score_t v) { this->c1 = v; }
+void InputParams::set_c2(score_t v) { this->c2 = v; }
+void InputParams::set_pref_thr(score_t v) { this->pref_thr = v; }
+void InputParams::set_veto_thr(score_t v) { this->veto_thr = v; }
+void InputParams::set_conc_thr(score_t v) { this->conc_thr = v; }
+void InputParams::set_disc_thr(score_t v) { this->disc_thr = v; }

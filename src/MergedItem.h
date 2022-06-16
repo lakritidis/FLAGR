@@ -3,7 +3,7 @@
 
 class MergedItem : public InputItem {
 	private:
-		score_t score;
+		score_t final_score;
 		rank_t final_ranking;
 		uint32_t num_rankings;
 		uint32_t num_alloc_rankings;
@@ -14,19 +14,20 @@ class MergedItem : public InputItem {
 
 	public:
 		MergedItem();
+		MergedItem(class MergedItem *);
 		MergedItem(char *, rank_t, uint32_t, class InputList **);
 		~MergedItem();
 
-		void insert_ranking(class InputList *, rank_t);
+		void insert_ranking(class InputList *, rank_t, score_t);
 		void display();
 
 		/// Mutators
-		void set_score(score_t);
+		void set_final_score(score_t);
 		void set_final_ranking(rank_t);
 		void set_next(class MergedItem *);
 
 		/// Accessors
-		score_t get_score();
+		score_t get_final_score();
 		rank_t get_final_ranking();
 		uint32_t get_num_rankings();
 		uint32_t get_num_alloc_rankings();

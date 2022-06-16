@@ -1,11 +1,8 @@
 #include "MergedItemPair.h"
 
-/// Used in Preference Relations method of ESWA 2016
+/// Used in the Preference Relations method of [3]
 /// Default Constructor
-MergedItemPair::MergedItemPair() :
-	item1(NULL), item2(NULL), score(0.0) {
-
-}
+MergedItemPair::MergedItemPair() : item1(NULL), item2(NULL), score(0.0) { }
 
 /// Constructor 1
 MergedItemPair::MergedItemPair(class MergedItem * i1, class MergedItem * i2) :
@@ -13,11 +10,10 @@ MergedItemPair::MergedItemPair(class MergedItem * i1, class MergedItem * i2) :
 }
 
 /// Destructor
-MergedItemPair::~MergedItemPair() {
-}
+MergedItemPair::~MergedItemPair() { }
 
 
-/// Compute a-majority opinion
+/// Compute the a-majority opinion
 void MergedItemPair::compute_a_majority_opinion(score_t a, score_t b, uint32_t N) {
 	uint32_t r = 0, r1 = 0, r2 = 0;
 	uint32_t n0 = 0, n1 = 0;
@@ -35,7 +31,7 @@ void MergedItemPair::compute_a_majority_opinion(score_t a, score_t b, uint32_t N
 		}
 	}
 
-	/// Update the disagreement scores of each list according to Eq. 4.
+	/// Update the disagreement scores of each list according to Eq. 4 of [3].
 	for (r = 0; r < this->item1->get_num_alloc_rankings(); r++) {
 
 		r1 = this->item1->get_ranking(r)->get_rank();
@@ -88,7 +84,7 @@ void MergedItemPair::compute_a_majority_opinion_debug(score_t a, score_t b, uint
 		}
 	}
 
-	/// Update the disagreement scores of each list according to Eq. 4.
+	/// Update the disagreement scores of each list according to Eq. 4 of [3].
 	for (r = 0; r < this->item1->get_num_alloc_rankings(); r++) {
 		printf("\tChecking list %d:\n", r);
 
@@ -161,6 +157,7 @@ void MergedItemPair::compute_weight() {
 //	this->display(0); getchar();
 }
 
+/// Display the ItemPair
 void MergedItemPair::display(uint32_t t) {
 	if (t == 0) {
 		printf("Edge (%s, %s) Score = %2.3f\n", this->item1->get_code(), this->item2->get_code(), this->score);

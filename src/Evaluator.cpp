@@ -1,16 +1,15 @@
 #include "Evaluator.h"
 
-/// Constructor 1 : default
-Evaluator::Evaluator() {
-	this->relevs = new Rels(DATASET_NUM_QUERIES);
-	this->true_positives = 0;
-	this->average_precision = 0.0;
-	this->average_ndcg = 0.0;
-	this->precision = NULL;
-	this->recall = NULL;
-	this->dcg = NULL;
-	this->ndcg = NULL;
-}
+/// Default Constructor
+Evaluator::Evaluator() :
+		relevs (new Rels(1024)),
+		true_positives(0),
+		average_precision(0.0),
+		average_ndcg(0.0),
+		precision(NULL),
+		recall(NULL),
+		dcg(NULL),
+		ndcg(NULL) { }
 
 /// Destructor
 Evaluator::~Evaluator() {
@@ -23,8 +22,8 @@ Evaluator::~Evaluator() {
 }
 
 /// Insert a relevance judgement into the relevs lexicon
-void Evaluator::insert_relev(uint32_t i, char * r, uint32_t j) {
-	this->relevs->insert(i, r, j);
+void Evaluator::insert_relev(char * r, uint32_t j) {
+	this->relevs->insert(r, j);
 }
 
 
@@ -51,13 +50,13 @@ void Evaluator::clear() {
 }
 
 /// Evaluate a MergedList
-void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file) {
+void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE * eval_file) {
     rank_t num_items = lst->get_num_items();
     rank_t num_relevant_items = this->relevs->get_num_nodes();
 	uint32_t relevance = 0;
 	double qty = 0.0;
 
-//	this->relevs->display(tid); getchar();
+//	this->relevs->display(); getchar();
 
 	this->true_positives = 0;
 	this->average_precision = 0.0;
@@ -72,10 +71,9 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 
     for (rank_t i = 0; i < num_items; i++) {
 		class MergedItem * p = lst->get_item(i);
-
-//		printf("Checking %d - %s: ", i + 1, p->get_code()); fflush(NULL);
-		if (this->relevs->search(tid, p->get_code(), &relevance)) {
-			if (p->get_score() > 0) {
+//		printf("Checking %d - %s: \n", i + 1, p->get_code()); fflush(NULL);
+		if (this->relevs->search(p->get_code(), &relevance)) {
+			if (p->get_final_score() > 0 && relevance > 0) {
 				this->true_positives++;
 				this->average_precision += this->true_positives / (i + 1.0);
 			}
@@ -100,7 +98,7 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 		/// IdealDCG temp: needs to be sorted
 		ideal_dcg[i] = (double)relevance;
 
-		if (relevance > 0 && p->get_score() > 0) {
+		if (relevance > 0 && p->get_final_score() > 0) {
 			this->average_ndcg += this->dcg[i] / (i + 2.0);
 		}
 //		printf("Relevance: %d - P@%d=%5.3f - R@%d=%5.3f - DCG@%d=%5.3f\n",
@@ -134,116 +132,29 @@ void Evaluator::evaluate(uint32_t tid, class MergedList * lst, FILE * eval_file)
 	delete [] ideal_dcg;
 
 	char str[100];
-	sprintf(str, "Topic %d", tid);
+	sprintf(str, "Topic %s", qry);
 
-	if (RESULTS_TYPE == 1) {
-		printf("| %s (%d/%d)\t| %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f  | %5.4f  |\n",
-			PadStr(str, 10, ' '), this->true_positives, num_relevant_items,
-			this->average_precision,
-			num_items > 4 ? this->precision[4] : 0,
-			num_items > 9 ? this->precision[9] : 0,
-			num_items > 14 ? this->precision[14] : 0,
-			num_items > 19 ? this->precision[19] : 0,
-			num_items > 29 ? this->precision[29] : 0,
-			num_items > 99 ? this->precision[99] : 0,
-			num_items > 199 ? this->precision[199] : 0,
-			num_items > 499 ? this->precision[499] : 0,
-			num_items > 999 ? this->precision[999] : 0,
-			num_items > 9 ? this->ndcg[9] : 0,
-			num_items > 19 ? this->ndcg[19] : 0);
-
-		if (eval_file) {
-			fprintf(eval_file, "| %s (%d/%d)\t| %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f  | %5.4f  |\n",
-				PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
-				num_items > 4 ? this->precision[4] : 0,
-				num_items > 9 ? this->precision[9] : 0,
-				num_items > 14 ? this->precision[14] : 0,
-				num_items > 19 ? this->precision[19] : 0,
-				num_items > 29 ? this->precision[29] : 0,
-				num_items > 99 ? this->precision[99] : 0,
-				num_items > 199 ? this->precision[199] : 0,
-				num_items > 499 ? this->precision[499] : 0,
-				num_items > 999 ? this->precision[999] : 0,
-				num_items > 9 ? this->ndcg[9] : 0,
-				num_items > 19 ? this->ndcg[19] : 0);
+	/// Write to file
+	if (eval_file) {
+		/// CSV data
+		fprintf(eval_file, "%s,%7.6f,", str, this->average_precision);
+		for (rank_t i = 0; i < ev_pts; i++) {
+			fprintf(eval_file, "%7.6f,", num_items > i ? this->precision[i] : 0);
 		}
-	} else if (RESULTS_TYPE == 2) {
-		printf("| %s (%d/%d)\t| %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f |\n",
-			PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
-			num_items > 4 ? this->precision[4] : 0,
-			num_items > 9 ? this->precision[9] : 0,
-			num_items > 19 ? this->precision[19] : 0,
-			num_items > 29 ? this->precision[29] : 0,
-			num_items > 49 ? this->precision[49] : 0,
-			num_items > 99 ? this->precision[99] : 0,
-			this->average_ndcg,
-			num_items > 4 ? this->ndcg[4] : 0,
-			num_items > 9 ? this->ndcg[9] : 0,
-			num_items > 19 ? this->ndcg[19] : 0,
-			num_items > 29 ? this->ndcg[29] : 0,
-			num_items > 49 ? this->ndcg[49] : 0,
-			num_items > 99 ? this->ndcg[99] : 0);
 
-		if (eval_file) {
-			fprintf(eval_file, "| %s (%d/%d)\t| %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f |\n",
-				PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
-				num_items > 4 ? this->precision[4] : 0,
-				num_items > 9 ? this->precision[9] : 0,
-				num_items > 19 ? this->precision[19] : 0,
-				num_items > 29 ? this->precision[29] : 0,
-				num_items > 49 ? this->precision[49] : 0,
-				num_items > 99 ? this->precision[99] : 0,
-				this->average_ndcg,
-				num_items > 4 ? this->ndcg[4] : 0,
-				num_items > 9 ? this->ndcg[9] : 0,
-				num_items > 19 ? this->ndcg[19] : 0,
-				num_items > 29 ? this->ndcg[29] : 0,
-				num_items > 49 ? this->ndcg[49] : 0,
-				num_items > 99 ? this->ndcg[99] : 0);
+		for (rank_t i = 0; i < ev_pts; i++) {
+			if (i < ev_pts - 1) {
+				fprintf(eval_file, "%7.6f,", num_items > i ? this->ndcg[i] : 0);
+			} else {
+				fprintf(eval_file, "%7.6f", num_items > i ? this->ndcg[i] : 0);
+			}
 		}
-	} else if (RESULTS_TYPE == 3) {
-		printf("| %s (%d/%d)\t| %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f |\n",
-			PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
-			num_items > 0 ? this->precision[0] : 0,
-			num_items > 1 ? this->precision[1] : 0,
-			num_items > 3 ? this->precision[3] : 0,
-			num_items > 4 ? this->precision[4] : 0,
-			num_items > 5 ? this->precision[5] : 0,
-			num_items > 7 ? this->precision[7] : 0,
-			num_items > 9 ? this->precision[9] : 0,
-			this->average_ndcg,
-			num_items > 0 ? this->ndcg[0] : 0,
-			num_items > 1 ? this->ndcg[1] : 0,
-			num_items > 3 ? this->ndcg[3] : 0,
-			num_items > 4 ? this->ndcg[4] : 0,
-			num_items > 5 ? this->ndcg[5] : 0,
-			num_items > 7 ? this->ndcg[7] : 0,
-			num_items > 9 ? this->ndcg[9] : 0);
-
-		if (eval_file) {
-			fprintf(eval_file, "| %s (%d/%d)\t| %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f | %4.3f |\n",
-				PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
-				num_items > 0 ? this->precision[0] : 0,
-				num_items > 1 ? this->precision[1] : 0,
-				num_items > 3 ? this->precision[3] : 0,
-				num_items > 4 ? this->precision[4] : 0,
-				num_items > 5 ? this->precision[5] : 0,
-				num_items > 7 ? this->precision[7] : 0,
-				num_items > 9 ? this->precision[9] : 0,
-				this->average_ndcg,
-				num_items > 0 ? this->ndcg[0] : 0,
-				num_items > 1 ? this->ndcg[1] : 0,
-				num_items > 3 ? this->ndcg[3] : 0,
-				num_items > 4 ? this->ndcg[4] : 0,
-				num_items > 5 ? this->ndcg[5] : 0,
-				num_items > 7 ? this->ndcg[7] : 0,
-				num_items > 9 ? this->ndcg[9] : 0);
-		}
+		fprintf(eval_file, "\n");
 	}
 }
 
 /// Evaluate an InputList
-double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
+double Evaluator::evaluate_input(class InputList * lst) {
     rank_t num_items = lst->get_num_items();
     rank_t num_relevant_items = this->relevs->get_num_nodes();
 	uint32_t relevance = 0;
@@ -267,7 +178,7 @@ double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
 //			printf("Checking %d - %s: ", i + 1, p->get_code()); fflush(NULL);
 //			getchar();
 //		}
-		if (this->relevs->search(tid, p->get_code(), &relevance)) {
+		if (this->relevs->search(p->get_code(), &relevance)) {
 			this->true_positives++;
 			this->average_precision += this->true_positives / (i + 1.0);
 //			printf(" * (%d) == METRICS : ", relevance);
@@ -323,9 +234,10 @@ double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
 
 	delete [] ideal_dcg;
 
-	char str[100];
-	sprintf(str, "%s - Topic %d", lst->get_voter()->get_name(), tid);
 /*
+	char str[100];
+//	sprintf(str, "%s - Topic %d", lst->get_voter()->get_name(), tid);
+
 	if (RESULTS_TYPE == 1) {
 		printf("| %s (%d/%d)\t| %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f | %5.4f  | %5.4f  |\n",
 			PadStr(str, 10, ' '), this->true_positives, num_relevant_items, this->average_precision,
@@ -371,8 +283,8 @@ double Evaluator::evaluate_input(uint32_t tid, class InputList * lst) {
 	return this->average_ndcg;
 }
 
-void Evaluator::display_relevs(uint32_t q) {
-	this->relevs->display(q);
+void Evaluator::display_relevs() {
+	this->relevs->display();
 }
 
 /// Accessors

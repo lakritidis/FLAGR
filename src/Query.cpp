@@ -2,16 +2,16 @@
 
 /// Constructor 1:
 /// If sw == Initialize the evaluator by using the relevance judgments
-Query::Query(uint32_t sw) {
-	this->agg = new Aggregator();
-	if (sw == 1) {
-		this->eval = new Evaluator();
-	} else {
-		this->eval = NULL;
-	}
-	this->topic = NULL;
-	this->real_experts_list = NULL;
-	this->computed_experts_list = NULL;
+Query::Query(uint32_t sw) :
+		topic(NULL),
+		agg(new Aggregator()),
+		eval(NULL),
+		real_experts_list(NULL),
+		computed_experts_list(NULL) {
+
+			if (sw == 1) {
+				this->eval = new Evaluator();
+			}
 }
 
 /// Destructor
@@ -21,11 +21,28 @@ Query::~Query() {
 			if (this->real_experts_list[i]) { delete this->real_experts_list[i]; }
 		}
 		delete [] this->real_experts_list;
+		this->real_experts_list = NULL;
 	}
 
-	if (this->agg) { delete this->agg; }
-	if (this->eval) { delete this->eval; }
-	if (this->topic) { delete [] this->topic; }
+	if (this->computed_experts_list) {
+		delete [] this->computed_experts_list;
+		this->computed_experts_list = NULL;
+	}
+
+	if (this->agg) {
+		delete this->agg;
+		this->agg = NULL;
+	}
+
+	if (this->eval) {
+		delete this->eval;
+		this->eval = NULL;
+	}
+
+	if (this->topic) {
+		delete [] this->topic;
+		this->topic = NULL;
+	}
 }
 
 /// Create a new input list for an aggregator
@@ -35,7 +52,7 @@ class InputList * Query::create_list(char * v, double w) {
 
 /// Apply the rank aggregation method and construct the final output list
 void Query::aggregate(class InputParams * params) {
-	this->computed_experts_list = this->agg->aggregate(params);
+	this->computed_experts_list = this->agg->aggregate(this->topic, params);
 }
 
 /// Destroy the aggregate list
@@ -49,13 +66,13 @@ void Query::destroy_output_list() {
 }
 
 /// Apply the rank aggregation method and construct the final output list
-void Query::insert_relev(uint32_t i, char * v, uint32_t j) {
-	this->eval->insert_relev(i, v, j);
+void Query::insert_relev(char * v, uint32_t j) {
+	this->eval->insert_relev(v, j);
 }
 
 /// Evaluate the output list of the query by using the input relevance judgments
-void Query::evaluate(FILE * e_file) {
-	this->eval->evaluate(this->topic_id, this->agg->get_output_list(), e_file);
+void Query::evaluate(rank_t ev_pts, FILE * e_file) {
+	this->eval->evaluate(ev_pts, this->topic, this->agg->get_output_list(), e_file);
 }
 
 double Query::evaluate_experts_list() {
@@ -99,7 +116,7 @@ void Query::evaluate_input() {
 	for (i = 0; i < num_lists; i++) {
 		inlist = this->agg->get_input_list(i);
 
-		voter_map = this->eval->evaluate_input(this->topic_id, inlist);
+		voter_map = this->eval->evaluate_input(inlist);
 
 		this->real_experts_list[i] = new Voter(inlist->get_voter()->get_name(), voter_map);
 	}
@@ -114,19 +131,19 @@ void Query::init_weights() {
 
 /// Display the query properties and input lists
 void Query::display() {
-	printf("Displaying Data for Query %d: %s\n", this->topic_id, this->topic);
+	printf("Displaying Data for Query: %s\n", this->topic);
 	this->agg->display();
 }
 
 /// Display the query properties and input lists
 void Query::display_relevs() {
-	printf("Displaying Rels for Query %d: %s\n", this->topic_id, this->topic);
-	this->eval->display_relevs(this->topic_id);
+	printf("Displaying Rels for Query: %s\n", this->topic);
+	this->eval->display_relevs();
 }
 
 /// Accessors
 class InputList * Query::get_input_list(uint32_t i) { return this->agg->get_input_list(i); }
-uint32_t Query::get_topic_id() { return this->topic_id; }
+char * Query::get_topic() { return this->topic; }
 uint32_t Query::get_num_relevs() { return this->eval->get_num_nodes(); }
 uint32_t Query::get_num_items() { return this->agg->get_num_items(); }
 uint32_t Query::get_num_input_lists() { return this->agg->get_num_lists(); }
@@ -139,4 +156,7 @@ double Query::get_dcg(uint32_t i) { return this->eval->get_dcg(i); }
 double Query::get_ndcg(uint32_t i) { return this->eval->get_ndcg(i); }
 
 /// Mutators
-void Query::set_topic_id(uint32_t v) { this->topic_id = v; }
+void Query::set_topic(char * v) {
+	this->topic = new char[strlen(v) + 1];
+	strcpy(this->topic, v);
+}

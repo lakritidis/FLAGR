@@ -1,23 +1,68 @@
 #ifndef INPUTPARAMS_H
 #define INPUTPARAMS_H
 
-/// DATASET TYPES (uint32_t dataset_type;)
-///  1:  TREC-style (WebAdhoc)
-///  2:  LETOR-style (MQ2007-agg, MQ2008-agg)
+/// Python parameters are passed via this PythonParams struct
+struct PythonParams {
+	char * input_file = NULL;
+	char * rels_file = NULL;
+	char * random_string = NULL;
+	char * output_dir = NULL;
+
+	int eval_points = 0;
+
+	int rank_aggregation_method = 0;
+	int weight_normalization = 0;
+	int distance = 0;
+
+	float tol = 0.0;
+	int max_iter = 0;
+	bool prune = false;
+
+	score_t pref_thr = 0.0;
+	score_t veto_thr = 0.0;
+	score_t conc_thr = 0.0;
+	score_t disc_thr = 0.0;
+
+	score_t alpha = 0.0;
+	score_t beta = 0.0;
+	score_t gamma = 0.0;
+	score_t delta1 = 0.0;
+	score_t delta2 = 0.0;
+	score_t c1 = 0.0;
+	score_t c2 = 0.0;
+};
+
 
 /// RANK AGGREGATION METHODS (uint32_t aggregation_method)
-///  1:  Borda Count
-///  2:  Condorcet Method
-///  3:  Outranking Approach (SIGIR 2007)
-///  4:  Rank Position
-///  5.  DIBRA @ Borda Count  (ESWA 2022)
-///  6:  DIBRA @ Condorcet Method (ESWA 2022)
-///  7:  DIBRA @ Outranking Approach (ESWA 2022)
-///  8:  DIBRA @ Rank Position (ESWA 2022)
-///  9:  Preference Relations (ESWA 2016)
-/// 10:  Agglomerative (KBS 2018)
+///  100:   CombSUM with Borda normalization			[1]
+///  101:   CombSUM with Rank normalization				[1]
+///  102:   CombSUM with Score normalization			[1]
+///  103:   CombSUM with Z-Score normalization			[1]
+///  110:   CombMNZ with Borda normalization			[1]
+///  111:   CombMNZ with Rank normalization				[1]
+///  112:   CombMNZ with Score normalization			[1]
+///  113:   CombMNZ with Z-Score normalization			[1]
+///  200:   Condorcet Winners Method
+///  300:   Outranking Approach							[2]
+///  5100.  DIBRA @ CombSUM with Borda Normalization	[5]
+///  5101.  DIBRA @ CombSUM with Rank Normalization
+///  5102.  DIBRA @ CombSUM with Score Normalization
+///  5103.  DIBRA @ CombSUM with Z-Score Normalization
+///  5110.  DIBRA @ CombMNZ with Borda Normalization
+///  5111.  DIBRA @ CombMNZ with Rank Normalization
+///  5112.  DIBRA @ CombMNZ with Score Normalization
+///  5113.  DIBRA @ CombMNZ with Z-Score Normalization
+///  5200.  DIBRA @ Condorcet Winners					[5]
+///  5300.  DIBRA @ Outranking Approach					[5]
+///  600.   Preference Relations Method					[3]
+///  700.   Agglomerative Aggregation					[4]
+///  801.   Markov Chains 1								[6]
+///  802.   Markov Chains 2								[6]
+///  803.   Markov Chains 3								[6]
+///  804.   Markov Chains 4								[6]
 
-/// LIST CORRELATION MEASURES (uint32_t correlation_method)
+
+/// LIST CORRELATION/DISTANCE MEASURES (uint32_t correlation_method)
 ///  1:  Spearman's Rho
 ///  2:  Scaled Footrule Distance
 ///  3:  Cosine Similarity
@@ -32,19 +77,18 @@
 
 class InputParams {
 	private:
-		char * base_path;
-		char * data_dir;
-		uint32_t dataset_type;
-		char * dataset_name;
-		char * dataset_track;
-		bool dataset_compressed;
+		char * input_file;
+		char * rels_file;
+		char * output_file;
+		char * eval_file;
+		char * random_string;
 
 		uint32_t aggregation_method;
 		uint32_t correlation_method;
 		uint32_t weights_normalization;
 		int32_t max_iterations;
-		int32_t iterations;
 		uint32_t max_list_items;
+		rank_t eval_points;
 		bool list_pruning;
 
 		score_t convergence_precision;
@@ -53,27 +97,30 @@ class InputParams {
 		score_t gamma;
 		score_t delta1;
 		score_t delta2;
+		score_t c1;
+		score_t c2;
+		score_t pref_thr;
+		score_t veto_thr;
+		score_t conc_thr;
+		score_t disc_thr;
 
-		char * eval_file;
-		char * dvar_file;
+	private:
+		void generate_random_string(size_t);
 
 	public:
 		InputParams();
-		InputParams(char * bp, uint32_t dtype, char * dname, char * dtrack, bool dcomp,
-			uint32_t amet, uint32_t cmet, uint32_t wnrm, int32_t mit, int32_t it, uint32_t mli,
-			bool lp, score_t conv_p, score_t a, score_t b, score_t g, score_t d1, score_t d2);
-
+		InputParams(struct PythonParams);
 		~InputParams();
 
-		void build_filenames();
+		void set_output_files(char *);
+		void display();
 
-		/// Acessors
-		char * get_base_path();
-		char * get_data_dir();
-		uint32_t get_dataset_type();
-		char * get_dataset_name();
-		char * get_dataset_track();
-		bool get_dataset_compressed();
+		/// Accessors
+		char * get_input_file();
+		char * get_rels_file();
+		char * get_output_file();
+		char * get_eval_file();
+		char * get_random_string();
 
 		uint32_t get_aggregation_method();
 		uint32_t get_correlation_method();
@@ -81,10 +128,8 @@ class InputParams {
 		int32_t get_max_iterations();
 		int32_t get_iterations();
 		uint32_t get_max_list_items();
+		rank_t get_eval_points();
 		bool get_list_pruning();
-
-		char * get_eval_file();
-		char * get_dvar_file();
 
 		score_t get_convergence_precision();
 		score_t get_alpha();
@@ -92,14 +137,19 @@ class InputParams {
 		score_t get_gamma();
 		score_t get_delta1();
 		score_t get_delta2();
+		score_t get_c1();
+		score_t get_c2();
+		score_t get_pref_thr();
+		score_t get_veto_thr();
+		score_t get_conc_thr();
+		score_t get_disc_thr();
 
 		/// Mutators
-		void set_base_path(char *);
-		void set_data_dir(char *);
-		void set_dataset_type(uint32_t);
-		void set_dataset_name(char *);
-		void set_dataset_track(char *);
-		void set_dataset_compressed(bool);
+		void set_input_file(char *);
+		void set_rels_file(char *);
+		void set_output_file(const char *);
+		void set_eval_file(const char *);
+		void set_random_string(const char *);
 
 		void set_aggregation_method(uint32_t);
 		void set_correlation_method(uint32_t);
@@ -107,10 +157,8 @@ class InputParams {
 		void set_max_iterations(int32_t);
 		void set_iterations(int32_t);
 		void set_max_list_items(uint32_t);
+		void set_eval_points(rank_t);
 		void set_list_pruning(bool);
-
-		void set_eval_file(char *);
-		void set_dvar_file(char *);
 
 		void set_convergence_precision(score_t);
 		void set_alpha(score_t);
@@ -118,6 +166,12 @@ class InputParams {
 		void set_gamma(score_t);
 		void set_delta1(score_t);
 		void set_delta2(score_t);
+		void set_c1(score_t);
+		void set_c2(score_t);
+		void set_pref_thr(score_t);
+		void set_veto_thr(score_t);
+		void set_conc_thr(score_t);
+		void set_disc_thr(score_t);
 };
 
 #endif // INPUTPARAMS_H

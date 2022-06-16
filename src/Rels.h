@@ -14,16 +14,16 @@ class Rels {
 		uint32_t num_chains; /// The number of non-empty chains.
 
 	private:
-		uint32_t KazLibHash(char *);
+		uint32_t djb2(char *);
 
 	public:
 		Rels();
 		Rels(uint32_t);
 		~Rels();
 
-		void display(uint32_t);
-		void insert(uint32_t, char *, uint32_t);
-		bool search(uint32_t, char *, uint32_t *);
+		void display();
+		void insert(char *, uint32_t);
+		bool search(char *, uint32_t *);
 
 		uint32_t get_num_nodes();
 };

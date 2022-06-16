@@ -5,22 +5,22 @@
 class Voter {
 	private:
 		char * name;
-		double weight;
+		score_t weight;
 
 	public:
 		Voter();
-		Voter(char *, double);
+		Voter(char *, score_t);
 		~Voter();
 
 		void display();
 
 		/// Mutators
 		void set_name(char *);
-		void set_weight(double);
+		void set_weight(score_t);
 
 		/// Accessors
 		char * get_name();
-		double get_weight();
+		score_t get_weight();
 };
 
 #endif // VOTER_H

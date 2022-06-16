@@ -4,10 +4,9 @@
 
 class Query {
 	private:
-		uint32_t topic_id;
-		char * topic;
-        class Aggregator * agg;
-        class Evaluator * eval;
+		char * topic; 				/// Query String
+        class Aggregator * agg;		/// Aggregator object: this one performs rank aggregation
+        class Evaluator * eval;		/// Evaluator object: this one performs evaluation
 
         class Voter ** real_experts_list;
         class Voter ** computed_experts_list;
@@ -28,10 +27,10 @@ class Query {
 		class InputList * create_list(char *, double);
 		void aggregate(class InputParams * params);
 
-		void insert_relev(uint32_t, char *, uint32_t);
+		void insert_relev(char *, uint32_t);
 		void display();
 		void display_relevs();
-		void evaluate(FILE *);
+		void evaluate(rank_t, FILE *);
 		void evaluate_input();
 		void destroy_output_list();
 		double evaluate_experts_list();
@@ -42,7 +41,7 @@ class Query {
 		uint32_t get_num_items();
 		uint32_t get_num_input_lists();
 
-		uint32_t get_topic_id();
+		char * get_topic();
 		double get_average_precision();
 		double get_average_ndcg();
 		double get_precision(uint32_t);
@@ -54,7 +53,7 @@ class Query {
 		class InputList * get_input_list(uint32_t);
 
 		/// Mutators
-		void set_topic_id(uint32_t);
+		void set_topic(char *);
 };
 
 #endif // QUERY_H

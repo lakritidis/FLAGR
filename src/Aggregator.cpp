@@ -1,12 +1,11 @@
 #include "Aggregator.h"
 
-/// Constructor
-Aggregator::Aggregator() {
-	this->num_lists = 0;
-	this->num_alloc_lists = 4;
-	this->input_lists = (class InputList **)malloc(this->num_alloc_lists * sizeof(class InputList *));
-	this->output_list = NULL;
-}
+/// Default Constructor
+Aggregator::Aggregator() :
+		num_lists(0),
+		num_alloc_lists(4),
+		input_lists((class InputList **)malloc(this->num_alloc_lists * sizeof(class InputList *))),
+		output_list(NULL) { }
 
 /// Destructor
 Aggregator::~Aggregator() {
@@ -70,51 +69,70 @@ void Aggregator::destroy_output_list() {
 }
 
 /// Apply the rank aggregation method and construct the final output list
-class Voter ** Aggregator::aggregate(class InputParams * params) {
+class Voter ** Aggregator::aggregate(char * topic, class InputParams * params) {
 
 	class Voter ** voters_list = NULL;
+	uint32_t ram = params->get_aggregation_method();
+
+	class SimpleScoreStats s;
+	s.set_min_val(0.0);
+	s.set_max_val(1.0);
+	s.set_mean_val(0.0);
+	s.set_std_val(1.0);
 
 	/// Apply the aggregation method of the argument
-	/// 1. Borda Count
-	if (params->get_aggregation_method() == 1) {
+	/// 10X. CombSUM [1]
+	if (ram >= 100 && ram <= 109) {
 		this->merge_input_lists();
-		this->output_list->BordaCount(0.0, 1.0, 0.0, 1.0, params);
+		this->output_list->CombSUM(this->input_lists, &s, params);
 
-	/// 2. Condorcet Method
-	} else if (params->get_aggregation_method() == 2) {
+	/// 11X. CombMNZ [1]
+	} else if (ram >= 110 && ram <= 119) {
 		this->merge_input_lists();
-		this->output_list->CondorcetMethod(0.0, 1.0, 0.0, 1.0, params);
+		this->output_list->CombMNZ(this->input_lists, &s, params);
 
-	/// 3. The outranking approach of Vanderpooten et al., (SIGIR 2007)
-	} else if (params->get_aggregation_method() == 3) {
+	/// 200. Condorcet Winners Method
+	} else if (ram == 200) {
 		this->merge_input_lists();
-		this->output_list->Outranking(0.0, 1.0, 0.0, 1.0, params);
+		this->output_list->CondorcetMethod(this->input_lists, &s, params);
 
-	/// 4. Rank Position
-	} else if (params->get_aggregation_method() == 4) {
+	/// 300. The outranking approach of [2]
+	} else if (ram == 300) {
 		this->merge_input_lists();
-		this->output_list->RankPosition(0.0, 1.0, 0.0, 1.0, params);
+		this->output_list->Outranking(this->input_lists, &s, params);
 
-	/// 5-8. The DIBRA method of Akritidis et al. (Web Intelligence 2019/ESWA 2022)
-	} else if (params->get_aggregation_method() == 5 || params->get_aggregation_method() == 6 ||
-				params->get_aggregation_method() == 7 || params->get_aggregation_method() == 8) {
-
+	/// 5XXX. The DIBRA method of [5]
+	} else if (ram >= 5100 && ram <= 5999) {
 		this->merge_input_lists();
-		voters_list = this->output_list->DIBRA(this->input_lists, params);
+		voters_list = this->output_list->DIBRA(this->input_lists, &s, params);
 
-	/// 9. The preference relations method of Desarkar et al. (ESWA 2016)
-	} else if (params->get_aggregation_method() == 9) {
+	/// 600. The preference relations method of [3]
+	} else if (ram == 600) {
 		this->merge_input_lists();
-		this->output_list->PrefRel(this->input_lists, params);
+		this->output_list->PrefRel(this->input_lists, &s, params);
 
-	/// 10. The weighted agglomerative algorithm of Chatterjee et al. (Knowledge-Based Systems 2018)
-	} else if (params->get_aggregation_method() == 10) {
-		this->output_list = new MergedList(1024, this->num_lists);
-		this->output_list->Agglomerative(this->input_lists, params);
+	/// 700. The weighted agglomerative algorithm of [4]
+	} else if (ram == 700) {
+		class MergedList * temp = new MergedList(1024, this->num_lists);
+		this->output_list = temp->Agglomerative(this->input_lists, &s, params);
+		delete temp;
+
+	/// 804. The fourth Markov Chains method of [6] (MC4)
+	} else if (ram == 801 || ram == 802 || ram == 803) {
+		this->merge_input_lists();
+		this->output_list->MC(this->input_lists, &s, params);
+
+
+	/// 804. The fourth Markov Chains method of [6] (MC4)
+	} else if (ram == 804) {
+		this->merge_input_lists();
+		this->output_list->MC4(this->input_lists, &s, params);
+
 	}
 
-
+	this->output_list->write_to_CSV(topic, params);
 //	this->output_list->display_list(); getchar();
+
 	return voters_list;
 }
 

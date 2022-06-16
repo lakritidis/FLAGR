@@ -1,27 +1,66 @@
 #include "MergedList.h"
 
-#include "ram/BordaCount.cpp"
+#include "ram/CombSUM.cpp"
+#include "ram/CombMNZ.cpp"
 #include "ram/CondorcetMethod.cpp"
 #include "ram/OutrankingApproach.cpp"
-#include "ram/RankPosition.cpp"
 #include "ram/DIBRA.cpp"
 #include "ram/PrefRel.cpp"
 #include "ram/Agglomerative.cpp"
+#include "ram/MC123.cpp"
+#include "ram/MC4.cpp"
+
 
 /// Constructor 1: default
-MergedList::MergedList() {
-	this->num_input_lists = 0;
-	this->hash_table = NULL;
-	this->num_nodes = 0;
-	this->num_chains = 0;
-	this->num_slots = 0;
-	this->mask = 0;
-	this->item_list = NULL;
-}
+MergedList::MergedList() :
+		num_input_lists(0),
+		hash_table(NULL),
+		item_list(NULL),
+		mask(0),
+		num_slots(0),
+		num_nodes(0),
+		num_chains(0),
+		weight(0.0),
+		log10s{0.0} { }
 
 /// Constructor 2: overloaded
-MergedList::MergedList(uint32_t size, uint32_t n) {
-	this->num_input_lists = n;
+MergedList::MergedList(uint32_t size, uint32_t n) :
+		num_input_lists(n),
+		hash_table(new MergedItem * [size]),
+		item_list(NULL),
+		mask(size - 1),
+		num_slots(size),
+		num_nodes(0),
+		num_chains(0),
+		weight(0.0),
+		log10s{0.0} {
+
+			for (uint32_t i = 0; i < size; i++) {
+				this->hash_table[i] = NULL;
+			}
+
+			this->log10s[0] = 0;
+			for (uint32_t i = 1; i < 100000; i++) {
+				this->log10s[i] = log10( (double)i );
+			}
+}
+
+/// Constructor 3: overloaded - Create an aggregate list from an input list.
+/// Used in Agglomerative Aggregation algorithm of [4]
+MergedList::MergedList(class InputList ** inlists, uint32_t nlists, uint32_t m) {
+	uint32_t size = 1024;
+	class InputItem * elem = NULL;
+	rank_t nitems = inlists[m]->get_num_items();
+
+	score_t score = 0;
+
+	this->weight = 1.0;   /// How are the list weights initialized?
+	this->num_input_lists = nlists;
+	this->num_nodes = 0;
+	this->num_chains = 0;
+	this->num_slots = size;
+	this->mask = size - 1;
+	this->item_list = NULL;
 
 	this->hash_table = new MergedItem * [size];
 
@@ -29,15 +68,28 @@ MergedList::MergedList(uint32_t size, uint32_t n) {
 		this->hash_table[i] = NULL;
 	}
 
+//	printf("\ncreating list %d...\n", m);fflush((NULL));
+	/// Create a tem
+	for (rank_t i = 0; i < inlists[m]->get_num_items(); i++) {
+		elem = inlists[m]->get_item(i);
+
+		/// Chatterjee et al. 2018, Eq. 7
+		score = 0.5 * (int32_t)(nitems * nitems - 2 * nitems * (elem->get_rank() - 1) - nitems);
+
+//		printf("\tinserting item %d : %s (rank %d, score %+5.2f)...\n", i, elem->get_code(),
+//				elem->get_rank(), score); fflush((NULL));
+
+		this->insert(elem, m, inlists);
+		this->update_weight(elem->get_code(), score);
+	}
+
 	this->log10s[0] = 0;
 	for (uint32_t i = 1; i < 100000; i++) {
 		this->log10s[i] = log10( (double)i );
 	}
-	this->num_nodes = 0;
-	this->num_chains = 0;
-	this->num_slots = size;
-	this->mask = size - 1;
-	this->item_list = NULL;
+
+	this->convert_to_array();
+	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
 }
 
 /// Destructor
@@ -48,7 +100,7 @@ MergedList::~MergedList() {
 /// Insert an element into the hash table
 void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 	/// Find the hash value of the input term
-	uint32_t HashValue = KazLibHash(n->get_code()) & this->mask;
+	uint32_t HashValue = this->djb2(n->get_code()) & this->mask;
 
 	/// Now search in the hash table to check whether this term exists or not
 	if (this->hash_table[HashValue] != NULL) {
@@ -58,7 +110,7 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 		for (q = this->hash_table[HashValue]; q != NULL; q = q->get_next()) {
 			if (strcmp(q->get_code(), n->get_code()) == 0) {
 
-				q->insert_ranking( l[x], n->get_rank() );
+				q->insert_ranking( l[x], n->get_rank(), n->get_inscore() );
 
 				return; /// Return and exit
 			}
@@ -71,7 +123,7 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 
 	/// Create a new record and re-assign the linked list's head
 	class MergedItem * record = new MergedItem(n->get_code(), n->get_rank(), this->num_input_lists, l);
-	record->insert_ranking(l[x], n->get_rank());
+	record->insert_ranking( l[x], n->get_rank(), n->get_inscore() );
 
 	/// Reassign the chain's head
 	record->set_next(this->hash_table[HashValue]);
@@ -81,7 +133,7 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 /// Find an element into the hash table and update its weight
 void MergedList::update_weight(char * code, score_t w) {
 	/// Find the hash value of the input term
-	uint32_t HashValue = KazLibHash(code) & this->mask;
+	uint32_t HashValue = this->djb2(code) & this->mask;
 
 	/// Now search in the hash table to check whether this term exists or not
 	if (this->hash_table[HashValue] != NULL) {
@@ -91,13 +143,14 @@ void MergedList::update_weight(char * code, score_t w) {
 		for (q = this->hash_table[HashValue]; q != NULL; q = q->get_next()) {
 			if (strcmp(q->get_code(), code) == 0) {
 
-				q->set_score( q->get_score() + w );
+				q->set_final_score( q->get_final_score() + w );
 
 				return; /// Return and exit
 			}
 		}
 	}
 }
+
 
 /// Display the items of the MergedList object (hash_table)
 void MergedList::display() {
@@ -112,6 +165,7 @@ void MergedList::display() {
 	}
 }
 
+
 /// Display the items of the MergedList object (item_list)
 void MergedList::display_list() {
 	for (rank_t i = 0; i < this->num_nodes; i++) {
@@ -119,6 +173,20 @@ void MergedList::display_list() {
 //		getchar();
 	}
 }
+
+
+/// Display the items of the MergedList object (item_list)
+void MergedList::write_to_CSV(char * topic, class InputParams * params) {
+	FILE * fp = fopen(params->get_output_file(), "a+");
+	if (fp) {
+		for (rank_t i = 0; i < this->num_nodes; i++) {
+			fprintf(fp, "%s,PyFLAGR,%s,%10.6f\n", topic, this->item_list[i]->get_code(),
+					this->item_list[i]->get_final_score());
+		}
+		fclose(fp);
+	}
+}
+
 
 /// "Copy" the MergedList's hash table elementd to the internal item_list
 void MergedList::convert_to_array() {
@@ -139,13 +207,13 @@ void MergedList::convert_to_array() {
 /// Reset the scores (set to equal to 0) of the merged list elements
 void MergedList::reset_scores() {
 	for (rank_t i = 0; i < this->num_nodes; i++) {
-		this->item_list[i]->set_score(0.0);
+		this->item_list[i]->set_final_score(0.0);
 	}
 }
 
 /// Search for an item and return its rank
 rank_t MergedList::get_item_rank(char *c) {
-	uint32_t HashValue = KazLibHash(c) & this->mask;
+	uint32_t HashValue = this->djb2(c) & this->mask;
 
 	if (this->hash_table[HashValue] != NULL) {
 		class MergedItem * q;
@@ -173,11 +241,16 @@ void MergedList::clear_contents() {
 		}
 
 		delete [] this->hash_table;
+		this->hash_table = NULL;
 	}
 
 	if (this->item_list) {
 		delete [] this->item_list;
+		this->item_list = NULL;
 	}
+
+	this->num_nodes = 0;
+	this->num_chains = 0;
 }
 
 /// Rebuild the Merged list from the input lists
@@ -260,7 +333,7 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 	uint32_t scenario = 2;
 
 	for (r = 0; r < R; r++) {
-		if (scenario == 1) { r_score += 1.0 / ( (r + 1.0) * (r + 1.0) ); } else /// BEST
+		if (scenario == 1) { r_score += 1.0 / ( (r + 1.0) * (r + 1.0) ); } else
 		if (scenario == 2) { r_score += (R - r + 1.0) * (R - r + 1.0); } else /// 2
 		if (scenario == 3) { r_score += (double)(R * R) / (double)( (r + R) * (r + R) ); } else
 		if (scenario == 4) { r_score += (r + 1.0) * (r + 1.0); } else
@@ -286,7 +359,7 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 		r = this->item_list[l]->get_ranking(z)->get_rank();
 
 		if(r < in->get_cutoff()) {
-			if (scenario == 1) { c_score += (l + 1.0) / (r + 1.0); } else /// BEST
+			if (scenario == 1) { c_score += (l + 1.0) / (r + 1.0); } else
 			if (scenario == 2) { c_score += (R - r + 1.0) * (l + 1.0); } else /// 2
 			if (scenario == 3) { c_score += (double)(R) / ( (l + 1.0) * (r + R) ); } else
 			if (scenario == 4) { c_score += (r + 1.0) * (l + 1.0); } else
@@ -371,29 +444,21 @@ double MergedList::LocalScaledFootruleDistance(uint32_t z, class InputList * in)
 
 
 /// Accessors
-inline rank_t MergedList::get_num_items() { return this->num_nodes; }
-inline class MergedItem * MergedList::get_item(uint32_t i) { return this->item_list[i]; }
-inline class MergedItem ** MergedList::get_item_list() { return this->item_list; }
+rank_t MergedList::get_num_items() { return this->num_nodes; }
+class MergedItem * MergedList::get_item(uint32_t i) { return this->item_list[i]; }
+class MergedItem ** MergedList::get_item_list() { return this->item_list; }
+score_t MergedList::get_weight() { return this->weight; }
 
-/// The Hash Function
-uint32_t MergedList::KazLibHash (char *key) {
-   static unsigned long randbox[] = {
-       0x49848f1bU, 0xe6255dbaU, 0x36da5bdcU, 0x47bf94e9U,
-       0x8cbcce22U, 0x559fc06aU, 0xd268f536U, 0xe10af79aU,
-       0xc1af4d69U, 0x1d2917b5U, 0xec4c304dU, 0x9ee5016cU,
-       0x69232f74U, 0xfead7bb3U, 0xe9089ab6U, 0xf012f6aeU,
-	};
+/// Mutators
+void MergedList::set_weight(score_t v) { this->weight = v; }
 
-	char *str = key;
-	uint32_t acc = 0;
+/// The DJB2 Hash Function (Dan Bernstein)
+uint32_t MergedList::djb2(char * str) {
+	unsigned long hash = 5381;
+	int c;
 
-	while (*str) {
-		acc ^= randbox[(*str + acc) & 0xf];
-		acc = (acc << 1) | (acc >> 31);
-		acc &= 0xffffffffU;
-		acc ^= randbox[((*str++ >> 4) + acc) & 0xf];
-		acc = (acc << 2) | (acc >> 30);
-		acc &= 0xffffffffU;
-	}
-	return acc;
+	while ((c = *str++))
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+	return hash;
 }

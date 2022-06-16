@@ -1,7 +1,6 @@
 #ifndef AGGREGATOR_H
 #define AGGREGATOR_H
 
-
 class Aggregator {
 	private:
 		uint16_t num_lists;
@@ -17,7 +16,7 @@ class Aggregator {
 		~Aggregator();
 
 		class InputList * create_list(char *, double);
-		class Voter ** aggregate(class InputParams *);
+		class Voter ** aggregate(char *, class InputParams *);
 		void init_weights();
 		void destroy_output_list();
 		void display();

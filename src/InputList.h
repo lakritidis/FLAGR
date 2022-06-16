@@ -10,30 +10,29 @@ class InputList {
 		rank_t num_items;
 		rank_t num_alloc_items;
 		rank_t cutoff;
-		rank_t min_rank;
-		rank_t max_rank;
+
+		class SimpleScoreStats * stats;
 
 		class InputItem ** items;
 
 	private:
-		static int cmp_rank(const void *a, const void *b) {
+		static int cmp_score(const void *a, const void *b) {
 			class InputItem * x = *(class InputItem **)a;
 			class InputItem * y = *(class InputItem **)b;
 
-			return x->get_rank() - y->get_rank();
+			return y->get_inscore() - x->get_inscore();
 		}
 
 	public:
 		InputList();
-		InputList(uint32_t, char *, double);
+		InputList(uint32_t, char *, score_t);
 		~InputList();
 
-		void insert_item(char *, rank_t);
-		void replace_item(char *, rank_t);
+		void insert_item(char *, rank_t, score_t);
+		void replace_item(char *, rank_t, score_t);
 		class InputItem * search_item(char *);
 		void display();
-		void sort_by_ranking();
-		void reverse_ranking();
+		void sort_by_score();
 
 		score_t SpearmanRho(class InputList *);
 
@@ -47,9 +46,12 @@ class InputList {
 		class Voter * get_voter();
 		rank_t get_num_items();
 		rank_t get_cutoff();
-		rank_t get_min_rank();
-		rank_t get_max_rank();
 		class InputItem * get_item(rank_t);
+
+		score_t get_min_score();
+		score_t get_max_score();
+		score_t get_mean_score();
+		score_t get_std_score();
 };
 
 #endif // INPUTLIST_H

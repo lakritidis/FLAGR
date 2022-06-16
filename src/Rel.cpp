@@ -1,15 +1,11 @@
 #include "Rel.h"
 
 /// Constructor 1 :default
-Rel::Rel() {
-	this->code = NULL;
-}
+Rel::Rel() : code(NULL), judgment(0), next(NULL) { }
 
 /// Constructor 2
-Rel::Rel(uint32_t i, char * c, uint32_t j) {
-	this->topic_id = i;
+Rel::Rel(char * c, uint32_t j) : code(NULL), judgment(j), next(NULL) {
 	this->copy_code(c);
-	this->judgment = j;
 }
 
 /// Interal copy code function
@@ -28,18 +24,15 @@ Rel::~Rel() {
 }
 
 void Rel::display() {
-	printf("%s is relevant to %d - Relevance: %d\n", this->code, this->topic_id, this->judgment);
+	printf("\t%s Relevance: %d\n", this->code, this->judgment);
 }
 
-
 /// Mutators
-inline void Rel::set_topic_id(uint32_t v) { this->topic_id = v; }
 inline void Rel::set_judgment(uint32_t v) { this->judgment = v; }
 inline void Rel::set_code(char * v) { this->copy_code(v); }
 inline void Rel::set_next(class Rel * v) { this->next = v; }
 
 /// Accessors
-inline uint32_t Rel::get_topic_id() { return this->topic_id; }
 inline char * Rel::get_code() { return this->code; }
 inline uint32_t Rel::get_judgment() { return this->judgment; }
 inline class Rel * Rel::get_next() { return this->next; }
@@ -89,4 +82,27 @@ void itoa_lp (int32_t n, char s[]) {
 		s[j] = t[j - i];
 	}
 	s[j] = 0;
+}
+
+float str_to_float(char *arr){
+    int i,j,flag;
+    float val;
+    char c;
+    i=0;
+    j=0;
+    val=0;
+    flag=0;
+    while ((c = *(arr+i))!='\0'){
+//      if ((c<'0')||(c>'9')) return 0;
+        if (c!='.'){
+            val =(val*10)+(c-'0');
+            if (flag == 1){
+                --j;
+            }
+        }
+        if (c=='.'){ if (flag == 1) return 0; flag=1;}
+        ++i;
+    }
+    val = val*pow(10,j);
+    return val;
 }

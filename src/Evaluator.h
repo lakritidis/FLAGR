@@ -26,15 +26,14 @@ class Evaluator {
 
 	public:
 		Evaluator();
-		Evaluator(class Rels *);
 		~Evaluator();
 
-		void insert_relev(uint32_t, char *, uint32_t);
+		void insert_relev(char *, uint32_t);
 		void clear();
-		void evaluate(uint32_t, class MergedList *, FILE *);
-		double evaluate_input(uint32_t, class InputList *);
+		void evaluate(rank_t, char *, class MergedList *, FILE *);
+		double evaluate_input(class InputList *);
 
-		void display_relevs(uint32_t);
+		void display_relevs();
 
 		/// Accessors
 		uint32_t get_num_nodes();
