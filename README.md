@@ -6,6 +6,17 @@ FLAGR is a high performing, modular library for rank aggregation. To ensure the 
 
 In this context, PyFLAGR is a Python library that links to FLAGR and allows a developer to exploit the efficient FLAGR implementations from a standard Python program.
 
+## Installing PyFLAGR
+
+PyFLAGR can be installed directly by using `pip`:
+
+`pip install pyflagr`
+
+Alternatively, PyFLAGR can be installed from the sources by navigating to the directory where `setup.py` resides:
+
+`pip install .`
+
+
 ## Compiling FLAGR as a shared library
 
 The FLAGR shared library has been already pre-built and tested with the GCC compiler. The FLAGR Github repository includes the appropriate `.so` and `.dll` dynamic libraries in the `pyflagr` directory, so PyFLAGR can be immediately installed without compilation.
@@ -23,13 +34,6 @@ For Windows-based systems with the GCC compiler, FLAGR can be built as a Dynamic
 
 This command will generate the necessary `.dll` library.
 
-## Installing PyFLAGR
-
-The installation of PyFLAGR can be performed by employing the `pip` Python package installer. Initially we navigate to the directory where the `setup.py` file resides.
-
-After navigating to the directory where `setup.py` resides, install it by using `pip`:
-
-`pip install .`
 
 ## Importing and using PyFLAGR
 
