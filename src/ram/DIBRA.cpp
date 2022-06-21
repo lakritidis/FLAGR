@@ -30,7 +30,10 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 			this->CombMNZ(inlists, s, prms);
 
 		} else if (ram == 5200) {
-			this->CondorcetMethod(inlists, s, prms);
+			this->CondorcetWinners(inlists, s, prms);
+
+		} else if (ram == 5201) {
+			this->CopelandWinners(inlists, s, prms);
 
 		} else if (ram == 5300) {
 			this->Outranking(inlists, s, prms);
@@ -163,7 +166,10 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 			this->CombMNZ(inlists, s, prms);
 
 		} else if (ram == 5200) {
-			this->CondorcetMethod(inlists, s, prms);
+			this->CondorcetWinners(inlists, s, prms);
+
+		} else if (ram == 5201) {
+			this->CopelandWinners(inlists, s, prms);
 
 		} else if (ram == 5300) {
 			this->Outranking(inlists, s, prms);
