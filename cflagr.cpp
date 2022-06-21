@@ -36,7 +36,7 @@ extern "C" {
 		if (PyParams.output_dir) free(PyParams.output_dir);
 	}
 
-	/// Wrapper for the Condorcet Method
+	/// Wrapper for the Condorcet Winners Method
 	void Condorcet(const char inf[], const char relf[], const int evpts, const char ranstr[], const char out[]) {
 
 		struct PythonParams PyParams;
@@ -60,6 +60,39 @@ extern "C" {
 
 		PyParams.eval_points = evpts;
 		PyParams.rank_aggregation_method = 200;
+
+		FLAGR_DRIVER(PyParams);
+
+		if (PyParams.input_file) free(PyParams.input_file);
+		if (PyParams.rels_file) free(PyParams.rels_file);
+		if (PyParams.rels_file) free(PyParams.random_string);
+		if (PyParams.output_dir) free(PyParams.output_dir);
+	}
+
+	/// Wrapper for the Copeland Winners Method
+	void Copeland(const char inf[], const char relf[], const int evpts, const char ranstr[], const char out[]) {
+
+		struct PythonParams PyParams;
+		srand(time(0));
+
+		PyParams.input_file = (char *)malloc((strlen(inf) + 1) * sizeof(char));
+		strcpy(PyParams.input_file, inf);
+
+		PyParams.random_string = (char *)malloc((strlen(ranstr) + 1) * sizeof(char));
+		strcpy(PyParams.random_string, ranstr);
+
+		PyParams.output_dir = (char *)malloc((strlen(out) + 1) * sizeof(char));
+		strcpy(PyParams.output_dir, out);
+
+		if (strlen(relf) > 0) {
+			PyParams.rels_file = (char *)malloc((strlen(relf) + 1) * sizeof(char));
+			strcpy(PyParams.rels_file, relf);
+		} else {
+			PyParams.rels_file = NULL;
+		}
+
+		PyParams.eval_points = evpts;
+		PyParams.rank_aggregation_method = 201;
 
 		FLAGR_DRIVER(PyParams);
 
@@ -286,6 +319,8 @@ int main(int argc, char *argv[]) {
 	Comb(input_file, qrels_file, 20, 100, "Comb_out", output_dir);
 
 	Condorcet(input_file, qrels_file, 20, "Condorcet_out", output_dir);
+
+	Copeland(input_file, qrels_file, 20, "Copeland_out", output_dir);
 
 	OutrankingApproach(input_file, qrels_file, 20, "Outrank_out", output_dir, 0.0, 0.75, 0.0, 0.25);
 
