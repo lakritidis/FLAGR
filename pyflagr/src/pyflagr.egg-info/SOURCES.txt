@@ -1,0 +1,8 @@
+README.md
+setup.cfg
+setup.py
+src/pyflagr.egg-info/PKG-INFO
+src/pyflagr.egg-info/SOURCES.txt
+src/pyflagr.egg-info/dependency_links.txt
+src/pyflagr.egg-info/requires.txt
+src/pyflagr.egg-info/top_level.txt
