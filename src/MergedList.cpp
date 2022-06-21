@@ -2,7 +2,8 @@
 
 #include "ram/CombSUM.cpp"
 #include "ram/CombMNZ.cpp"
-#include "ram/CondorcetMethod.cpp"
+#include "ram/CondorcetWinners.cpp"
+#include "ram/CopelandWinners.cpp"
 #include "ram/OutrankingApproach.cpp"
 #include "ram/DIBRA.cpp"
 #include "ram/PrefRel.cpp"

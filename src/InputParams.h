@@ -43,6 +43,7 @@ struct PythonParams {
 ///  112:   CombMNZ with Score normalization			[1]
 ///  113:   CombMNZ with Z-Score normalization			[1]
 ///  200:   Condorcet Winners Method
+///  201:   Copeland Winners Method
 ///  300:   Outranking Approach							[2]
 ///  5100.  DIBRA @ CombSUM with Borda Normalization	[5]
 ///  5101.  DIBRA @ CombSUM with Rank Normalization
@@ -53,6 +54,7 @@ struct PythonParams {
 ///  5112.  DIBRA @ CombMNZ with Score Normalization
 ///  5113.  DIBRA @ CombMNZ with Z-Score Normalization
 ///  5200.  DIBRA @ Condorcet Winners					[5]
+///  5201.  DIBRA @ Copeland Winners					[5]
 ///  5300.  DIBRA @ Outranking Approach					[5]
 ///  600.   Preference Relations Method					[3]
 ///  700.   Agglomerative Aggregation					[4]

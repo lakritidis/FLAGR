@@ -90,7 +90,9 @@ class MergedList {
 		/// Rank Aggregation Methods
 		void CombSUM(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void CombMNZ(class InputList **, class SimpleScoreStats *, class InputParams *);
-		void CondorcetMethod(class InputList **, class SimpleScoreStats *, class InputParams *);
+		void CondorcetWinners(class InputList **, class SimpleScoreStats *, class InputParams *);
+		void CopelandWinners(class InputList **, class SimpleScoreStats *, class InputParams *);
+		void BayesWinners(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void Outranking(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void MC(class InputList **,  class SimpleScoreStats *, class InputParams *);
 		void MC4(class InputList **,  class SimpleScoreStats *, class InputParams *);

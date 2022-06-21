@@ -94,7 +94,12 @@ class Voter ** Aggregator::aggregate(char * topic, class InputParams * params) {
 	/// 200. Condorcet Winners Method
 	} else if (ram == 200) {
 		this->merge_input_lists();
-		this->output_list->CondorcetMethod(this->input_lists, &s, params);
+		this->output_list->CondorcetWinners(this->input_lists, &s, params);
+
+	/// 201. Copeland Winners Method
+	} else if (ram == 201) {
+		this->merge_input_lists();
+		this->output_list->CopelandWinners(this->input_lists, &s, params);
 
 	/// 300. The outranking approach of [2]
 	} else if (ram == 300) {
