@@ -2,7 +2,7 @@
 
 **Fuse, Learn, AGgregate, Rerank
 
-FLAGR is a high performing, modular library for rank aggregation. To ensure the highest possible performance, the core FLAGR library is written in C++ and implements a wide collection of unsupervised rank aggregation methods. Its modular design allows third-party programmers to implement their own algorithms and easily rebuild the entire library. FLAGR can be built as a standard application, or as a shared library (`so` or `dll`). In the second case, it can be linked from other C/C++ programs, or even from programs written in other languages (e.g. Python, PHP, etc.).
+FLAGR is a high performing, modular library for rank aggregation. The core FLAGR library was developed in C++ and contains fast implementations for a wide collection of unsupervised rank aggregation methods. Its modular design allows third-party programmers to implement their own algorithms and easily rebuild the entire library. FLAGR can be built as a standard application, or as a shared library (`so` or `dll`). In the second case, it can be linked from other C/C++ programs, or even from programs written in other languages (e.g. Python, PHP, etc.).
 
 In this context, PyFLAGR is a Python library that links to FLAGR and allows a developer to exploit the efficient FLAGR implementations from a standard Python program.
 
@@ -14,7 +14,7 @@ PyFLAGR can be installed directly by using `pip`:
 
 Alternatively, PyFLAGR can be installed from the sources by navigating to the directory where `setup.py` resides:
 
-`pip install .`
+`pip install /path/to/setup.py`
 
 
 ## Compiling FLAGR as a shared library
@@ -39,13 +39,13 @@ This command will generate the necessary `.dll` library.
 
 PyFLAGR groups its supported rank aggregation methods in four modules:
 
-1. `Comb`: In this module the `CombSUM` and `CombMNZ` methods are implemented. Each method comes in four variants according to the rank/score normalization method. Future releases of FLAGR will also include CombAVG, CombMAX and CombMIN.
-2. `Majoritarian`: Includes `CondorcetWinners` and `OutrankingApproach`.
-3. `MarkovChains`: The fourth and most popular method (termed `MC4`) based on Markov Chains is implemented. Future releases of FLAGR will include the other three implementations.
+1. `Comb`: In this module the `CombSUM` and `CombMNZ` methods are implemented. Each method comes in four variants according to the rank/score normalization method: `Borda`, `rank`, `score` and `z-score` \[1\]. Future releases of FLAGR will also include CombAVG, CombMAX and CombMIN.
+2. `Majoritarian`: Includes `CondorcetWinners`, `CopelandWinners` and `OutrankingApproach` \[2\].
+3. `MarkovChains`: The fourth and most popular method (termed `MC4`) based on Markov Chains is implemented \[6\]. Future releases of FLAGR will include the other three implementations.
 4. `Weighted`: This module implements several self-weighting rank aggregation methods. These methods automatically identify the expert voters and include:
- 1. The Preference Relations Graph method of Desarkar et.al, 2016.
- 2. The Agglomerative method of Chatterjee et.al, 2018.
- 3. The Iterative, Distance-Based method of Akritidis et.al, 2022.
+ 1. The Preference Relations Graph method of \[3\].
+ 2. The Agglomerative method of \[4\].
+ 3. The Iterative, Distance-Based method of \[5\].
 
 The following statements demonstrate the imports of all PyFLAGR rank aggregation methods in a typical jupyter notebook.
 ```
@@ -80,7 +80,9 @@ where:
 * `Item`: a unique name that identifies a particular element in the list. A voter cannot submit the same element for the same query/topic two or more times. This means that each element appears exactly once in each list. However, the same element may appear in lists submitted by other voters.
 * `Score`: the score assigned to an `Item` by a specific `Voter`. In may cases (e.g. search engine rankings), the individual scores are unknown. In such cases the scores can be replaced by the (reverse) ranking of an `Item` in such a manner that the top rankings receive higher scores than the ones that have been assigned lower rankings.
 
-PyFLAGR has two mechanisms for passing data to FLAGR, namely:
+FLAGR is designed to accept data directly from [RASDaGen](https://github.com/lakritidis/RASDaGen), a synthetic dataset generator for rank aggregation problems.
+
+On the other hand, PyFLAGR has two mechanisms for passing data to FLAGR, namely:
 * either by forwarding the name and the location of the aforementioned input CSV file (this is the `input_file` argument of the `aggregate` method),
 * or by accepting a Pandas Dataframe from the user (this is the `input_df` argument of the `aggregate` method). In this case, PyFLAGR internally dumps the `input_df` contents into a temporary CSV file and passes the name and the location of that temporary file to FLAGR.
 
