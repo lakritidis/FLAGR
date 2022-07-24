@@ -29,10 +29,10 @@ This command will generate the necessary `.so` library.
 
 For Windows-based systems with the GCC compiler, FLAGR can be built as a Dynamic Link Library by invoking the following system commands:
 
-* `g++ -O3 -c -o flagr.o /path/to/cflagr/cflagr.cpp`
+* `g++ -O3 -c -o flagr.o /path/to/cflagr/dllflagr.cpp`
 * `g++ -O3 -o /path/to/dll/flagr.dll -s -shared flagr.o -Wl,--subsystem,windows`
 
-This command will generate the necessary `.dll` library.
+This command will generate the necessary `.dll` library. An automated procedure for compiling FLAGR as a DLL can be executed from the makedll.bat batch file included in this repository.
 
 
 ## Importing and using PyFLAGR
