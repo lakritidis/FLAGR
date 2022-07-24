@@ -311,9 +311,9 @@ int main(int argc, char *argv[]) {
 	char qrels_file[] = "/media/leo/B65266EC5266B1331/phd_Research/08 - Datasets/TREC/Synthetic/MOSO_qrels.csv";
 	char output_dir[] = "/tmp";
 #elif _WIN32
-	char input_file[] = "/media/leo/B65266EC5266B1331/phd_Research/08 - Datasets/TREC/Synthetic/MOSO.csv";
-	char qrels_file[] = "/media/leo/B65266EC5266B1331/phd_Research/08 - Datasets/TREC/Synthetic/MOSO_qrels.csv";
-	char output_dir[] = "/tmp";
+	char input_file[] = "D:/phd_Research/08 - Datasets/TREC/Synthetic/MOSO.csv";
+	char qrels_file[] = "D:/phd_Research/08 - Datasets/TREC/Synthetic/MOSO_qrels.csv";
+	char output_dir[] = "c:/windows/temp/";
 #endif // _WIN32
 
 	Comb(input_file, qrels_file, 20, 100, "Comb_out", output_dir);
