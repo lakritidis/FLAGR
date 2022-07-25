@@ -1,6 +1,7 @@
 import ctypes
 
 from pyflagr.RAM import RAM
+#from RAM import RAM
 
 
 # PREFERENCE RELATIONS METHOD =========================================================================================
@@ -192,6 +193,7 @@ class DIBRA(RAM):
                 ctypes.c_float,   # Concordance Threshold
                 ctypes.c_float    # Discordance Threshold
             ]
+            self.flagr_lib.DIBRA.restype = None
 
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None):
         status = self.check_get_input(input_file, input_df)

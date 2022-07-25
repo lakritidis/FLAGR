@@ -1,7 +1,7 @@
 import ctypes
 
 from pyflagr.RAM import RAM
-
+#from RAM import RAM
 
 # CONDORCET WINNERS METHOD ============================================================================================
 class CondorcetWinners(RAM):

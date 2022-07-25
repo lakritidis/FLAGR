@@ -1,6 +1,7 @@
 import ctypes
 
 from pyflagr.RAM import RAM
+#from RAM import RAM
 
 
 # COMB SUM ===========================================================================================================
@@ -19,11 +20,13 @@ class CombSUM(RAM):
             ctypes.c_char_p,  # Random string to be embedded into the output file names
             ctypes.c_char_p]  # The directory where the output files will be written
 
+        self.flagr_lib.Comb.restype = None
+
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None):
         status = self.check_get_input(input_file, input_df)
         if status != 0:
             return
-        print(status)
+
         status = self.check_get_rels_input(rels_file, rels_df)
 
         if status != 0:
@@ -50,7 +53,8 @@ class CombSUM(RAM):
             self.eval_pts,
             ram,
             bytes(ran_str, 'ASCII'),
-            bytes(self.output_dir, 'ASCII'))
+            bytes(self.output_dir, 'ASCII')
+        )
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
         return df_out, df_eval
@@ -78,6 +82,8 @@ class CombMNZ(RAM):
             ctypes.c_char_p,  # Random string to be embedded into the output file names
             ctypes.c_char_p]  # The directory where the output files will be written
 
+        self.flagr_lib.Comb.restype = None
+
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None):
         status = self.check_get_input(input_file, input_df)
         if status != 0:
@@ -103,12 +109,13 @@ class CombMNZ(RAM):
 
         # Call the exposed Comb C function
         self.flagr_lib.Comb(
-            bytes(self.input_file, 'ASCII'),
-            bytes(self.rels_file, 'ASCII'),
+            ctypes.c_char_p(self.input_file.encode('ascii')),
+            ctypes.c_char_p(self.rels_file.encode('ascii')),
             self.eval_pts,
             ram,
-            bytes(ran_str, 'ASCII'),
-            bytes(self.output_dir, 'ASCII'))
+            ctypes.c_char_p(ran_str.encode('ascii')),
+            ctypes.c_char_p(self.output_dir.encode('ascii'))
+            )
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
 

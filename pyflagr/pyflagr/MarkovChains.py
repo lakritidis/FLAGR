@@ -1,7 +1,7 @@
 import ctypes
 
 from pyflagr.RAM import RAM
-
+#from RAM import RAM
 
 # MARKOV CHAINS 4 METHOD ==============================================================================================
 class MC4(RAM):
