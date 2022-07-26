@@ -30,12 +30,6 @@ class RAM:
             self.flagr_lib = ctypes.CDLL(os.path.dirname(os.path.realpath(__file__)) + "/flagr.so")
 
         elif platform == "win32":
-            os.environ['PATH'] = os.path.dirname(os.path.realpath(__file__)) + os.pathsep + os.environ['PATH']
-            paths = os.environ['PATH'].split(";")
-            for path in paths:
-                if os.path.isdir(path):
-                    os.add_dll_directory(path)
-
             self.flagr_lib = ctypes.CDLL(os.path.dirname(os.path.realpath(__file__)) + '/flagr.dll')
 
         elif platform == "darwin":
