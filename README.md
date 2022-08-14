@@ -2,7 +2,7 @@
 
 **Fuse, Learn, AGgregate, Rerank
 
-FLAGR is a high performing, modular library for rank aggregation. The core FLAGR library was developed in C++ and contains fast implementations for a wide collection of unsupervised rank aggregation methods. Its modular design allows third-party programmers to implement their own algorithms and easily rebuild the entire library. FLAGR can be built as a standard application, or as a shared library (`so` or `dll`). In the second case, it can be linked from other C/C++ programs, or even from programs written in other languages (e.g. Python, PHP, etc.).
+FLAGR is a high performing, modular library for rank aggregation. To ensure the highest possible performance, the core FLAGR library is written in C++ and implements a wide collection of unsupervised rank aggregation methods. Its modular design allows third-party programmers to implement their own algorithms and easily rebuild the entire library. FLAGR can be built as a standard application, or as a shared library (`so` or `dll`). In the second case, it can be linked from other C/C++ programs, or even from programs written in other languages (e.g. Python, PHP, etc.).
 
 In this context, PyFLAGR is a Python library that links to FLAGR and allows a developer to exploit the efficient FLAGR implementations from a standard Python program.
 
@@ -14,38 +14,19 @@ PyFLAGR can be installed directly by using `pip`:
 
 Alternatively, PyFLAGR can be installed from the sources by navigating to the directory where `setup.py` resides:
 
-`pip install /path/to/setup.py`
-
-
-## Compiling FLAGR as a shared library
-
-The FLAGR shared library has been already pre-built and tested with the GCC compiler. The FLAGR Github repository includes the appropriate `.so` and `.dll` dynamic libraries in the `pyflagr` directory, so PyFLAGR can be immediately installed without compilation.
-
-Nevertheless, in case a custom rank aggregation method has been implemented with FLAGR, or any modification in the C++ code has been made, FLAGR must be rebuilt and PyFLAGR must be reinstalled. For Linux-based systems with the GCC compiler, FLAGR can be built as a shared library by invoking the following system command:
-
-`g++ -O3 -Wall -Werror -shared -std=c++11 -fPIC /path/to/cflagr/cflagr.cpp -o /path/to/so/flagr.so`
-
-This command will generate the necessary `.so` library.
-
-For Windows-based systems with the GCC compiler, FLAGR can be built as a Dynamic Link Library by invoking the following system commands:
-
-* `g++ -O3 -c -o flagr.o /path/to/cflagr/dllflagr.cpp`
-* `g++ -O3 -o /path/to/dll/flagr.dll -s -shared flagr.o -Wl,--subsystem,windows`
-
-This command will generate the necessary `.dll` library. An automated procedure for compiling FLAGR as a DLL can be executed from the makedll.bat batch file included in this repository.
-
+`pip install .`
 
 ## Importing and using PyFLAGR
 
 PyFLAGR groups its supported rank aggregation methods in four modules:
 
-1. `Comb`: In this module the `CombSUM` and `CombMNZ` methods are implemented. Each method comes in four variants according to the rank/score normalization method: `Borda`, `rank`, `score` and `z-score` \[1\]. Future releases of FLAGR will also include CombAVG, CombMAX and CombMIN.
-2. `Majoritarian`: Includes `CondorcetWinners`, `CopelandWinners` and `OutrankingApproach` \[2\].
-3. `MarkovChains`: The fourth and most popular method (termed `MC4`) based on Markov Chains is implemented \[6\]. Future releases of FLAGR will include the other three implementations.
+1. `Comb`: In this module the `CombSUM` and `CombMNZ` methods are implemented. Each method comes in four variants according to the rank/score normalization method. Future releases of FLAGR will also include CombAVG, CombMAX and CombMIN.
+2. `Majoritarian`: Includes `CondorcetWinners`, `CopelandWinners` and `OutrankingApproach`.
+3. `MarkovChains`: The fourth and most popular method (termed `MC4`) based on Markov Chains is implemented. Future releases of FLAGR will include the other three implementations.
 4. `Weighted`: This module implements several self-weighting rank aggregation methods. These methods automatically identify the expert voters and include:
- 1. The Preference Relations Graph method of \[3\].
- 2. The Agglomerative method of \[4\].
- 3. The Iterative, Distance-Based method of \[5\].
+ 1. The Preference Relations Graph method of Desarkar et.al, 2016.
+ 2. The Agglomerative method of Chatterjee et.al, 2018.
+ 3. The Iterative, Distance-Based method of Akritidis et.al, 2022.
 
 The following statements demonstrate the imports of all PyFLAGR rank aggregation methods in a typical jupyter notebook.
 ```
@@ -80,12 +61,9 @@ where:
 * `Item`: a unique name that identifies a particular element in the list. A voter cannot submit the same element for the same query/topic two or more times. This means that each element appears exactly once in each list. However, the same element may appear in lists submitted by other voters.
 * `Score`: the score assigned to an `Item` by a specific `Voter`. In may cases (e.g. search engine rankings), the individual scores are unknown. In such cases the scores can be replaced by the (reverse) ranking of an `Item` in such a manner that the top rankings receive higher scores than the ones that have been assigned lower rankings.
 
-FLAGR is designed to accept data directly from [RASDaGen](https://github.com/lakritidis/RASDaGen), a synthetic dataset generator for rank aggregation problems.
-
-On the other hand, PyFLAGR has two mechanisms for passing data to FLAGR, namely:
+PyFLAGR has two mechanisms for passing data to FLAGR, namely:
 * either by forwarding the name and the location of the aforementioned input CSV file (this is the `input_file` argument of the `aggregate` method),
 * or by accepting a Pandas Dataframe from the user (this is the `input_df` argument of the `aggregate` method). In this case, PyFLAGR internally dumps the `input_df` contents into a temporary CSV file and passes the name and the location of that temporary file to FLAGR.
-
 
 Optionally, the user may specify a second CSV file (called as `rels_file`), or a Dataframe (called as `rels_df`) that contain judgments about the relevance of the included elements w.r.t a query. The columns in `rels_file` are organized as follows:
 
@@ -99,7 +77,7 @@ where:
 
 ## Output data format
 
-In all cases the core library, FLAGR, writes the generated aggregate list in a plain CSV file. PyFLAGR reads the contents of this CSV file into a Pandas Dataframe which is returned to the user.
+PyFLAGR returns a Pandas Dataframe that contains the final aggregate list.
 
 Optionally, FLAGR may also create a second output file to write the results of the evaluation of the effectiveness of an algorithm. This happens when a `rels_file` is provided to the algorithm. The `aggregate` method of all algorithms *always* returns two Pandas Dataframes according to the provided input.
 

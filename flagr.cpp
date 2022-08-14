@@ -17,6 +17,11 @@
 		vol. 202, pp. 117435, 2022.
 	[6] Dwork C., Kumar R., Naor M., Sivakumar D., "Rank Aggregation Methods for the Web", In
 		Proceedings of the 10th International Conference on World Wide Web, pp. 613-622, 2001.
+		R Kolde, S Laur, P Adler, J Vilo
+	[7] Kolde R., Laur S., Adler P., Vilo J., "Robust rank aggregation for gene list integration
+		and meta-analysis", Bioinformatics, vol. 28, no. 4, pp. 573--580, 2012.
+	[8] Majumder KL, Bhattacharjee GP, "Algorithm AS 63: The incomplete Beta Integral,", Applied
+		Statistics, vol. 22, no. 3, pp. 409-411, 1973.
 **/
 
 #include "stdio.h"
@@ -31,7 +36,7 @@
 #include <vector>
 
 typedef uint32_t rank_t;
-typedef float score_t;
+typedef double score_t;
 
 #define MAX_LIST_ITEMS 1000
 #define NOT_RANKED_ITEM_RANK MAX_LIST_ITEMS * MAX_LIST_ITEMS
@@ -45,7 +50,6 @@ typedef float score_t;
 #include "src/InputList.cpp"
 #include "src/Ranking.cpp"
 #include "src/MergedItem.cpp"
-#include "src/MergedItemPair.cpp"
 #include "src/MergedList.cpp"
 #include "src/Evaluator.cpp"
 #include "src/Aggregator.cpp"
@@ -54,15 +58,15 @@ typedef float score_t;
 #include "src/input/InputData.cpp"
 
 /// This function drives the entire FLAGR execution - It passes the Python Parameters to FLAGR
-void FLAGR_DRIVER (PythonParams PyParams) {
-	class InputParams * PARAMS = new InputParams(PyParams);
+void FLAGR_DRIVER (UserParams uParams) {
+	class InputParams * PARAMS = new InputParams(uParams);
 //	PARAMS->display(); fflush(NULL);
 
 	class InputData * input_data = new InputData(PARAMS);
 
 	input_data->aggregate();
 
-	if (PyParams.rels_file) {
+	if (uParams.rels_file) {
 		input_data->evaluate();
 	}
 
