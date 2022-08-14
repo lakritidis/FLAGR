@@ -141,7 +141,7 @@ char * InputData::read_file(FILE * source, long * file_size) {
 
 /// Print execution information in stdout
 void InputData::print_header() {
-	char m1[1024], m3[1024], m4[1024], m5[1024];
+	char m1[1000], m3[1000], m4[1024], m5[1000];
 	uint32_t ram = this->params->get_aggregation_method();
 
 	if (ram == 100) { strcpy(m1, "CombSUM with Borda normalization"); } else
@@ -222,8 +222,8 @@ void InputData::evaluate() {
 
 	/// Write the header row in the CSV evaluation file
 	fprintf(eval_file, "Query,AvgPrecision,");
-	for (rank_t i = 0; i < this->params->get_eval_points(); i++) { fprintf(eval_file, "P@%d,", i + 1); }
-	for (rank_t i = 0; i < this->params->get_eval_points(); i++) {
+	for (i = 0; i < this->params->get_eval_points(); i++) { fprintf(eval_file, "P@%d,", i + 1); }
+	for (i = 0; i < this->params->get_eval_points(); i++) {
 		if (i < this->params->get_eval_points() - 1) {
 			fprintf(eval_file, "N@%d,", i + 1);
 		} else {
@@ -274,11 +274,11 @@ void InputData::evaluate() {
 
 	/// Create a last row in the CSV evaluation file with the mean values
 	fprintf(eval_file, "MEAN,%7.6f,", this->MAP);
-	for (rank_t i = 0; i < this->params->get_eval_points(); i++) {
+	for (i = 0; i < this->params->get_eval_points(); i++) {
 		fprintf(eval_file, "%7.6f,", this->mean_precision[i]);
 	}
 
-	for (rank_t i = 0; i < this->params->get_eval_points(); i++) {
+	for (i = 0; i < this->params->get_eval_points(); i++) {
 		if (i < this->params->get_eval_points() - 1) {
 			fprintf(eval_file, "%7.6f,", this->mean_ndcg[i]);
 		} else {
