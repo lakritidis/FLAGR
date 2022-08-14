@@ -1,6 +1,10 @@
-/// The CombSUM rank aggregation method [1]
+/// The CombSUM family of linear combination methods. Details about the 5 implemented variants are
+/// published in the following paper:
+/// Renda E., Straccia U., "Web metasearch: rank vs. score based rank aggregation methods", In
+/// Proceedings of the 2003 ACM symposium on Applied computing, pp. 841-846, 2003.
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void MergedList::CombSUM(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
+void MergedList::CombSUM(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 	class MergedItem * q;
 	class Ranking * r;
 	class InputList * l;
@@ -53,6 +57,10 @@ void MergedList::CombSUM(class InputList ** inlists,  class SimpleScoreStats * s
 				/// Z-Score normalization: Eq: 2 of [1]
 				} else if (ram == 103 || ram == 5103) {
 					score = (r->get_score() - l->get_mean_score()) / l->get_std_score();
+
+				/// Simple Borda normalization
+				} else if (ram == 104 || ram == 5104) {
+					score = (this->num_nodes - r->get_rank() + 1.0) / (score_t)this->num_nodes;
 				}
 
 			/// Case B: The element has NOT been ranked in list l
@@ -61,9 +69,11 @@ void MergedList::CombSUM(class InputList ** inlists,  class SimpleScoreStats * s
 				if(ram == 100 || ram == 5100) {
 					score = (this->num_nodes - l->get_num_items() + 1.0) / (2.0 * this->num_nodes);
 
-				/// Rank/Score/Z-Score normalization: No scores are assigned to non-ranked elements [1]
-				} else if(ram == 101 || ram == 102 || ram == 103 || ram == 5101 || ram == 5102 || ram == 5103) {
-					score = 0.0;
+				/// Rank/Score/Z-Score/SimpleBorda normalization: No scores are assigned to
+				/// non-ranked elements [1]
+				} else if(ram == 101 || ram == 102 || ram == 103 || ram == 104 ||
+					ram == 5101 || ram == 5102 || ram == 5103 || ram == 5104) {
+						score = 0.0;
 				}
 			}
 

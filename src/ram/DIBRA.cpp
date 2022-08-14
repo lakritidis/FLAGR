@@ -1,3 +1,10 @@
+/// The Iterative Distance-Based Unsupervised Algorithm (DIBRA) of Akritidis et. al, 2022. Published
+/// in:
+/// Akritidis L., Fevgas A., Bozanis P., Manolopoulos Y., "An Unsupervised Distance-Based Model for
+/// Weighted Rank Aggregation with List Pruning", Expert Systems with Applications, vol. 202,
+/// pp. 117435, 2022.
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
+
 class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 
 	double prev_weight = 0.0;

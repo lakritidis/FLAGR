@@ -1,6 +1,7 @@
-/// The method of Condorcet Winners: Assign Scores to the items of MergedList w.r.t to Condorcet criterion.
+/// The Copeland Winners method is based on the majority criterion.
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void MergedList::CopelandWinners(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
+void MergedList::CopelandWinners(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 
 	class MergedItem *p, *q;
 	bool verbose = false;

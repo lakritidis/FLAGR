@@ -1,6 +1,10 @@
-/// The Outranking Approach of [2]: Assign Scores to the items of MergedList w.r.t to the method of [2]
+/// The Outranking Approach of Farah and Vanderpooten, 2007. Published in:
+/// Farah, M., Vanderpooten, D., "An outranking approach for rank aggregation in information
+/// retrieval", In Proceedings of the 30th ACM Conference on Research and Development in
+/// Information Retrieval, pp. 591-598, 2007.
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void MergedList::Outranking(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
+void MergedList::Outranking(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 	score_t PREF_THRESHOLD = prms->get_pref_thr();
 	score_t VETO_THRESHOLD = prms->get_veto_thr();
 	score_t CONC_THRESHOLD = prms->get_conc_thr();

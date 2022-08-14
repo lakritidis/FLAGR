@@ -1,4 +1,11 @@
-void MergedList::PrefRel(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
+/// The Preference Relations method of Desarkar et. al 2016:
+/// Desarkar, M. S., Sarkar, S., Mitra, P., "Preference relations based unsupervised rank
+/// aggregation for metasearch", Expert Systems with Applications, vol. 49, pp. 86-98, 2016.
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "tools/MergedItemPair.cpp"
+
+void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 	uint32_t i = 0, j = 0, p = 0;
 	uint32_t num_pairs = this->num_nodes * (this->num_nodes - 1) / 2;
 	score_t DisagreementScore = 0.0, ListScore = 0.0, ItemScore = 0.0;

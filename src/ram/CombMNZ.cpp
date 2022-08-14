@@ -1,6 +1,10 @@
-/// The CombMNZ rank aggregation method [1]
+/// The CombMNZ family of linear combination methods. Details about the 5 implemented variants are
+/// published in the following paper:
+/// Renda E., Straccia U., "Web metasearch: rank vs. score based rank aggregation methods", In
+/// Proceedings of the 2003 ACM symposium on Applied computing, pp. 841-846, 2003.
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void MergedList::CombMNZ(class InputList ** inlists,  class SimpleScoreStats * s, class InputParams * prms) {
+void MergedList::CombMNZ(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 	class MergedItem * q;
 	class Ranking * r;
 	class InputList * l;
@@ -55,7 +59,12 @@ void MergedList::CombMNZ(class InputList ** inlists,  class SimpleScoreStats * s
 				/// Z-Score normalization: Eq: 2 of [1]
 				} else if (ram == 113 || ram == 5113) {
 					score = (r->get_score() - l->get_mean_score()) / l->get_std_score();
+
+				/// Simple Borda normalization
+				} else if (ram == 114 || ram == 5114) {
+					score = (this->num_nodes - r->get_rank() + 1.0) / (score_t)this->num_nodes;
 				}
+
 
 			/// Case B: The element has NOT been ranked in list l
 			} else {
@@ -63,9 +72,11 @@ void MergedList::CombMNZ(class InputList ** inlists,  class SimpleScoreStats * s
 				if(ram == 110 || ram == 5110) {
 					score = (this->num_nodes - l->get_num_items() + 1.0) / (2.0 * this->num_nodes);
 
-				/// Rank/Score/Z-Score normalization: No scores are assigned to non-ranked elements [1]
-				} else if(ram == 111 || ram == 112 || ram == 113 || ram == 5111 || ram == 5112 || ram == 5113) {
-					score = 0.0;
+				/// Rank/Score/Z-Score/SimpleBorda normalization: No scores are assigned to
+				/// non-ranked elements [1]
+				} else if(ram == 111 || ram == 112 || ram == 113 || ram == 114 ||
+					ram == 5111 || ram == 5112 || ram == 5113 || ram == 5114) {
+						score = 0.0;
 				}
 			}
 
