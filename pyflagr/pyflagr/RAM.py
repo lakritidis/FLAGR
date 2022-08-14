@@ -8,6 +8,7 @@ from sys import platform
 
 import pandas as pd
 
+
 class RAM:
     input_file = ""
     input_df = None
@@ -20,9 +21,6 @@ class RAM:
     def __init__(self, eval_pts):
         self.eval_pts = eval_pts
 
-        # This is the default directory where the output files are written. It is the preset temp directory of the OS.
-        self.output_dir = tempfile.gettempdir()
-
         self.flagr_lib = None
 
         # Import the FLAGR shared library in PyFLAGR
@@ -30,6 +28,13 @@ class RAM:
             self.flagr_lib = ctypes.CDLL(os.path.dirname(os.path.realpath(__file__)) + "/flagr.so")
 
         elif platform == "win32":
+            '''
+            os.environ['PATH'] = os.path.dirname(os.path.realpath(__file__)) + os.pathsep + os.environ['PATH']
+            paths = os.environ['PATH'].split(";")
+            for path in paths:
+                if os.path.isdir(path):
+                    os.add_dll_directory(path)
+            '''
             self.flagr_lib = ctypes.CDLL(os.path.dirname(os.path.realpath(__file__)) + '/flagr.dll')
 
         elif platform == "darwin":
@@ -75,20 +80,22 @@ class RAM:
         result_str = ''.join(random.choice(letters) for _ in range(length))
         return result_str
 
-    # Retrieve the output from a PYFLAGR rank aggregation method. This one reads the output CSV files and returns
+    # Retrieve the output from a PyFLAGR rank aggregation method. This one reads the output CSV files and returns
     # two DataFrames. The first one contains the aggregate lists for each query; the second one stores the results
     # of the evaluation (provided that a qrels file or DataFrame has been set).
     def get_output(self, od, ran):
-        outfile = od + "/out_" + ran + ".csv"
-        evalfile = od + "/eval_" + ran + ".csv"
+        out_file = od + "/out_" + ran + ".csv"
+        eval_file = od + "/eval_" + ran + ".csv"
 
-        if os.path.isfile(outfile):
-            df_out = pd.read_csv(outfile, engine='c')
-            os.remove(outfile)
+        if os.path.isfile(out_file):
+            df_out = pd.read_csv(out_file, engine='c')
+            if od == tempfile.gettempdir():
+                os.remove(out_file)
 
-            if os.path.isfile(evalfile):
-                df_eval = pd.read_csv(evalfile)
-                os.remove(evalfile)
+            if os.path.isfile(eval_file):
+                df_eval = pd.read_csv(eval_file)
+                if od == tempfile.gettempdir():
+                    os.remove(eval_file)
 
                 return df_out, df_eval
             else:

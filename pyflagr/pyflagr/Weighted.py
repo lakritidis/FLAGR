@@ -1,7 +1,10 @@
+import os
+
 import ctypes
+import tempfile
 
 from pyflagr.RAM import RAM
-#from RAM import RAM
+# from RAM import RAM
 
 
 # PREFERENCE RELATIONS METHOD =========================================================================================
@@ -25,7 +28,14 @@ class PreferenceRelationsGraph(RAM):
             ctypes.c_float    # beta parameter
         ]
 
-    def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None):
+    def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
+        # This is the directory where the output files are written. If nothing is provided, then the preset temp
+        # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
+        if out_dir is not None and os.path.isdir(out_dir):
+            self.output_dir = out_dir
+        else:
+            self.output_dir = tempfile.gettempdir()
+
         status = self.check_get_input(input_file, input_df)
         if status != 0:
             return
@@ -72,7 +82,14 @@ class Agglomerative(RAM):
             ctypes.c_float    # c2 parameter
         ]
 
-    def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None):
+    def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
+        # This is the directory where the output files are written. If nothing is provided, then the preset temp
+        # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
+        if out_dir is not None and os.path.isdir(out_dir):
+            self.output_dir = out_dir
+        else:
+            self.output_dir = tempfile.gettempdir()
+
         status = self.check_get_input(input_file, input_df)
         if status != 0:
             return
@@ -115,87 +132,98 @@ class DIBRA(RAM):
     discordance_t = 0.25
 
     def __init__(self, eval_pts=10, aggregator='combsum:borda', w_norm='minmax', dist='cosine', prune=False, gamma=1.5,
-        d1=0.4, d2=0.1, tol=0.01, max_iter=50, pref = 0.0, veto = 0.75, conc = 0.0, disc = 0.25):
+            d1=0.4, d2=0.1, tol=0.01, max_iter=50, pref=0.0, veto=0.75, conc=0.0, disc=0.25):
 
-            RAM.__init__(self, eval_pts)
+        RAM.__init__(self, eval_pts)
 
-            # Set the aggregator code according to the selected aggregation method
+        # Set the aggregator code according to the selected aggregation method
+        self.agg = 5100
+        if aggregator == "combsum:borda":
             self.agg = 5100
-            if aggregator == "combsum:borda":
-                self.agg = 5100
-            elif aggregator == "combsum:rank":
-                self.agg = 5101
-            elif aggregator == "combsum:score":
-                self.agg = 5102
-            elif aggregator == "combsum:z-score":
-                self.agg = 5103
-            elif aggregator == "combmnz:borda":
-                self.agg = 5110
-            elif aggregator == "combmnz:rank":
-                self.agg = 5111
-            elif aggregator == "combmnz:score":
-                self.agg = 5112
-            elif aggregator == "combmnz:z-score":
-                self.agg = 5113
-            elif aggregator == "condorcet":
-                self.agg = 5200
-            elif aggregator == "outrank":
-                self.agg = 5300
+        elif aggregator == "combsum:rank":
+            self.agg = 5101
+        elif aggregator == "combsum:score":
+            self.agg = 5102
+        elif aggregator == "combsum:z-score":
+            self.agg = 5103
+        elif aggregator == "combsum:simple-borda":
+            self.agg = 5104
+        elif aggregator == "combmnz:borda":
+            self.agg = 5110
+        elif aggregator == "combmnz:rank":
+            self.agg = 5111
+        elif aggregator == "combmnz:score":
+            self.agg = 5112
+        elif aggregator == "combmnz:z-score":
+            self.agg = 5113
+        elif aggregator == "combmnz:simple-borda":
+            self.agg = 5114
+        elif aggregator == "condorcet":
+            self.agg = 5200
+        elif aggregator == "outrank":
+            self.agg = 5300
 
-            # Set the voter weights normalization method
+        # Set the voter weights normalization method
+        self.weight_norm = 2
+        if w_norm == "none":
+            self.weight_norm = 1
+        elif w_norm == "minmax":
             self.weight_norm = 2
-            if w_norm == "none":
-                self.weight_norm = 1
-            elif w_norm == "minmax":
-                self.weight_norm = 2
-            elif w_norm == "z":
-                self.weight_norm = 3
+        elif w_norm == "z":
+            self.weight_norm = 3
 
-            # Set the list distance metric
+        # Set the list distance metric
+        self.distance_metric = 3
+        if dist == "rho":
+            self.distance_metric = 1
+        elif dist == "cosine":
             self.distance_metric = 3
-            if dist == "rho":
-                self.distance_metric = 1
-            elif dist == "cosine":
-                self.distance_metric = 3
-            elif dist == "footrule":
-                self.distance_metric = 4
-            elif dist == "tau":
-                self.distance_metric = 5
+        elif dist == "footrule":
+            self.distance_metric = 4
+        elif dist == "tau":
+            self.distance_metric = 5
 
-            self.list_pruning = prune
-            self.g = gamma
-            self.d_1 = d1
-            self.d_2 = d2
-            self.tolerance = tol
-            self.miter = max_iter
-            self.preference_t = pref
-            self.veto_t = veto
-            self.concordance_t = conc
-            self.discordance_t = disc
+        self.list_pruning = prune
+        self.g = gamma
+        self.d_1 = d1
+        self.d_2 = d2
+        self.tolerance = tol
+        self.miter = max_iter
+        self.preference_t = pref
+        self.veto_t = veto
+        self.concordance_t = conc
+        self.discordance_t = disc
 
-            self.flagr_lib.DIBRA.argtypes = [
-                ctypes.c_char_p,  # Input data file with the lists to be aggregated
-                ctypes.c_char_p,  # Input data file with the relevant elements per query - used for evaluation
-                ctypes.c_int,     # Number of evaluation points
-                ctypes.c_int,     # basic un-weighted rank aggregation method
-                ctypes.c_char_p,  # Random string to be embedded into the output file names
-                ctypes.c_char_p,  # The directory where the output files will be written
-                ctypes.c_int,     # Voter weights normalization
-                ctypes.c_int,     # List distance function
-                ctypes.c_bool,    # List pruning algorithm
-                ctypes.c_float,   # gamma parameter
-                ctypes.c_float,   # d1 parameter
-                ctypes.c_float,   # d2 parameter
-                ctypes.c_float,   # convergence precision tolerance
-                ctypes.c_int,     # Maximum number of iterations
-                ctypes.c_float,   # Preference Threshold
-                ctypes.c_float,   # Veto Threshold
-                ctypes.c_float,   # Concordance Threshold
-                ctypes.c_float    # Discordance Threshold
-            ]
-            self.flagr_lib.DIBRA.restype = None
+        self.flagr_lib.DIBRA.argtypes = [
+            ctypes.c_char_p,  # Input data file with the lists to be aggregated
+            ctypes.c_char_p,  # Input data file with the relevant elements per query - used for evaluation
+            ctypes.c_int,     # Number of evaluation points
+            ctypes.c_int,     # basic un-weighted rank aggregation method
+            ctypes.c_char_p,  # Random string to be embedded into the output file names
+            ctypes.c_char_p,  # The directory where the output files will be written
+            ctypes.c_int,     # Voter weights normalization
+            ctypes.c_int,     # List distance function
+            ctypes.c_bool,    # List pruning algorithm
+            ctypes.c_float,   # gamma parameter
+            ctypes.c_float,   # d1 parameter
+            ctypes.c_float,   # d2 parameter
+            ctypes.c_float,   # convergence precision tolerance
+            ctypes.c_int,     # Maximum number of iterations
+            ctypes.c_float,   # Preference Threshold
+            ctypes.c_float,   # Veto Threshold
+            ctypes.c_float,   # Concordance Threshold
+            ctypes.c_float    # Discordance Threshold
+        ]
+        self.flagr_lib.DIBRA.restype = None
 
-    def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None):
+    def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
+        # This is the directory where the output files are written. If nothing is provided, then the preset temp
+        # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
+        if out_dir is not None and os.path.isdir(out_dir):
+            self.output_dir = out_dir
+        else:
+            self.output_dir = tempfile.gettempdir()
+
         status = self.check_get_input(input_file, input_df)
         if status != 0:
             return
