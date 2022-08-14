@@ -14,6 +14,8 @@ class Ranking {
 		Ranking(class InputList *, rank_t, score_t);
 		~Ranking();
 
+		void display();
+
 		/// Mutators
 		void set_input_list(class InputList *);
 		void set_rank(rank_t);

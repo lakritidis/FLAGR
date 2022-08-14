@@ -5,11 +5,14 @@
 #include "ram/CondorcetWinners.cpp"
 #include "ram/CopelandWinners.cpp"
 #include "ram/OutrankingApproach.cpp"
+#include "ram/KemenyOptimal.cpp"
 #include "ram/DIBRA.cpp"
 #include "ram/PrefRel.cpp"
 #include "ram/Agglomerative.cpp"
 #include "ram/MC123.cpp"
 #include "ram/MC4.cpp"
+#include "ram/RobustRA.cpp"
+#include "ram/CustomMethods.cpp"
 
 
 /// Constructor 1: default
@@ -317,13 +320,19 @@ double MergedList::KendallsTau(uint32_t z, class InputList * in) {
 
 		for (rank_t j = i + 1; j < n; j++) {
 			b = this->get_item_rank( in->get_item(j)->get_code() );
-			printf("Comparing pair (%d,%d) -> (%d,%d)", i, j, a, b);
-			if (a < b) { concordant++; } else { discordant++; }
+//			printf("Comparing pair (%d:%s, %d:%s) -> (%d, %d) - ", i, in->get_item(i)->get_code(), j, in->get_item(j)->get_code(), a, b);
+			if (a < b) {
+//				printf("concordant\n");
+				concordant++;
+			} else {
+//				printf("discordant\n");
+				discordant++;
+			}
 		}
 	}
 
-	tau = (double)concordant / denom;
-//	printf("(%d-%d) - rho=%5.3f - sum:%5.3f\n", this->num_nodes, in->get_num_items(), rho, sum);
+	tau = (double)(concordant) / denom;
+//	printf("Concordant : %d - Discordant: %d - Tau = %5.3f\n", concordant, discordant, tau);
 	return tau;
 }
 
@@ -443,6 +452,59 @@ double MergedList::LocalScaledFootruleDistance(uint32_t z, class InputList * in)
 	return nd;
 }
 
+/// Computation of the factorial of an integer
+uint64_t MergedList::factorial(uint32_t n) {
+	if (n == 0) { return 1; }
+	if (n > 20) {
+		fprintf(stderr, "Cannot compute factorials of numbers greater than 20\n");
+		exit(1);
+	}
+
+	uint64_t f = 1.0;
+	for (uint32_t i = 2; i <= n; i++) {
+		f *= i;
+	}
+	return f;
+}
+
+/// Compute the factorial by using the gamma function and store in a double.
+/// This allows computation of the first 170 factorials.
+double MergedList::factorial(double n) {
+	if (n < 0) {
+		fprintf(stderr, "Undefined");
+	}
+
+	if (n > 170) {
+		fprintf(stderr, "Infinity");
+	}
+	return tgamma(n + 1);
+}
+
+double * MergedList::precompute_170_factorials() {
+	double * factorials = new double[171];
+	factorials[0] = 0;
+	for (uint16_t i = 1; i < 171; i++) {
+		factorials[i] = tgamma(i + 1);
+	}
+	return factorials;
+}
+
+/// Comparator callback function for lexicographically qsorting the MergedItemPairs
+int MergedList::cmp_edges(const void *a, const void *b) {
+	class MergedItemPair * x = * (class MergedItemPair **)a;
+	class MergedItemPair * y = * (class MergedItemPair **)b;
+
+	return strcmp (x->get_item2()->get_code(), y->get_item2()->get_code());
+}
+
+/// Comparator callback function for qsorting vectors of doubles
+int MergedList::cmp_double(const void *a, const void *b) {
+	double x = * (double *)a;
+	double y = * (double *)b;
+
+	if (x > y) { return 1; }
+	return -1;
+}
 
 /// Accessors
 rank_t MergedList::get_num_items() { return this->num_nodes; }

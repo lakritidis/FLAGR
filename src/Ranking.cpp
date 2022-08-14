@@ -10,6 +10,12 @@ Ranking::Ranking(class InputList * l, rank_t r, score_t s) :
 Ranking::~Ranking() {
 }
 
+/// Display Ranking contents
+void Ranking::display() {
+	printf("\tList ID: %d - Rank: %d, Score: %6.5f\n",
+		this->input_list->get_id(), this->rank, this->score);
+}
+
 /// Mutators
 void Ranking::set_input_list(class InputList * v) { this->input_list = v; }
 void Ranking::set_rank(rank_t v) { this->rank = v; }

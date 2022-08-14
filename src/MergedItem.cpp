@@ -1,13 +1,14 @@
 #include "MergedItem.h"
+#include "ram/tools/BetaDistribution.cpp"
 
 /// Default Constructor
-MergedItem::MergedItem() {
-	this->final_score = 0.0;
-	this->final_ranking = 0;
-	this->num_rankings = 0;
-	this->num_alloc_rankings = 0;
-	this->rankings = NULL;
-	this->next = NULL;
+MergedItem::MergedItem() :
+	final_score (0.0),
+	final_ranking(0),
+	num_rankings(0),
+	num_alloc_rankings(0),
+	rankings(nullptr),
+	next(nullptr) {
 }
 
 /// Constructor 2
@@ -69,16 +70,47 @@ void MergedItem::insert_ranking(class InputList * l, rank_t r, score_t s) {
 /// Display the MergedItem data
 void MergedItem::display() {
 	class Ranking * r;
-	printf("Item: %s was found in %d input lists, Score: %5.2f:\n",
+	printf("Item: %s was found in %d input lists, Score: %E:\n",
 		this->code, this->num_rankings, this->final_score);
 
 	for (uint32_t i = 0; i < this->num_alloc_rankings; i++) {
 		r = this->rankings[i];
 		if (r->get_input_list()) {
-			printf("\tList ID: %d - Ranking %d\n", r->get_input_list()->get_id(), r->get_rank());
+			r->display();
 		}
 	}
 	printf("\n");
+}
+
+/// Sort the individual item rankings in increasing score order.
+void MergedItem::sort_rankings_by_score() {
+	qsort(this->rankings, this->num_alloc_rankings, sizeof(class Ranking *), &MergedItem::cmp_score);
+}
+
+/// Callback function for QuickSort
+int MergedItem::cmp_score(const void *a, const void *b) {
+	class Ranking * x = * (class Ranking **)a;
+	class Ranking * y = * (class Ranking **)b;
+
+	if (x->get_score() > y->get_score()) {
+		return 1;
+	} else {
+		return -1;
+	}
+}
+
+/// Compute the beta values of the ranking scores
+void MergedItem::compute_beta_values() {
+	class Ranking * r;
+	double p = 0.0;
+
+	for (uint32_t i = 0; i < this->num_alloc_rankings; i++) {
+		r = this->rankings[i];
+
+		p = pbeta(r->get_score(), i + 1, this->num_alloc_rankings - i);
+
+		r->set_score( p );
+	}
 }
 
 /// Mutators

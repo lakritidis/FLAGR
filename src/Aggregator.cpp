@@ -106,6 +106,16 @@ class Voter ** Aggregator::aggregate(char * topic, class InputParams * params) {
 		this->merge_input_lists();
 		this->output_list->Outranking(this->input_lists, &s, params);
 
+	/// 400. Kemeny Optimal Aggregation (Brute Force Method)
+	} else if (ram == 400) {
+		this->merge_input_lists();
+		this->output_list->KemenyOptimal(this->input_lists, &s, params);
+
+	/// 401. The Robust Rank Aggregation algorithm of [7]
+	} else if (ram == 401) {
+		this->merge_input_lists();
+		this->output_list->RobustRA(this->input_lists, &s, params);
+
 	/// 5XXX. The DIBRA method of [5]
 	} else if (ram >= 5100 && ram <= 5999) {
 		this->merge_input_lists();
@@ -127,17 +137,27 @@ class Voter ** Aggregator::aggregate(char * topic, class InputParams * params) {
 		this->merge_input_lists();
 		this->output_list->MC(this->input_lists, &s, params);
 
-
 	/// 804. The fourth Markov Chains method of [6] (MC4)
 	} else if (ram == 804) {
 		this->merge_input_lists();
 		this->output_list->MC4(this->input_lists, &s, params);
 
+	/// 901. The first custom (user-defined) method
+	} else if (ram == 901) {
+		this->merge_input_lists();
+		this->output_list->CustomMethod1(this->input_lists, &s, params);
+
+	/// 902. The second custom (user-defined) method
+	} else if (ram == 902) {
+		this->merge_input_lists();
+		this->output_list->CustomMethod2(this->input_lists, &s, params);
 	}
+
+
 
 	this->output_list->write_to_CSV(topic, params);
 //	this->output_list->display_list(); getchar();
-
+//	printf("topic %s - ok\n", topic); fflush(NULL);
 	return voters_list;
 }
 

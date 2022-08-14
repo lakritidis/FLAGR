@@ -294,35 +294,35 @@ double Evaluator::get_average_precision() { return this->average_precision; }
 double Evaluator::get_average_ndcg() { return this->average_ndcg; }
 
 double Evaluator::get_precision(uint32_t i) {
-	if (i < 0 || !this->precision[i]) {
+	if (!this->precision[i]) {
 		return 0.0;
 	}
 	return this->precision[i];
 }
 
 double Evaluator::get_recall(uint32_t i) {
-	if (i < 0 || !this->recall[i]) {
+	if (!this->recall[i]) {
 		return 0.0;
 	}
 	return this->recall[i];
 }
 
 double Evaluator::get_F1(uint32_t i) {
-	if (i < 0 || !this->recall[i] || !this->precision[i]) {
+	if (!this->recall[i] || !this->precision[i]) {
 		return 0.0;
 	}
 	return 2 * this->precision[i] * this->recall[i] / (this->precision[i] + this->recall[i]);
 }
 
 double Evaluator::get_dcg(uint32_t i) {
-	if (i < 0 || !this->dcg[i]) {
+	if (!this->dcg[i]) {
 		return 0.0;
 	}
 	return this->dcg[i];
 }
 
 inline double Evaluator::get_ndcg(uint32_t i) {
-	if (i < 0 || !this->ndcg[i]) {
+	if (!this->ndcg[i]) {
 		return 0.0;
 	}
 	return this->ndcg[i];

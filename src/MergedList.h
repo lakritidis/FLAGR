@@ -31,8 +31,11 @@ class MergedList {
 
 			if (x->get_final_score() == y->get_final_score()) {
 				return y->get_num_rankings() - x->get_num_rankings();
+			} else if (y->get_final_score() > x->get_final_score()) {
+				return -1;
+			} else {
+				return 1;
 			}
-			return x->get_final_score() - y->get_final_score();
 		}
 
 		static int cmp_score_desc(const void *a, const void *b) {
@@ -56,15 +59,17 @@ class MergedList {
 			return -1;
 		}
 
-		static int cmp_edges(const void *a, const void *b) {
-			class MergedItemPair * x = * (class MergedItemPair **)a;
-			class MergedItemPair * y = * (class MergedItemPair **)b;
-
-			return strcmp (x->get_item2()->get_code(), y->get_item2()->get_code());
-		}
+		static int cmp_edges(const void *a, const void *b);
+		static int cmp_double(const void *a, const void *b);
 
 		score_t * compute_state_matrix(class SimpleScoreStats *, class InputParams * );
 		void matrixvec_multiply(score_t *, score_t *, score_t **);
+		void permute(class MergedItem **, class InputList **, rank_t, score_t *, int l, int r);
+		score_t stuart(double *, double *, double *, double *, char *);
+		score_t sumStuart(double *, double, uint32_t, double *, double *);
+		uint64_t factorial(uint32_t);
+		double factorial(double);
+		double * precompute_170_factorials();
 
 	public:
 		MergedList();
@@ -78,7 +83,7 @@ class MergedList {
 		void display();
 		void display_list();
 		void write_to_CSV(char *, class InputParams *);
-		void show_weights(class InputList *);
+		void compute_initial_weights(class MergedList **, class InputList **);
 		void update_weight(char *, score_t);
 		void reset_scores();
 		void reset_weights();
@@ -92,13 +97,18 @@ class MergedList {
 		void CombMNZ(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void CondorcetWinners(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void CopelandWinners(class InputList **, class SimpleScoreStats *, class InputParams *);
-		void BayesWinners(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void Outranking(class InputList **, class SimpleScoreStats *, class InputParams *);
+		void KemenyOptimal(class InputList **, class SimpleScoreStats *, class InputParams *);
+		void RobustRA(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void MC(class InputList **,  class SimpleScoreStats *, class InputParams *);
 		void MC4(class InputList **,  class SimpleScoreStats *, class InputParams *);
 		class Voter ** DIBRA(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void PrefRel(class InputList **, class SimpleScoreStats *, class InputParams *);
 		class MergedList * Agglomerative(class InputList **,  class SimpleScoreStats *, class InputParams *);
+
+		/// Custom Algorithm declarations
+		void CustomMethod1(class InputList **,  class SimpleScoreStats *, class InputParams *);
+		void CustomMethod2(class InputList **,  class SimpleScoreStats *, class InputParams *);
 
 		/// Rank Correlation Methods
 		double SpearmanRho(class InputList *);

@@ -14,6 +14,7 @@ InputParams::InputParams() :
 		max_list_items(0),
 		eval_points(0),
 		list_pruning(false),
+		exact(false),
 		convergence_precision(0.0),
 		alpha(0.0),
 		beta(0.0),
@@ -28,39 +29,40 @@ InputParams::InputParams() :
 		disc_thr(0.0) { }
 
 /// Default Constructor
-InputParams::InputParams(struct PythonParams PyParams) :
+InputParams::InputParams(struct UserParams uParams) :
 		input_file(NULL),
 		rels_file(NULL),
 		output_file(NULL),
 		eval_file(NULL),
 		random_string(NULL),
-		aggregation_method(PyParams.rank_aggregation_method),
-		correlation_method(PyParams.distance),
-		weights_normalization(PyParams.weight_normalization),
-		max_iterations(PyParams.max_iter),
+		aggregation_method(uParams.rank_aggregation_method),
+		correlation_method(uParams.distance),
+		weights_normalization(uParams.weight_normalization),
+		max_iterations(uParams.max_iter),
 		max_list_items(0),
-		eval_points(PyParams.eval_points),
-		list_pruning(PyParams.prune),
-		convergence_precision(PyParams.tol),
-		alpha(PyParams.alpha),
-		beta(PyParams.beta),
-		gamma(PyParams.gamma),
-		delta1(PyParams.delta1),
-		delta2(PyParams.delta2),
-		c1(PyParams.c1),
-		c2(PyParams.c2),
-		pref_thr(PyParams.pref_thr),
-		veto_thr(PyParams.veto_thr),
-		conc_thr(PyParams.conc_thr),
-		disc_thr(PyParams.disc_thr) {
+		eval_points(uParams.eval_points),
+		list_pruning(uParams.prune),
+		exact(uParams.exact),
+		convergence_precision(uParams.tol),
+		alpha(uParams.alpha),
+		beta(uParams.beta),
+		gamma(uParams.gamma),
+		delta1(uParams.delta1),
+		delta2(uParams.delta2),
+		c1(uParams.c1),
+		c2(uParams.c2),
+		pref_thr(uParams.pref_thr),
+		veto_thr(uParams.veto_thr),
+		conc_thr(uParams.conc_thr),
+		disc_thr(uParams.disc_thr) {
 
-			this->set_input_file(PyParams.input_file);
-			if (PyParams.rels_file) {
-				this->set_rels_file(PyParams.rels_file);
+			this->set_input_file(uParams.input_file);
+			if (uParams.rels_file) {
+				this->set_rels_file(uParams.rels_file);
 			}
 
-			this->set_random_string(PyParams.random_string);
-			this->set_output_files(PyParams.output_dir);
+			this->set_random_string(uParams.random_string);
+			this->set_output_files(uParams.output_dir);
 		}
 
 /// Destructor
@@ -74,7 +76,7 @@ InputParams::~InputParams() {
 
 /// Display members
 void InputParams::display() {
-	printf("Dumping FLAGR execution parameters:\n");
+	printf("FLAGR execution parameters:\n");
 	if (input_file)    { printf("\tInput file:         %s\n", this->input_file); }
 				else   { printf("\tInput file:         [not set]\n"); }
 
@@ -90,15 +92,16 @@ void InputParams::display() {
 	if (random_string) { printf("\tRandom string:      %s\n", this->random_string); }
 				else   { printf("\tRandom string:      [not set]\n"); }
 
-	printf("\tAggregation method: %d\n", this->aggregation_method);
-	printf("\tDistance measure:   %d\n", this->correlation_method);
-	printf("\tVoter weights norm: %d\n", this->weights_normalization);
-	printf("\tMax iterations:     %d\n", this->max_iterations);
-	printf("\tMax list items:     %d\n", this->max_list_items);
-	printf("\tEvaluation points:  %d\n", this->eval_points);
+	printf("\tAggregation method: %d\n",	this->aggregation_method);
+	printf("\tDistance measure:   %d\n",	this->correlation_method);
+	printf("\tVoter weights norm: %d\n",	this->weights_normalization);
+	printf("\tMax iterations:     %d\n",	this->max_iterations);
+	printf("\tMax list items:     %d\n",	this->max_list_items);
+	printf("\tEvaluation points:  %d\n",	this->eval_points);
 
-	printf("\nDumping FLAGR hyper-parameters:\n");
-	printf("\tList pruning:       %d\n", this->list_pruning);
+	printf("\nAlgorithm hyper-parameters:\n");
+	printf("\tList pruning:       %d\n", 	this->list_pruning);
+	printf("\tExact computation:  %d\n", 	this->exact);
 	printf("\tConvergence precis: %7.6f\n", this->convergence_precision);
 	printf("\talpha:              %4.3f\n", this->alpha);
 	printf("\tbeta:               %4.3f\n", this->beta);
@@ -170,6 +173,7 @@ int32_t InputParams::get_max_iterations() { return this->max_iterations; }
 uint32_t InputParams::get_max_list_items() { return this->max_list_items; }
 rank_t InputParams::get_eval_points() { return this->eval_points; }
 bool InputParams::get_list_pruning() { return this->list_pruning; }
+bool InputParams::get_exact() { return this->exact; }
 
 score_t InputParams::get_convergence_precision() { return this->convergence_precision; }
 score_t InputParams::get_alpha() { return this->alpha; }

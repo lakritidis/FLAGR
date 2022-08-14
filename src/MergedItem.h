@@ -12,6 +12,10 @@ class MergedItem : public InputItem {
 
 		class MergedItem * next;
 
+	private:
+		/// Callback function for QuickSort
+		static int cmp_score(const void *a, const void *b);
+
 	public:
 		MergedItem();
 		MergedItem(class MergedItem *);
@@ -19,6 +23,8 @@ class MergedItem : public InputItem {
 		~MergedItem();
 
 		void insert_ranking(class InputList *, rank_t, score_t);
+		void sort_rankings_by_score();
+		void compute_beta_values();
 		void display();
 
 		/// Mutators

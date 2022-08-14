@@ -1,8 +1,8 @@
 #ifndef INPUTPARAMS_H
 #define INPUTPARAMS_H
 
-/// Python parameters are passed via this PythonParams struct
-struct PythonParams {
+/// External user parameters are passed to FLAGR via this UserParams structure.
+struct UserParams {
 	char * input_file = NULL;
 	char * rels_file = NULL;
 	char * random_string = NULL;
@@ -17,6 +17,7 @@ struct PythonParams {
 	float tol = 0.0;
 	int max_iter = 0;
 	bool prune = false;
+	bool exact = false;
 
 	score_t pref_thr = 0.0;
 	score_t veto_thr = 0.0;
@@ -34,34 +35,40 @@ struct PythonParams {
 
 
 /// RANK AGGREGATION METHODS (uint32_t aggregation_method)
-///  100:   CombSUM with Borda normalization			[1]
-///  101:   CombSUM with Rank normalization				[1]
-///  102:   CombSUM with Score normalization			[1]
-///  103:   CombSUM with Z-Score normalization			[1]
-///  110:   CombMNZ with Borda normalization			[1]
-///  111:   CombMNZ with Rank normalization				[1]
-///  112:   CombMNZ with Score normalization			[1]
-///  113:   CombMNZ with Z-Score normalization			[1]
+///  100:   CombSUM with Borda normalization				[1]
+///  101:   CombSUM with Rank normalization					[1]
+///  102:   CombSUM with Score normalization				[1]
+///  103:   CombSUM with Z-Score normalization				[1]
+///  104:   CombSUM with SimpleBorda normalization
+///  110:   CombMNZ with Borda normalization				[1]
+///  111:   CombMNZ with Rank normalization					[1]
+///  112:   CombMNZ with Score normalization				[1]
+///  113:   CombMNZ with Z-Score normalization				[1]
+///  114:   CombMNZ with SimpleBorda normalization
 ///  200:   Condorcet Winners Method
 ///  201:   Copeland Winners Method
-///  300:   Outranking Approach							[2]
-///  5100.  DIBRA @ CombSUM with Borda Normalization	[5]
-///  5101.  DIBRA @ CombSUM with Rank Normalization
-///  5102.  DIBRA @ CombSUM with Score Normalization
-///  5103.  DIBRA @ CombSUM with Z-Score Normalization
-///  5110.  DIBRA @ CombMNZ with Borda Normalization
-///  5111.  DIBRA @ CombMNZ with Rank Normalization
-///  5112.  DIBRA @ CombMNZ with Score Normalization
-///  5113.  DIBRA @ CombMNZ with Z-Score Normalization
-///  5200.  DIBRA @ Condorcet Winners					[5]
-///  5201.  DIBRA @ Copeland Winners					[5]
-///  5300.  DIBRA @ Outranking Approach					[5]
-///  600.   Preference Relations Method					[3]
-///  700.   Agglomerative Aggregation					[4]
-///  801.   Markov Chains 1								[6]
-///  802.   Markov Chains 2								[6]
-///  803.   Markov Chains 3								[6]
-///  804.   Markov Chains 4								[6]
+///  300:   Outranking Approach								[2]
+///  400:   Kemeny Optimal Aggregation (Brute Force)
+///  401:   Robust Rank Aggregation (RRA)					[7]
+///  5100.  DIBRA @ CombSUM with Borda Normalization		[5]
+///  5101.  DIBRA @ CombSUM with Rank Normalization			[5]
+///  5102.  DIBRA @ CombSUM with Score Normalization		[5]
+///  5103.  DIBRA @ CombSUM with Z-Score Normalization		[5]
+///  5104.  DIBRA @ CombSUM with SimpleBorda Normalization	[5]
+///  5110.  DIBRA @ CombMNZ with Borda Normalization		[5]
+///  5111.  DIBRA @ CombMNZ with Rank Normalization			[5]
+///  5112.  DIBRA @ CombMNZ with Score Normalization		[5]
+///  5113.  DIBRA @ CombMNZ with Z-Score Normalization		[5]
+///  5114.  DIBRA @ CombMNZ with SimpleBorda Normalization	[5]
+///  5200.  DIBRA @ Condorcet Winners						[5]
+///  5201.  DIBRA @ Copeland Winners						[5]
+///  5300.  DIBRA @ Outranking Approach						[5]
+///  600.   Preference Relations Method						[3]
+///  700.   Agglomerative Aggregation						[4]
+///  801.   Markov Chains 1									[6]
+///  802.   Markov Chains 2									[6]
+///  803.   Markov Chains 3									[6]
+///  804.   Markov Chains 4									[6]
 
 
 /// LIST CORRELATION/DISTANCE MEASURES (uint32_t correlation_method)
@@ -92,6 +99,7 @@ class InputParams {
 		uint32_t max_list_items;
 		rank_t eval_points;
 		bool list_pruning;
+		bool exact;
 
 		score_t convergence_precision;
 		score_t alpha;
@@ -111,7 +119,7 @@ class InputParams {
 
 	public:
 		InputParams();
-		InputParams(struct PythonParams);
+		InputParams(struct UserParams);
 		~InputParams();
 
 		void set_output_files(char *);
@@ -132,6 +140,7 @@ class InputParams {
 		uint32_t get_max_list_items();
 		rank_t get_eval_points();
 		bool get_list_pruning();
+		bool get_exact();
 
 		score_t get_convergence_precision();
 		score_t get_alpha();
