@@ -16,7 +16,7 @@ LONG_DESCRIPTION =  'FLAGR is a high performing, open-source, modular and cross-
 
 setup(
     name='pyflagr',
-    version='1.0.4',
+    version='1.0.5',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
