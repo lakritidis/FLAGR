@@ -1,12 +1,20 @@
 # (Py)FLAGR
 
-**Fuse, Learn, AGgregate, Rerank
+* Fuse, Learn, AGgregate, Rerank
 
-FLAGR is a high performing, modular library for rank aggregation. To ensure the highest possible performance, the core FLAGR library is written in C++ and implements a wide collection of unsupervised rank aggregation methods. Its modular design allows third-party programmers to implement their own algorithms and easily rebuild the entire library. FLAGR can be built as a standard application, or as a shared library (`so` or `dll`). In the second case, it can be linked from other C/C++ programs, or even from programs written in other languages (e.g. Python, PHP, etc.).
 
-In this context, PyFLAGR is a Python library that links to FLAGR and allows a developer to exploit the efficient FLAGR implementations from a standard Python program.
 
-The library is fully documented at [http://flagr.mywork.gr/](http://flagr.mywork.gr/)
+The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.
+
+FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.
+
+PyFLAGR is a Python library built on top of FLAGR library core. It can be easily installed with pip (see below) and used in standard Python programs and Jupyter notebooks. Representative code examples can be found on this page.
+
+The current FLAGR version is 1.0.6.
+
+Both libraries are licensed under the Apache License, version 2.
+
+The library is fully documented at [http://flagr.mywork.gr/](https://flagr.site/)
 
 
 ## Installing PyFLAGR
