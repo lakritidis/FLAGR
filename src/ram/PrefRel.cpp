@@ -27,7 +27,6 @@ void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s,
 
 	/// Compute the list weights from their disagreement scores (eq. 5)
 //	printf("\n\nNum Nodes: %d, Num Pairs: %d\n", this->num_nodes, num_pairs);
-
 	for (i = 0; i < this->num_input_lists; i++) {
 		inlist = this->item_list[0]->get_ranking(i)->get_input_list();
 		DisagreementScore = inlist->get_voter()->get_weight();
@@ -35,7 +34,7 @@ void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s,
 		ListScore = 1.0 - DisagreementScore / num_pairs;
 		inlist->set_voter_weight ( ListScore );
 
-//		printf("List %d disagreement score = %2.1f, weight = %2.3f\n", i, DisagreementScore, ListScore);
+//		printf("List %d disagreement score = %2.1f, weight = %12.10f\n", i, DisagreementScore, ListScore);
 	}
 
 	/// Create the edges of the aggregate graph: 2 edges per MergedItem
@@ -57,26 +56,28 @@ void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s,
 	qsort(edges, 2 * num_pairs, sizeof(class MergedItemPait *), &MergedList::cmp_edges);
 
 	/// Find the in-degrees of the graph nodes by scanning the edges
+	ItemScore = 0.0;
 	for (i = 0; i < 2 * num_pairs; i++) {
 		key = edges[i]->get_item2()->get_code();
 		if (i == 0) {
 			prev_key = key;
 		}
 
-		ItemScore += edges[i]->get_score();
+//		edges[i]->display(0);
 
 		if (key != prev_key) {
-			this->update_weight(key, ItemScore);
-			ItemScore = 0.0;
+//			printf("\tItemScore for %s = %12.10f\n", prev_key, ItemScore);
+			this->update_weight(prev_key, ItemScore);
+			ItemScore = edges[i]->get_score();
 			prev_key = key;
+		} else {
+			ItemScore += edges[i]->get_score();
 		}
-
-//		edges[i]->display(0);
 	}
 
-	this->update_weight(key, ItemScore);
-	ItemScore = 0.0;
-	prev_key = key;
+//	printf("\tItemScore for %s = %12.10f\n", prev_key, ItemScore); getchar();
+
+	this->update_weight(prev_key, ItemScore);
 
 	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
 

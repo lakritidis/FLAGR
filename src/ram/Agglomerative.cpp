@@ -83,7 +83,7 @@ void MergedList::merge_with(class MergedList * inlist, class InputParams * param
 //		getchar();
 	}
 
-//	printf("Old weight 1: %5.3f - Old weight 2: %5.3f", this->weight, inlist->get_weight());
+//	printf("Old weight 1: %5.3f - Old weight 2: %5.3f ", this->weight, inlist->get_weight());
 
 	/// Compute the weight of the updated MergedList from its parents (Ref [4], Eq. 9).
 	this->weight = (c1 * this->weight + c2 * inlist->get_weight()) / (c1 + c2);
@@ -96,7 +96,7 @@ void MergedList::merge_with(class MergedList * inlist, class InputParams * param
 }
 
 
-/// Compute the Spearman's rho correlation measure between this MergedList and another
+/// Compute the Spearman's rho correlation measure between this MergedList and another one.
 double MergedList::SpearmanRho(class MergedList * inlist) {
 	class MergedItem * q, * p;
 	double rho = 0.0, sum = 0.0;
@@ -124,6 +124,28 @@ double MergedList::SpearmanRho(class MergedList * inlist) {
 	return rho;
 }
 
+/// Compute the Spearman's Footrule distance between this MergedList and another one.
+double MergedList::ScaledFootruleDistance(class MergedList * inlist) {
+	double d = 0.0, nd = 0.0;
+	rank_t i = 0, r = 0, R = inlist->get_num_items(), L = this->num_nodes;
+
+	for (i = 0; i < L; i++) {
+		for (r = 0; r < R; r++) {
+			if (strcmp(this->item_list[i]->get_code(), inlist->get_item(r)->get_code()) == 0) {
+				d += fabs( (double) i / L - (double) r / R );
+				break;
+			}
+		}
+	}
+
+	nd = 2.00 * d / R;
+
+//	if (nd > 1) { printf("gt > 1: ==%d== d=%5.3f NormD=%5.3f", R, d, nd); getchar(); }
+//	printf("SFD: %5.3f (Norm SFD: %5.3f) - Items: %d\n", d, nd, R); getchar();
+
+	return nd;
+
+}
 
 /// Determine the most similar MergedList of each MergedList. Instead on using a M x M matrix for
 /// all similarities, it suffices to use a M x 1 array which stores only the max similarity values.
@@ -140,12 +162,13 @@ struct max_similarity * compute_similarities(struct max_similarity * max_similar
 		}
 
 		for (m = 0; m < nlists; m++) {
+//			if (templist[m]) { templist[m]->display_list(); getchar(); }
 			max_sim = -2.0;
 			for (n = 0; n < nlists; n++) {
 				if (m != n && templist[m] && templist[n]) {
 					sim = templist[m]->SpearmanRho(templist[n]);
 
-	//				printf("\nRho correlation between %d and %d = %5.3f\n", m, n, sim);
+//					printf("\nRho correlation between %d and %d = %5.3f\n", m, n, sim);
 					if (sim > max_sim) {
 						max_sim = sim;
 						max_similarities[m].sim = max_sim;
@@ -158,7 +181,7 @@ struct max_similarity * compute_similarities(struct max_similarity * max_similar
 }
 
 /// Compute the initial weights based on the majority votes
-void MergedList::compute_initial_weights(class MergedList ** list_array, class InputList ** input_lists) {
+void MergedList::compute_initial_weights(class InputList ** input_lists) {
 	rank_t k = 0, p_rank = 0, q_rank = 0, i = 0, j = 0;
 	uint32_t nlists = this->num_input_lists, l = 0;
 	score_t wins = 0, losses = 0;
@@ -231,6 +254,8 @@ class MergedList * MergedList::Agglomerative(class InputList ** inlists, class S
 	/// Which list is the most similar to another one? One record per each input list
 	struct max_similarity * max_similarities = new max_similarity [nlists];
 
+	this->compute_initial_weights(inlists);
+
 	/// Create one temporary aggregate per input list - this will help us in the progressive list merging
 	class MergedList ** templist = new MergedList * [nlists];
 
@@ -238,8 +263,6 @@ class MergedList * MergedList::Agglomerative(class InputList ** inlists, class S
 		templist[m] = new MergedList(inlists, nlists, m);
 //		templist[m]->display(); getchar();
 	}
-
-	this->compute_initial_weights(templist, inlists);
 
 	/// Compute the initial list similarities/correlations between the lists
 	max_similarities = compute_similarities(max_similarities, templist, nlists);
