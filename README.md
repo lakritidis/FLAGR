@@ -14,7 +14,7 @@ The current FLAGR version is 1.0.7.
 
 Both libraries are licensed under the Apache License, version 2.
 
-The library is fully documented at [http://flagr.mywork.gr/](https://flagr.site/)
+The library is fully documented at [https://flagr.site/](https://flagr.site/)
 
 
 ## Installing PyFLAGR
