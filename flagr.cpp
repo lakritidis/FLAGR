@@ -3,25 +3,27 @@
 	A high performance library for rank aggregation
 
 	References:
-	[1] Renda E., Straccia U., "Web metasearch: rank vs. score based rank aggregation methods", In
+	[1] E. Renda, U. Straccia, "Web metasearch: rank vs. score based rank aggregation methods", In
 		Proceedings of the 2003 ACM symposium on Applied computing, pp. 841-846, 2003.
-	[2] Farah, M., Vanderpooten, D., "An outranking approach for rank aggregation in information
+	[2] M. Farah, D. Vanderpooten, "An outranking approach for rank aggregation in information
 		retrieval", In Proceedings of the 30th ACM Conference on Research and Development in
 		Information Retrieval, pp. 591-598, 2007.
-	[3] Desarkar, M. S., Sarkar, S., Mitra, P., "Preference relations based unsupervised rank
+	[3] M.S. Desarkar, S. Sarkar, P. Mitra, "Preference relations based unsupervised rank
 		aggregation for metasearch", Expert Systems with Applications, vol. 49, pp. 86-98, 2016.
-	[4] Chatterjee, S., Mukhopadhyay, A., Bhattacharyya, M., "A weighted rank aggregation approach
+	[4] S. Chatterjee, A. Mukhopadhyay, M. Bhattacharyya, "A weighted rank aggregation approach
 		towards crowd opinion analysis", Knowledge-Based Systems, vol. 149, pp. 47-60, 2018.
-	[5] Akritidis L., Fevgas A., Bozanis P., Manolopoulos Y., "An Unsupervised Distance-Based Model
+	[5] L. Akritidis, A. Fevgas, P. Bozanis, Y. Manolopoulos, "An Unsupervised Distance-Based Model
 		for Weighted Rank Aggregation with List Pruning", Expert Systems with Applications,
 		vol. 202, pp. 117435, 2022.
-	[6] Dwork C., Kumar R., Naor M., Sivakumar D., "Rank Aggregation Methods for the Web", In
+	[6] C. Dwork, R. Kumar, M. Naor, D. Sivakumar, "Rank Aggregation Methods for the Web", In
 		Proceedings of the 10th International Conference on World Wide Web, pp. 613-622, 2001.
-		R Kolde, S Laur, P Adler, J Vilo
-	[7] Kolde R., Laur S., Adler P., Vilo J., "Robust rank aggregation for gene list integration
+	[7] R. Kolde, S. Laur, P. Adler, J. Vilo, "Robust rank aggregation for gene list integration
 		and meta-analysis", Bioinformatics, vol. 28, no. 4, pp. 573--580, 2012.
-	[8] Majumder KL, Bhattacharjee GP, "Algorithm AS 63: The incomplete Beta Integral,", Applied
+	[8] K.L. Majumder, G.P. Bhattacharjee, "Algorithm AS 63: The incomplete Beta Integral", Applied
 		Statistics, vol. 22, no. 3, pp. 409-411, 1973.
+	[9] R.P. DeConde, S. Hawley, S. Falcon, N. Clegg, B. Knudsen, R. Etzioni, "Combining results of
+		microarray experiments: a rank aggregation approach", Statistical Applications in Genetics
+		and Molecular Biology, vol. 5, no. 1, 2006.
 **/
 
 #include "stdio.h"
