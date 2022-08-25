@@ -154,15 +154,15 @@ void MergedItemPair::compute_weight() {
 		}
 	}
 
-//	this->display(0); getchar();
+//	this->display(0);
 }
 
 /// Display the ItemPair
 void MergedItemPair::display(uint32_t t) {
 	if (t == 0) {
-		printf("Edge (%s, %s) Score = %2.3f\n", this->item1->get_code(), this->item2->get_code(), this->score);
+		printf("Edge (%s, %s) Score = %12.10f\n", this->item1->get_code(), this->item2->get_code(), this->score);
 	} else if (t == 1) {
-		printf("Edge Score: %2.3f\n", this->score);
+		printf("Edge Score: %12.10f\n", this->score);
 		printf("Left Node:\n");
 		this->item1->display();
 		printf("\nRight Node:\n");
