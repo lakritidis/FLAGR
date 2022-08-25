@@ -2,21 +2,21 @@ from distutils.core import setup
 from setuptools import find_packages
 
 DESCRIPTION = 'PyFLAGR is a Python package for aggregating ranked preference lists from multiple sources.'
-LONG_DESCRIPTION =  'FLAGR is a high performing, open-source, modular and cross-platform library for rank aggregation. '\
-                    'The core FLAGR library is written in C++ and implements a wide collection of unsupervised rank ' \
-                    'aggregation methods. Its modular design allows third-party programmers to implement their own ' \
-                    'algorithms and easily integrate them within the library. FLAGR can be built as a standard ' \
-                    'console application, or as a shared library (that is, .so or .dll file). In the second case, it ' \
-                    'can be linked from other C/C++ programs, or from programs written in other languages (like ' \
-                    'Python, R, PHP, etc.).\n\n' \
-                    'In this context, PyFLAGR is a Python library that links to FLAGR and allows an analyst to exploit '\
-                    'the efficient FLAGR implementations from a standard Python program.\n\n\n' \
-                    'FLAGR Website: [http://flagr.mywork.gr/](http://flagr.mywork.gr/)\n\n' \
-                    'GitHub repository: [https://github.com/lakritidis/FLAGR](https://github.com/lakritidis/FLAGR)\n\n'
+LONG_DESCRIPTION = 'The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied '\
+    'research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, '\
+    'election systems and metasearch engines.\n\n' \
+    'FLAGR is a high performance, modular, open source library for rank aggregation problems. It implements baseline '\
+    'and recent state-of-the-art aggregation algorithms that accept ranked preference lists and generate a single '\
+    'consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the '\
+    'broad family of unsupervised learning techniques.\n\n' \
+    'PyFLAGR is a Python library built on top of FLAGR library core. It can be easily installed with pip and used in '\
+    'standard Python programs and Jupyter notebooks.\n\n\n' \
+    'FLAGR Website: [https://flagr.site/](https://flagr.site/)\n\n' \
+    'GitHub repository: [https://github.com/lakritidis/FLAGR](https://github.com/lakritidis/FLAGR)\n\n'
 
 setup(
     name='pyflagr',
-    version='1.0.5',
+    version='1.0.7',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
