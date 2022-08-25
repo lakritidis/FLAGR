@@ -25,6 +25,8 @@ class RRA(RAM):
             ctypes.c_bool     # Correct p-values with Stuart-Ares algorithm
         ]
 
+        self.flagr_lib.RobustRA.restype = None
+
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
         # This is the directory where the output files are written. If nothing is provided, then the preset temp
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.

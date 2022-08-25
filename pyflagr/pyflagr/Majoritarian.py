@@ -21,6 +21,8 @@ class CondorcetWinners(RAM):
             ctypes.c_char_p  # The directory where the output files will be written
         ]
 
+        self.flagr_lib.Condorcet.restype = None
+
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
         # This is the directory where the output files are written. If nothing is provided, then the preset temp
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
@@ -65,6 +67,8 @@ class CopelandWinners(RAM):
             ctypes.c_char_p,  # Random string to be embedded into the output file names
             ctypes.c_char_p   # The directory where the output files will be written
         ]
+
+        self.flagr_lib.Copeland.restype = None
 
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
         # This is the directory where the output files are written. If nothing is provided, then the preset temp
@@ -123,6 +127,8 @@ class OutrankingApproach(RAM):
             ctypes.c_float,   # Concordance Threshold
             ctypes.c_float    # Discordance Threshold
         ]
+
+        self.flagr_lib.OutrankingApproach.restype = None
 
     def aggregate(self, input_file="", input_df=None, rels_file="", rels_df=None, out_dir=None):
         # This is the directory where the output files are written. If nothing is provided, then the preset temp
