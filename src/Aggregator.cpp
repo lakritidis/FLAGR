@@ -132,15 +132,10 @@ class Voter ** Aggregator::aggregate(char * topic, class InputParams * params) {
 		this->output_list = temp->Agglomerative(this->input_lists, &s, params);
 		delete temp;
 
-	/// 804. The fourth Markov Chains method of [6] (MC4)
-	} else if (ram == 801 || ram == 802 || ram == 803) {
+	/// 80X. The Markov Chains methods of [6]
+	} else if (ram == 801 || ram == 802 || ram == 803 || ram == 804 || ram == 805) {
 		this->merge_input_lists();
 		this->output_list->MC(this->input_lists, &s, params);
-
-	/// 804. The fourth Markov Chains method of [6] (MC4)
-	} else if (ram == 804) {
-		this->merge_input_lists();
-		this->output_list->MC4(this->input_lists, &s, params);
 
 	/// 901. The first custom (user-defined) method
 	} else if (ram == 901) {

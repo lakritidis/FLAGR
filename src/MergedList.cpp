@@ -9,8 +9,7 @@
 #include "ram/DIBRA.cpp"
 #include "ram/PrefRel.cpp"
 #include "ram/Agglomerative.cpp"
-#include "ram/MC123.cpp"
-#include "ram/MC4.cpp"
+#include "ram/MC.cpp"
 #include "ram/RobustRA.cpp"
 #include "ram/CustomMethods.cpp"
 
@@ -58,7 +57,7 @@ MergedList::MergedList(class InputList ** inlists, uint32_t nlists, uint32_t m) 
 
 	score_t score = 0;
 
-	this->weight = 1.0;   /// How are the list weights initialized?
+	this->weight = inlists[m]->get_voter()->get_weight();
 	this->num_input_lists = nlists;
 	this->num_nodes = 0;
 	this->num_chains = 0;
@@ -73,7 +72,9 @@ MergedList::MergedList(class InputList ** inlists, uint32_t nlists, uint32_t m) 
 	}
 
 //	printf("\ncreating list %d...\n", m);fflush((NULL));
-	/// Create a tem
+	/// Create a temporary aggregate list from an InputList -> essentially we are converting an
+	/// InputList into a MergedList. These MergedLists will be progressively merged later in an
+	/// Agglomerative fashion.
 	for (rank_t i = 0; i < inlists[m]->get_num_items(); i++) {
 		elem = inlists[m]->get_item(i);
 
@@ -489,7 +490,18 @@ double * MergedList::precompute_170_factorials() {
 	return factorials;
 }
 
-/// Comparator callback function for lexicographically qsorting the MergedItemPairs
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
+/// Comparators ///////////////////////////////////////////////////////////////////////////////////
+
+/// Comparator callback function for lexicographically qsorting MergedItems
+int MergedList::cmp_code_asc(const void *a, const void *b) {
+	class MergedItem *x = *(class MergedItem **)a;
+	class MergedItem *y = *(class MergedItem **)b;
+
+	return strcmp(x->get_code(), y->get_code());
+}
+
+/// Comparator callback function for lexicographically qsorting MergedItemPairs
 int MergedList::cmp_edges(const void *a, const void *b) {
 	class MergedItemPair * x = * (class MergedItemPair **)a;
 	class MergedItemPair * y = * (class MergedItemPair **)b;
@@ -503,6 +515,50 @@ int MergedList::cmp_double(const void *a, const void *b) {
 	double y = * (double *)b;
 
 	if (x > y) { return 1; }
+	return -1;
+}
+
+/// Comparator callback function for qsorting the list elements in increasing score order
+int MergedList::cmp_score_asc(const void *a, const void *b) {
+	class MergedItem *x = *(class MergedItem **)a;
+	class MergedItem *y = *(class MergedItem **)b;
+
+	if (x->get_final_score() == y->get_final_score()) {
+		if (y->get_num_rankings() == x->get_num_rankings()) {
+			return strcmp(x->get_code(), y->get_code());
+		} else {
+			return y->get_num_rankings() - x->get_num_rankings();
+		}
+	} else if (y->get_final_score() > x->get_final_score()) {
+		return -1;
+	} else {
+		return 1;
+	}
+}
+
+/// Comparator callback function for qsorting the list elements in decreasing score order
+int MergedList::cmp_score_desc(const void *a, const void *b) {
+	class MergedItem *x = *(class MergedItem **)a;
+	class MergedItem *y = *(class MergedItem **)b;
+
+	if (x->get_final_score() == y->get_final_score()) {
+		if (y->get_num_rankings() == x->get_num_rankings()) {
+			return strcmp(x->get_code(), y->get_code());
+		} else {
+			return y->get_num_rankings() - x->get_num_rankings();
+		}
+	} else if (y->get_final_score() > x->get_final_score()) {
+		return 1;
+	} else {
+		return -1;
+	}
+}
+
+int MergedList::cmp_voter(const void *a, const void *b) {
+	class Voter * x = *(class Voter **)a;
+	class Voter * y = *(class Voter **)b;
+
+	if (x->get_weight() > y->get_weight()) { return 1; }
 	return -1;
 }
 

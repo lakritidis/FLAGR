@@ -18,58 +18,24 @@ class MergedList {
 	private:
 		uint32_t djb2(char *);
 
-		static int cmp_code_asc(const void *a, const void *b) {
-			class MergedItem *x = *(class MergedItem **)a;
-			class MergedItem *y = *(class MergedItem **)b;
-
-			return strcmp(x->get_code(), y->get_code());
-		}
-
-		static int cmp_score_asc(const void *a, const void *b) {
-			class MergedItem *x = *(class MergedItem **)a;
-			class MergedItem *y = *(class MergedItem **)b;
-
-			if (x->get_final_score() == y->get_final_score()) {
-				return y->get_num_rankings() - x->get_num_rankings();
-			} else if (y->get_final_score() > x->get_final_score()) {
-				return -1;
-			} else {
-				return 1;
-			}
-		}
-
-		static int cmp_score_desc(const void *a, const void *b) {
-			class MergedItem *x = *(class MergedItem **)a;
-			class MergedItem *y = *(class MergedItem **)b;
-
-			if (x->get_final_score() == y->get_final_score()) {
-				return y->get_num_rankings() - x->get_num_rankings();
-			} else if (y->get_final_score() > x->get_final_score()) {
-				return 1;
-			} else {
-				return -1;
-			}
-		}
-
-		static int cmp_voter(const void *a, const void *b) {
-			class Voter * x = *(class Voter **)a;
-			class Voter * y = *(class Voter **)b;
-
-			if (x->get_weight() > y->get_weight()) { return 1; }
-			return -1;
-		}
-
-		static int cmp_edges(const void *a, const void *b);
-		static int cmp_double(const void *a, const void *b);
+		static int cmp_code_asc(const void *, const void *);
+		static int cmp_score_asc(const void *, const void *);
+		static int cmp_score_desc(const void *, const void *);
+		static int cmp_voter(const void *, const void *);
+		static int cmp_edges(const void *, const void *);
+		static int cmp_double(const void *, const void *);
 
 		score_t * compute_state_matrix(class SimpleScoreStats *, class InputParams * );
 		void matrixvec_multiply(score_t *, score_t *, score_t **);
+
 		void permute(class MergedItem **, class InputList **, rank_t, score_t *, int l, int r);
+
 		score_t stuart(double *, double *, double *, double *, char *);
 		score_t sumStuart(double *, double, uint32_t, double *, double *);
 		uint64_t factorial(uint32_t);
 		double factorial(double);
 		double * precompute_170_factorials();
+		void compute_initial_weights(class InputList **);
 
 	public:
 		MergedList();
@@ -83,7 +49,6 @@ class MergedList {
 		void display();
 		void display_list();
 		void write_to_CSV(char *, class InputParams *);
-		void compute_initial_weights(class MergedList **, class InputList **);
 		void update_weight(char *, score_t);
 		void reset_scores();
 		void reset_weights();
@@ -101,7 +66,6 @@ class MergedList {
 		void KemenyOptimal(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void RobustRA(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void MC(class InputList **,  class SimpleScoreStats *, class InputParams *);
-		void MC4(class InputList **,  class SimpleScoreStats *, class InputParams *);
 		class Voter ** DIBRA(class InputList **, class SimpleScoreStats *, class InputParams *);
 		void PrefRel(class InputList **, class SimpleScoreStats *, class InputParams *);
 		class MergedList * Agglomerative(class InputList **,  class SimpleScoreStats *, class InputParams *);
@@ -113,6 +77,7 @@ class MergedList {
 		/// Rank Correlation Methods
 		double SpearmanRho(class InputList *);
 		double SpearmanRho(class MergedList *);
+		double ScaledFootruleDistance(class MergedList *);
 		double ScaledFootruleDistance(uint32_t, class InputList *);
 		double LocalScaledFootruleDistance(uint32_t, class InputList *);
 		double CosineSimilarity(uint32_t, class InputList *);
