@@ -8,6 +8,9 @@ InputData::InputData() :
 		params(NULL),
 		num_queries(0),
 		queries(NULL),
+		num_ret(0),
+		num_rel(0),
+		num_rel_ret(0),
 		MAP(0.0),
 		MNDCG(0.0),
 		avg_sprho(0.0),
@@ -23,6 +26,9 @@ InputData::InputData(class InputParams * pr) :
 		params(pr),
 		num_queries(0),
 		queries(NULL),
+		num_ret(0),
+		num_rel(0),
+		num_rel_ret(0),
 		MAP(0.0),
 		MNDCG(0.0),
 		avg_sprho(0.0),
@@ -148,24 +154,37 @@ void InputData::print_header() {
 	if (ram == 101) { strcpy(m1, "CombSUM with Rank normalization"); } else
 	if (ram == 102) { strcpy(m1, "CombSUM with Score normalization"); } else
 	if (ram == 103) { strcpy(m1, "CombSUM with Z-Score normalization"); } else
+	if (ram == 104) { strcpy(m1, "CombSUM with simple Borda normalization"); } else
 	if (ram == 110) { strcpy(m1, "CombMNZ with Borda normalization"); } else
 	if (ram == 111) { strcpy(m1, "CombMNZ with Rank normalization"); } else
 	if (ram == 112) { strcpy(m1, "CombMNZ with Score normalization"); } else
 	if (ram == 113) { strcpy(m1, "CombMNZ with Z-Score normalization"); } else
+	if (ram == 114) { strcpy(m1, "CombMNZ with simple Borda normalization"); } else
 	if (ram == 200) { strcpy(m1, "Condorcet Winners Method"); } else
+	if (ram == 201) { strcpy(m1, "Copeland Winners Method"); } else
 	if (ram == 300) { strcpy(m1, "Outranking Approach"); } else
+	if (ram == 400) { strcpy(m1, "Kemeny Optimal Aggregation"); } else
+	if (ram == 401) { strcpy(m1, "Robust Rank Aggregation (RRA)"); } else
 	if (ram == 5100) { strcpy(m1, "DIBRA @ CombSUM with Borda normalization"); } else
 	if (ram == 5101) { strcpy(m1, "DIBRA @ CombSUM with Rank normalization"); } else
 	if (ram == 5102) { strcpy(m1, "DIBRA @ CombSUM with Score normalization"); } else
 	if (ram == 5103) { strcpy(m1, "DIBRA @ CombSUM with Z-Score normalization"); } else
+	if (ram == 5104) { strcpy(m1, "DIBRA @ CombSUM with simple Borda normalization"); } else
 	if (ram == 5110) { strcpy(m1, "DIBRA @ CombMNZ with Borda normalization"); } else
 	if (ram == 5111) { strcpy(m1, "DIBRA @ CombMNZ with Rank normalization"); } else
 	if (ram == 5112) { strcpy(m1, "DIBRA @ CombMNZ with Score normalization"); } else
 	if (ram == 5113) { strcpy(m1, "DIBRA @ CombMNZ with Z-Score normalization"); } else
+	if (ram == 5114) { strcpy(m1, "DIBRA @ CombMNZ with simple Borda normalization"); } else
 	if (ram == 5200) { strcpy(m1, "DIBRA @ Condorcet Winners Method"); } else
+	if (ram == 5201) { strcpy(m1, "DIBRA @ Copeland Winners Method"); } else
 	if (ram == 5300) { strcpy(m1, "DIBRA @ Outranking Approach"); } else
 	if (ram == 600) { strcpy(m1, "Preference Relations Method"); } else
-	if (ram == 700) { strcpy(m1, "Agglomerative Aggregation"); }
+	if (ram == 700) { strcpy(m1, "Agglomerative Aggregation"); } else
+	if (ram == 801) { strcpy(m1, "Markov Chains 1"); } else
+	if (ram == 802) { strcpy(m1, "Markov Chains 2"); } else
+	if (ram == 803) { strcpy(m1, "Markov Chains 3"); } else
+	if (ram == 804) { strcpy(m1, "Markov Chains 4"); } else
+	if (ram == 805) { strcpy(m1, "MCT"); }
 
 	printf("| %s / %s", m1, this->params->get_input_file());
 
@@ -205,7 +224,7 @@ void InputData::print_header() {
 void InputData::evaluate() {
 	rank_t max_pts = this->params->get_eval_points();
 	double precision_acc[max_pts], recall_acc[max_pts], F1_acc[max_pts], dcg_acc[max_pts], ndcg_acc[max_pts];
-	double sum_avep = 0.0, sum_aven = 0.0;
+	double sum_avep = 0.0, sum_aver = 0.0, sum_aved = 0.0, sum_aven = 0.0;
 	uint32_t m = 0;
 	rank_t i = 0, cutoff = 0;
 
@@ -221,13 +240,15 @@ void InputData::evaluate() {
 	}
 
 	/// Write the header row in the CSV evaluation file
-	fprintf(eval_file, "Query,AvgPrecision,");
-	for (i = 0; i < this->params->get_eval_points(); i++) { fprintf(eval_file, "P@%d,", i + 1); }
-	for (i = 0; i < this->params->get_eval_points(); i++) {
-		if (i < this->params->get_eval_points() - 1) {
-			fprintf(eval_file, "N@%d,", i + 1);
+	fprintf(eval_file, "q,num_ret,num_rel,num_rel_ret,map,");
+	for (i = 0; i < max_pts; i++) { fprintf(eval_file, "P_%d,", i + 1); }
+	for (i = 0; i < max_pts; i++) { fprintf(eval_file, "recall_%d,", i + 1); }
+	for (i = 0; i < max_pts; i++) { fprintf(eval_file, "dcg_cut_%d,", i + 1); }
+	for (i = 0; i < max_pts; i++) {
+		if (i < max_pts - 1) {
+			fprintf(eval_file, "ndcg_cut_%d,", i + 1);
 		} else {
-			fprintf(eval_file, "N@%d", i + 1);
+			fprintf(eval_file, "ndcg_cut_%d", i + 1);
 		}
 	}
 	fprintf(eval_file, "\n");
@@ -237,13 +258,17 @@ void InputData::evaluate() {
 //		printf("Evaluating Query %d: %s (%d items)\n", m + 1,
 //				this->queries[m]->get_topic(), this->queries[m]->get_num_items());
 
-		this->queries[m]->evaluate(this->params->get_eval_points(), this->eval_file);
+		this->queries[m]->evaluate(max_pts, this->eval_file);
 
-		if (this->queries[m]->get_num_items() > this->params->get_eval_points()) {
-			cutoff = this->params->get_eval_points();
+		if (this->queries[m]->get_num_items() > max_pts) {
+			cutoff = max_pts;
 		} else {
 			cutoff = this->queries[m]->get_num_items();
 		}
+
+		this->num_ret += this->queries[m]->get_num_items();
+		this->num_rel += this->queries[m]->get_num_rel();
+		this->num_rel_ret += this->queries[m]->get_num_rel_ret();
 
 		/// Update the accumulators so that we can compute the mean values in the end
 		for (i = 0; i < cutoff; i++) {
@@ -255,6 +280,8 @@ void InputData::evaluate() {
 		}
 
 		sum_avep += this->queries[m]->get_average_precision();
+		sum_aver += this->queries[m]->get_average_recall();
+		sum_aved += this->queries[m]->get_average_dcg();
 		sum_aven += this->queries[m]->get_average_ndcg();
 
 		this->avg_sprho += this->queries[m]->evaluate_experts_list();
@@ -273,13 +300,14 @@ void InputData::evaluate() {
 	this->avg_sprho = this->avg_sprho / (double) this->num_queries;
 
 	/// Create a last row in the CSV evaluation file with the mean values
-	fprintf(eval_file, "MEAN,%7.6f,", this->MAP);
-	for (i = 0; i < this->params->get_eval_points(); i++) {
-		fprintf(eval_file, "%7.6f,", this->mean_precision[i]);
-	}
+	fprintf(eval_file, "all,%d,%d,%d,%7.6f,",
+			this->num_ret, this->num_rel, this->num_rel_ret, this->MAP);
 
-	for (i = 0; i < this->params->get_eval_points(); i++) {
-		if (i < this->params->get_eval_points() - 1) {
+	for (i = 0; i < max_pts; i++) { fprintf(eval_file, "%7.6f,", this->mean_precision[i]); }
+	for (i = 0; i < max_pts; i++) { fprintf(eval_file, "%7.6f,", this->mean_recall[i]); }
+	for (i = 0; i < max_pts; i++) { fprintf(eval_file, "%7.6f,", this->mean_dcg[i]); }
+	for (i = 0; i < max_pts; i++) {
+		if (i < max_pts - 1) {
 			fprintf(eval_file, "%7.6f,", this->mean_ndcg[i]);
 		} else {
 			fprintf(eval_file, "%7.6f", this->mean_ndcg[i]);
@@ -338,3 +366,6 @@ double InputData::get_mean_ndcg(uint32_t i) { return this->mean_ndcg[i]; }
 double InputData::get_MAP() { return this->MAP; }
 double InputData::get_MNDCG() { return this->MNDCG; }
 double InputData::get_avg_sprho() { return this->avg_sprho; }
+rank_t InputData::get_num_ret() { return this->num_ret; }
+rank_t InputData::get_num_rel() { return this->num_rel; }
+rank_t InputData::get_num_rel_ret() { return this->num_rel_ret; }

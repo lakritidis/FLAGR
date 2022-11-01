@@ -9,6 +9,10 @@ class InputData {
 		class Query ** queries;
 
 		/// Evaluation Metrics
+		rank_t num_ret;
+		rank_t num_rel;
+		rank_t num_rel_ret;
+
 		double MAP;
 		double MNDCG;
 		double avg_sprho;
@@ -50,6 +54,9 @@ class InputData {
 
 		double get_MAP();
 		double get_MNDCG();
+		rank_t get_num_ret();
+		rank_t get_num_rel();
+		rank_t get_num_rel_ret();
 		double get_mean_precision(uint32_t);
 		double get_mean_recall(uint32_t);
 		double get_mean_F1(uint32_t);
