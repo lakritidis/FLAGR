@@ -1,10 +1,7 @@
-import os
-
+import os.path
 import ctypes
-import tempfile
 
 from pyflagr.RAM import RAM
-# from RAM import RAM
 
 
 # CONDORCET WINNERS METHOD ============================================================================================
@@ -28,8 +25,6 @@ class CondorcetWinners(RAM):
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
         if out_dir is not None and os.path.isdir(out_dir):
             self.output_dir = out_dir
-        else:
-            self.output_dir = tempfile.gettempdir()
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
@@ -75,8 +70,6 @@ class CopelandWinners(RAM):
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
         if out_dir is not None and os.path.isdir(out_dir):
             self.output_dir = out_dir
-        else:
-            self.output_dir = tempfile.gettempdir()
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
@@ -135,8 +128,6 @@ class OutrankingApproach(RAM):
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
         if out_dir is not None and os.path.isdir(out_dir):
             self.output_dir = out_dir
-        else:
-            self.output_dir = tempfile.gettempdir()
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:

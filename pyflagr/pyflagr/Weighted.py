@@ -1,10 +1,7 @@
-import os
-
+import os.path
 import ctypes
-import tempfile
 
 from pyflagr.RAM import RAM
-# from RAM import RAM
 
 
 # PREFERENCE RELATIONS METHOD =========================================================================================
@@ -35,8 +32,6 @@ class PreferenceRelationsGraph(RAM):
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
         if out_dir is not None and os.path.isdir(out_dir):
             self.output_dir = out_dir
-        else:
-            self.output_dir = tempfile.gettempdir()
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
@@ -91,8 +86,6 @@ class Agglomerative(RAM):
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
         if out_dir is not None and os.path.isdir(out_dir):
             self.output_dir = out_dir
-        else:
-            self.output_dir = tempfile.gettempdir()
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
@@ -135,8 +128,8 @@ class DIBRA(RAM):
     concordance_t = 0.0
     discordance_t = 0.25
 
-    def __init__(self, eval_pts=10, aggregator='combsum:borda', w_norm='minmax', dist='cosine', prune=False, gamma=1.5,
-            d1=0.4, d2=0.1, tol=0.01, max_iter=50, pref=0.0, veto=0.75, conc=0.0, disc=0.25):
+    def __init__(self, eval_pts=10, aggregator='combsum:borda', w_norm='minmax', dist='cosine', prune=False,
+                 gamma=1.5, d1=0.4, d2=0.1, tol=0.01, max_iter=50, pref=0.0, veto=0.75, conc=0.0, disc=0.25):
 
         RAM.__init__(self, eval_pts)
 
@@ -228,8 +221,6 @@ class DIBRA(RAM):
         # directory of the OS is used. If an invalid path is provided, the aforementioned temp dir is used silently.
         if out_dir is not None and os.path.isdir(out_dir):
             self.output_dir = out_dir
-        else:
-            self.output_dir = tempfile.gettempdir()
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:

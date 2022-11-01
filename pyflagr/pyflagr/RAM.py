@@ -15,7 +15,7 @@ class RAM:
     rels_file = ""
     rels_df = None
     eval_pts = 10
-    output_dir = ""
+    output_dir = tempfile.gettempdir()
     flagr_lib = ""
 
     def __init__(self, eval_pts):
@@ -74,7 +74,7 @@ class RAM:
 
         return status
 
-    # A random bytes generator - to be used in filenames passed to FLAGR
+    # A random bytes' generator - to be used in filenames passed to FLAGR
     def get_random_string(self, length):
         letters = string.ascii_lowercase
         result_str = ''.join(random.choice(letters) for _ in range(length))
