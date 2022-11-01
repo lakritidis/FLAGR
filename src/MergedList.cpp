@@ -185,7 +185,7 @@ void MergedList::write_to_CSV(char * topic, class InputParams * params) {
 	FILE * fp = fopen(params->get_output_file(), "a+");
 	if (fp) {
 		for (rank_t i = 0; i < this->num_nodes; i++) {
-			fprintf(fp, "%s,PyFLAGR,%s,%10.6f\n", topic, this->item_list[i]->get_code(),
+			fprintf(fp, "%s,PyFLAGR,%s,%d,%10.6f\n", topic, this->item_list[i]->get_code(), i+1,
 					this->item_list[i]->get_final_score());
 		}
 		fclose(fp);

@@ -37,12 +37,15 @@ class Query {
 		void init_weights();
 
 		/// Accessors
-		uint32_t get_num_relevs();
 		uint32_t get_num_items();
+		rank_t get_num_rel();
+		rank_t get_num_rel_ret();
 		uint32_t get_num_input_lists();
 
 		char * get_topic();
 		double get_average_precision();
+		double get_average_recall();
+		double get_average_dcg();
 		double get_average_ndcg();
 		double get_precision(uint32_t);
 		double get_recall(uint32_t);

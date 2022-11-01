@@ -5,6 +5,8 @@ Evaluator::Evaluator() :
 		relevs (new Rels(1024)),
 		true_positives(0),
 		average_precision(0.0),
+		average_recall(0.0),
+		average_dcg(0.0),
 		average_ndcg(0.0),
 		precision(NULL),
 		recall(NULL),
@@ -60,6 +62,8 @@ void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE
 
 	this->true_positives = 0;
 	this->average_precision = 0.0;
+	this->average_recall = 0.0;
+	this->average_dcg = 0.0;
 	this->average_ndcg = 0.0;
 	this->precision = new double[num_items];
 	this->recall = new double[num_items];
@@ -76,6 +80,9 @@ void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE
 			if (p->get_final_score() > 0 && relevance > 0) {
 				this->true_positives++;
 				this->average_precision += this->true_positives / (i + 1.0);
+				if (num_relevant_items > 0) {
+					this->average_recall += this->true_positives / (double) num_relevant_items;
+				}
 			}
 //			printf(" * (%d) == METRICS : \n", relevance);
 		}
@@ -84,7 +91,11 @@ void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE
 		this->precision[i] = this->true_positives / (i + 1.0);
 
 		/// Recall@k
-		this->recall[i] = (double) this->true_positives / (double) num_relevant_items;
+		if (num_relevant_items > 0) {
+			this->recall[i] = this->true_positives / (double) num_relevant_items;
+		} else {
+			this->recall[i] = 0;
+		}
 
 		/// DCG@k
 		if (i == 0) {
@@ -98,7 +109,8 @@ void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE
 		/// IdealDCG temp: needs to be sorted
 		ideal_dcg[i] = (double)relevance;
 
-		if (relevance > 0 && p->get_final_score() > 0) {
+		if (p->get_final_score() > 0 && relevance > 0) {
+			this->average_dcg += this->dcg[i];
 			this->average_ndcg += this->dcg[i] / (i + 2.0);
 		}
 //		printf("Relevance: %d - P@%d=%5.3f - R@%d=%5.3f - DCG@%d=%5.3f\n",
@@ -120,12 +132,16 @@ void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE
 		}
     }
 
-	/// Compute Average Precision and Average DCG
+	/// Compute Average Precision, Recall, DCG, and nDCG
 	if (this->true_positives > 0) {
 		this->average_precision = this->average_precision / (double)num_relevant_items;
+		this->average_recall = this->average_recall / (double)num_relevant_items;
+		this->average_dcg = this->average_dcg / (double)num_relevant_items;
 		this->average_ndcg = this->average_ndcg / (double)num_relevant_items;
 	} else {
 		this->average_precision = 0.0;
+		this->average_recall = 0.0;
+		this->average_dcg = 0.0;
 		this->average_ndcg = 0.0;
 	}
 
@@ -137,9 +153,26 @@ void Evaluator::evaluate(rank_t ev_pts, char * qry, class MergedList * lst, FILE
 	/// Write to file
 	if (eval_file) {
 		/// CSV data
-		fprintf(eval_file, "%s,%7.6f,", str, this->average_precision);
+		fprintf(eval_file, "%s,", str);
+		fprintf(eval_file, "%d,", num_items);
+		fprintf(eval_file, "%d,", num_relevant_items);
+		fprintf(eval_file, "%d,", this->true_positives);
+
+		fprintf(eval_file, "%7.6f,", this->average_precision);
+//		fprintf(eval_file, "%7.6f,", this->average_recall);
+//		fprintf(eval_file, "%7.6f,", this->average_dcg);
+//		fprintf(eval_file, "%7.6f,", this->average_ndcg);
+
 		for (rank_t i = 0; i < ev_pts; i++) {
 			fprintf(eval_file, "%7.6f,", num_items > i ? this->precision[i] : 0);
+		}
+
+		for (rank_t i = 0; i < ev_pts; i++) {
+			fprintf(eval_file, "%7.6f,", num_items > i ? this->recall[i] : 0);
+		}
+
+		for (rank_t i = 0; i < ev_pts; i++) {
+			fprintf(eval_file, "%7.6f,", num_items > i ? this->dcg[i] : 0);
 		}
 
 		for (rank_t i = 0; i < ev_pts; i++) {
@@ -162,6 +195,8 @@ double Evaluator::evaluate_input(class InputList * lst) {
 
 	this->true_positives = 0;
 	this->average_precision = 0.0;
+	this->average_recall = 0.0;
+	this->average_dcg = 0.0;
 	this->average_ndcg = 0.0;
 	this->precision = new double[num_items];
 	this->recall = new double[num_items];
@@ -181,6 +216,9 @@ double Evaluator::evaluate_input(class InputList * lst) {
 		if (this->relevs->search(p->get_code(), &relevance)) {
 			this->true_positives++;
 			this->average_precision += this->true_positives / (i + 1.0);
+			if (num_relevant_items > 0) {
+				this->average_recall += this->true_positives / (double) num_relevant_items;
+			}
 //			printf(" * (%d) == METRICS : ", relevance);
 		}
 
@@ -188,7 +226,11 @@ double Evaluator::evaluate_input(class InputList * lst) {
 		this->precision[i] = this->true_positives / (i + 1.0);
 
 		/// Recall@k
-		this->recall[i] = (double) this->true_positives / (double) num_relevant_items;
+		if (num_relevant_items > 0) {
+			this->recall[i] = this->true_positives / (double) num_relevant_items;
+		} else {
+			this->recall[i] = 0;
+		}
 
 		/// DCG@k
 		if (i == 0) {
@@ -203,6 +245,7 @@ double Evaluator::evaluate_input(class InputList * lst) {
 		ideal_dcg[i] = (double)relevance;
 
 		if (relevance > 0) {
+			this->average_dcg += this->dcg[i];
 			this->average_ndcg += this->dcg[i] / (i + 1.0);
 		}
 //		printf("P@%d=%5.3f - R@%d=%5.3f - DCG@%d=%5.3f\n",
@@ -226,9 +269,13 @@ double Evaluator::evaluate_input(class InputList * lst) {
 	/// Compute Average Precision and Average DCG
 	if (this->true_positives > 0) {
 		this->average_precision = this->average_precision / (double)num_relevant_items;
+		this->average_recall = this->average_recall / (double)num_relevant_items;
+		this->average_dcg = this->average_dcg / (double)num_relevant_items;
 		this->average_ndcg = this->average_ndcg / (double)num_relevant_items;
 	} else {
 		this->average_precision = 0.0;
+		this->average_recall = 0.0;
+		this->average_dcg = 0.0;
 		this->average_ndcg = 0.0;
 	}
 
@@ -288,9 +335,12 @@ void Evaluator::display_relevs() {
 }
 
 /// Accessors
-uint32_t Evaluator::get_num_nodes() { return this->relevs->get_num_nodes(); }
+uint32_t Evaluator::get_num_rel() { return this->relevs->get_num_nodes(); }
 uint32_t Evaluator::get_true_positives() { return this->true_positives; }
+
 double Evaluator::get_average_precision() { return this->average_precision; }
+double Evaluator::get_average_recall() { return this->average_recall; }
+double Evaluator::get_average_dcg() { return this->average_dcg; }
 double Evaluator::get_average_ndcg() { return this->average_ndcg; }
 
 double Evaluator::get_precision(uint32_t i) {

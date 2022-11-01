@@ -144,10 +144,13 @@ void Query::display_relevs() {
 /// Accessors
 class InputList * Query::get_input_list(uint32_t i) { return this->agg->get_input_list(i); }
 char * Query::get_topic() { return this->topic; }
-uint32_t Query::get_num_relevs() { return this->eval->get_num_nodes(); }
 uint32_t Query::get_num_items() { return this->agg->get_num_items(); }
+rank_t Query::get_num_rel() { return this->eval->get_num_rel(); }
+rank_t Query::get_num_rel_ret() { return this->eval->get_true_positives(); }
 uint32_t Query::get_num_input_lists() { return this->agg->get_num_lists(); }
 double Query::get_average_precision() { return this->eval->get_average_precision(); }
+double Query::get_average_recall() { return this->eval->get_average_recall(); }
+double Query::get_average_dcg() { return this->eval->get_average_dcg(); }
 double Query::get_average_ndcg() { return this->eval->get_average_ndcg(); }
 double Query::get_precision(uint32_t i) { return this->eval->get_precision(i); }
 double Query::get_recall(uint32_t i) { return this->eval->get_recall(i); }
