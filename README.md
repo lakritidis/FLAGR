@@ -10,7 +10,7 @@ FLAGR is a high performance, modular, open source C++ library for rank aggregati
 
 PyFLAGR is a Python library built on top of FLAGR library core. It can be easily installed with pip (see below) and used in standard Python programs and Jupyter notebooks. Representative code examples can be found on [this notebook](https://github.com/lakritidis/FLAGR/blob/main/README.ipynb).
 
-The current FLAGR version is 1.0.7.
+The current FLAGR version is 1.0.8.
 
 Both libraries are licensed under the Apache License, version 2.
 
