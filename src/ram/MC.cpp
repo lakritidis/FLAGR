@@ -229,4 +229,3 @@ void MergedList::matrixvec_multiply(score_t * res_mat, score_t * state_mat, scor
 //		printf("S[%d]=%5.6f\n", i, (res_mat)[i]);
 	}
 }
-

@@ -90,4 +90,3 @@ void MergedList::CombMNZ(class InputList ** inlists, class SimpleScoreStats * s,
 
 //	this->display_list(); getchar();
 }
-

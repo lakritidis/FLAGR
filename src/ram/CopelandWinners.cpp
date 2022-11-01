@@ -88,4 +88,3 @@ void MergedList::CopelandWinners(class InputList ** inlists, class SimpleScoreSt
 
 	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
 }
-

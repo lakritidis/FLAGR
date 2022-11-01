@@ -37,4 +37,3 @@ void MergedList::CustomMethod2(class InputList ** inlists, class SimpleScoreStat
 	/// or you may want to sort the scores in increasing order
 	/// qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_asc);
 }
-

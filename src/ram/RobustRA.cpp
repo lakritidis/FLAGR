@@ -149,4 +149,3 @@ score_t MergedList::sumStuart(double * v, double r, uint32_t k, double * p, doub
 
 	return sum;
 }
-

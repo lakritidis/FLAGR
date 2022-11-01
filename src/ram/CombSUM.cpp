@@ -88,4 +88,3 @@ void MergedList::CombSUM(class InputList ** inlists, class SimpleScoreStats * s,
 
 //	this->display_list(); getchar();
 }
-

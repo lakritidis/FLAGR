@@ -79,4 +79,3 @@ void MergedList::CondorcetWinners(class InputList ** inlists, class SimpleScoreS
 
 	qsort(this->item_list, this->num_nodes, sizeof(class MergedItem *), &MergedList::cmp_score_desc);
 }
-
