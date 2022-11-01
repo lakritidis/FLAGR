@@ -16,7 +16,7 @@ LONG_DESCRIPTION = 'The fusion of multiple ranked lists of elements into a singl
 
 setup(
     name='pyflagr',
-    version='1.0.7',
+    version='1.0.8',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -26,7 +26,7 @@ setup(
     maintainer_email="lakritidis@ihu.gr",
     packages=find_packages(),
     url='https://github.com/lakritidis/FLAGR',
-    install_requires=["pandas"],
+    install_requires=["pandas", "matplotlib"],
     license="Apache",
     keywords=[
         "rank aggregation", "rank fusion", "data fusion", "unsupervised learning", "information retrieval",
