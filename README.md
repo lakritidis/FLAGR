@@ -17,6 +17,17 @@ Both libraries are licensed under the Apache License, version 2.
 The library is fully documented at [https://flagr.site/](https://flagr.site/)
 
 
+## Compiling from Sources
+
+FLAGR can be easily compiled from its C++ sources by using the provided build scripts. The scripts require a working GCC compiler to be installed into the machine that performs the compilation.
+
+There are two build scripts, one for Linux and one for Windows. Specifically:
+
+* In Linux: type `make` in the terminal to build the binaries from the C++ sources. The FLAGR executable file is automatically created into the `bin/Release/` directory of the package. In addition, a shared `.so` library will be created into `bin/` and `pyflagr/pyflagr/`.
+* In Windows: type `makefile.bat` in Windows CLI or Windows Powershell. The batch file will build the binaries from the C++ sources and generate `FLAGR.exe` into the `bin/Release/` directory. Moreover, a Dynamic Link `.dll` Library will be created  into `bin/` and `pyflagr/pyflagr/`.
+
+
+
 ## Installing PyFLAGR
 
 PyFLAGR can be installed directly by using `pip`:
@@ -26,3 +37,4 @@ PyFLAGR can be installed directly by using `pip`:
 Alternatively, PyFLAGR can be installed from the sources by navigating to the directory where `setup.py` resides:
 
 `pip install .`
+
