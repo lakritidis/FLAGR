@@ -23,8 +23,8 @@ FLAGR can be easily compiled from its C++ sources by using the provided build sc
 
 There are two build scripts, one for Linux and one for Windows. Specifically:
 
-* In Linux: type `make` in the terminal to build the binaries from the C++ sources. The FLAGR executable file is automatically created into the `bin/Release/` directory of the package. In addition, a shared `.so` library will be created into `bin/` and `pyflagr/pyflagr/`.
-* In Windows: type `makefile.bat` in Windows CLI or Windows Powershell. The batch file will build the binaries from the C++ sources and generate `FLAGR.exe` into the `bin/Release/` directory. Moreover, a Dynamic Link `.dll` Library will be created  into `bin/` and `pyflagr/pyflagr/`.
+* In Linux: type `make` in the terminal to build the binaries from the C++ sources. The FLAGR executable file is automatically created into the `bin/Release/` directory of the package. In addition, a shared `.so` library will be created into `bin/Release/` and `pyflagr/pyflagr/`.
+* In Windows: type `makefile.bat` in Windows CLI or Windows Powershell. The batch file will build the binaries from the C++ sources and generate `FLAGR.exe` into the `bin/Release/` directory. Moreover, a Dynamic Link `.dll` Library will be created  into `bin/Release/` and `pyflagr/pyflagr/`.
 
 
 
