@@ -1,21 +1,26 @@
 CC=g++
 CFLAGS=-O3 -std=c++11 -Wall -Werror
+
 INCDIR=-Isrc/
-OBJDIR=obj/
-BINDIR=bin/
-LIBFLAGS=-shared -fPIC
+OBJDIR=obj/Release/
+BINDIR=bin/Release/
+
 LIBDIR=pyflagr/pyflagr/
+LIBFLAGS=-shared -fPIC
 
-FLAGR: cflagr.o
-	$(CC)  -o  $(BINDIR)FLAGR  $(OBJDIR)cflagr.o  $(CFLAGS)  -s
 
-lib: cflagr.cpp
-	$(CC)  $(CFLAGS)  $(LIBFLAGS)  cflagr.cpp  -o  $(LIBDIR)pyflagr.so
+FLAGR: flagr.o
+	$(CC)  -o  $(BINDIR)FLAGR  $(OBJDIR)flagr.o  $(CFLAGS)  -s
+	$(CC)  $(CFLAGS)  $(LIBFLAGS)  cflagr.cpp  -o  $(LIBDIR)flagr.so
+	cp $(LIBDIR)flagr.so $(BINDIR)flagr.so
 
-cflagr.o: cflagr.cpp
-	$(CC)  $(INCDIR)  $(CFLAGS)  -c  cflagr.cpp  -o  $(OBJDIR)cflagr.o
+flagr.o: cflagr.cpp
+	mkdir -p -m777 $(BINDIR)
+	mkdir -p -m777 $(OBJDIR)
+	mkdir -p -m777 $(BINDIR)output
+	$(CC)  $(INCDIR)  $(CFLAGS)  -c  main.cpp  -o  $(OBJDIR)flagr.o
 
 clean:
-	rm -f $(OBJDIR)/cflagr.o
-	rm -f $(BINDIR)/FLAGR
+	rm -rf $(OBJDIR)
+	rm -rf $(BINDIR)
 
