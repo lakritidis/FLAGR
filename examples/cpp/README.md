@@ -37,9 +37,18 @@ If the `input_file` parameter is left blank, then the program uses the sample da
 ``Query, Voter Name, Item Code, Item Score, Algorithm/Dataset``
 
 where
-* `Query` represents the query string or the topic for which the preference list is submitted,
-* `Voter` is the name of the ranker who submitted the preference list for the specified `Query`,
-* `Item Code` is a unique name that identifies a particular element of the preference list,
-* `Item Score` is the preference score assigned to an item by a specific voter, and
+* `Query` represents the topic for which the preference list is submitted,
+* `Voter` is the name of the ranker who submitted a preference list for a particular `Query`,
+* `Item Code` is a unique name that identifies each element of the preference lists,
+* `Item Score` is the preference score assigned to an item by a `Voter`, and
 * `Algorithm/Dataset` is a user-defined string that represents the origin of a particular preference list.
 
+On the other hand, `testdata_qrels.csv` contains relevance judgments for the preference list elements of the primary input file for each query. It is organized in the following fashion:
+
+``Query, 0, Item Code, Relevance``
+
+where:
+* `Query` represents the topic for which the preference list is submitted,
+* `0`: unused. This value must be always 0.
+* `Item Code` is a unique name that identifies each element of the preference lists,
+* `Relevance` is nn integer value that represents the relevance of the item with respect to the mentioned `Query`. Typically, zero values represent irrelevant and incorrect elements; negative values represent spam elements; and positive values represent relevant, correct and informative elements.
