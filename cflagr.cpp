@@ -1,4 +1,4 @@
-#include "flagr.cpp"
+#include "driver.cpp"
 
 /// ////////////////////////////////////////////////////////////////////////////////////////////////
 /// FLAGR exposed C functions - Dynamic Library References
@@ -436,44 +436,3 @@ extern "C" {
 	}
 }
 
-/// ///////////////////////////////////////////////////////////////////////////////////////////////
-/// Main
-int main(int argc, char *argv[]) {
-	char input_file[] = "/media/leo/B65266EC5266B133/phd_Research/08 - Datasets/TREC/Synthetic/FESO.csv";
-//	char input_file[] = "/media/leo/B65266EC5266B133/phd_Research/08 - Datasets/TREC/Synthetic/cellCycleKO.csv";
-	char qrels_file[] = "/media/leo/B65266EC5266B133/phd_Research/08 - Datasets/TREC/Synthetic/FESO_qrels.csv";
-	char output_dir[] = "/tmp";
-/*
-	Linear(input_file, qrels_file, 20, 101, "Linear_out", output_dir);
-
-	Linear(input_file, qrels_file, 20, 100, "Borda_out", output_dir);
-
-	Condorcet(input_file, qrels_file, 20, "Condorcet_out", output_dir);
-
-	Copeland(input_file, qrels_file, 20, "Copeland_out", output_dir);
-
-	OutrankingApproach(input_file, qrels_file, 20, "Outrank_out", output_dir, 0.0, 0.75, 0.0, 0.25);
-
-//	Kemeny(input_file, qrels_file, 20, "Kemeny_out", output_dir);
-
-	MC(input_file, qrels_file, 20, 804, "MC_out", output_dir, 0.15, 0.00000001, 200);
-
-	RobustRA(input_file, qrels_file, 20, "RRA", output_dir, false);
-
-	PrefRel(input_file, qrels_file, 20, "PrefRel_out", output_dir, 0.3, 0.2);
-
-	Agglomerative(input_file, qrels_file, 20, "Agglomerative_out", output_dir, 2.5, 1.5);
-
-	DIBRA(input_file, qrels_file, 20, 5300, "DIBRA_out", output_dir,
-		2, 3, false, 1.5, 0.4, 0.1, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
-
-//	Custom1(input_file, qrels_file, 20, "RRA", output_dir);
-
-//	Custom2(input_file, qrels_file, 20, "RRA", output_dir);
-
-*/
-
-	MC(input_file, qrels_file, 20, 805, "MC_out", output_dir, 0.15, 0.0, 100);
-
-	return 0;
-}
