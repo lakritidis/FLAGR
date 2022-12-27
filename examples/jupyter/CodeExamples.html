@@ -14579,17 +14579,50 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="(Py)FLAGR">(Py)FLAGR<a class="anchor-link" href="#(Py)FLAGR">&#182;</a></h1><h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h2><p>The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.</p>
+<h1 id="(Py)FLAGR">(Py)FLAGR<a class="anchor-link" href="#(Py)FLAGR">&#182;</a></h1><p>The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.</p>
 <p>FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Installation">Installation<a class="anchor-link" href="#Installation">&#182;</a></h2><p>PyFLAGR is a Python library built on top of FLAGR library core. It can be easily installed with pip:</p>
 <p><code>pip install pyflagr</code></p>
 <p>After installation, PyFLAGR can be used in standard Python programs and Jupyter notebooks. Representative code examples can be found on this notebook.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Downloads,-Documentation,-Version-and-License">Downloads, Documentation, Version and License<a class="anchor-link" href="#Downloads,-Documentation,-Version-and-License">&#182;</a></h2><ul>
 <li>The source code of FLAGR and PyFLAGR is available through the <a href="https://github.com/lakritidis/FLAGR">official GitHub repository</a>.</li>
 <li>The library is fully documented at <a href="https://flagr.site/">https://flagr.site/</a>.</li>
 <li>The current (Py)FLAGR version is 1.0.8.</li>
 <li>Both libraries are licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2</a>.</li>
 </ul>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Importing-and-using-PyFLAGR">Importing and using PyFLAGR<a class="anchor-link" href="#Importing-and-using-PyFLAGR">&#182;</a></h2><p>PyFLAGR groups its supported rank aggregation methods in 6 modules:</p>
 <ol>
 <li><code>Linear</code>: This module contains the <code>CombSUM</code>, <code>CombMNZ</code>, <code>Borda</code> and <code>SimpleBorda</code> classes. <code>CombSUM</code> and <code>CombMNZ</code> support five normalization methods (see Renda et al., 2003). <code>Borda</code> and <code>SimpleBorda</code> are just wrappers of <code>CombSUM</code> with <code>borda</code> and <code>simple-borda</code> normalization.</li>
@@ -14600,7 +14633,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <li><code>Weighted</code>: This module implements several self-weighting rank aggregation methods. These methods automatically identify the expert voters and include:<ol>
 <li>The Preference Relations Graph method of Desarkar et al., 2016.</li>
 <li>The Agglomerative method of Chatterjee et al., 2018.</li>
-<li>The Iterative, Distance-Based method of Akritidis et al., 2022.</li>
+<li>The Iterative, Distance-Based method (DIBRA) of Akritidis et al., 2022.</li>
 </ol>
 </li>
 </ol>
@@ -14722,7 +14755,28 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Input/Output-files">Input/Output files<a class="anchor-link" href="#Input/Output-files">&#182;</a></h2><p>Please refer to <a href="http://flagr.site/docs/38/input-and-output-files">this article</a>.</p>
+<h2 id="Input/Output-files">Input/Output files<a class="anchor-link" href="#Input/Output-files">&#182;</a></h2><p>A rank aggregation application involves a set of queries $Q=\{q_1,q_2,...,q_N\}$ and a set of rankers $R=\{r_1,r_2,...r_m\}$. Each query $q\in{Q}$ is submitted to all rankers in $R$, who respond by returning a ranked list of preference items sorted in decreasing importance, or relevance order. For example, in the context of recommendation systems, a set of users may be asked to enlist their preferences as a response to the hypothetical query "<em>which are your favorite games?</em>". Then, a rank aggregation algorithm must merge all the submitted preference lists, discover any important latent information, and generate a single output list with improved element ordering.</p>
+<p>For the requirements of this notebook, we use a sample dataset that was created by employing <a href="https://github.com/lakritidis/RASDaGen">RASDaGen</a>, a synthetic dataset generator for rank aggregation applications. The dataset includes two files: <code>testdata.csv</code> and <code>testdata_qrels.csv</code>.</p>
+<p>The former contains preference lists that were submitted by 50 voters for 20 queries. Each input list contains 30 elements. Therefore, the number of rows in this file is equal to $50 \times 20 \times 30=30000$. The columns of this CSV file must be organized in the following manner:</p>
+<p><code>Query, Voter Name, Item Code, Item Score, Algorithm/Dataset</code></p>
+<p>where</p>
+<ul>
+<li><code>Query</code> represents the topic for which the preference list is submitted,</li>
+<li><code>Voter</code> is the name of the ranker who submitted a preference list for a particular <code>Query</code>,</li>
+<li><code>Item Code</code> is a unique name that identifies each element of the preference lists,</li>
+<li><code>Item Score</code> is the preference score assigned to an item by a <code>Voter</code>, and</li>
+<li><code>Algorithm/Dataset</code> is a user-defined string that represents the origin of a particular preference list.</li>
+</ul>
+<p>On the other hand, <code>testdata_qrels.csv</code> contains relevance judgments for the preference list elements of the primary input file for each query. It is organized in the following fashion:</p>
+<p><code>Query, 0, Item Code, Relevance</code></p>
+<p>where:</p>
+<ul>
+<li><code>Query</code> represents the topic for which the preference list is submitted,</li>
+<li><code>0</code>: unused. This value must be always 0.</li>
+<li><code>Item Code</code> is a unique name that identifies each element of the preference lists,</li>
+<li><code>Relevance</code> is nn integer value that represents the relevance of the item with respect to the mentioned <code>Query</code>. Typically, zero values represent irrelevant and incorrect elements; negative values represent spam elements; and positive values represent relevant, correct and informative elements.</li>
+</ul>
+<p>Please refer to <a href="http://flagr.site/docs/38/input-and-output-files">this article</a> for more details.</p>
 
 </div>
 </div>
@@ -14735,8 +14789,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="PyFLAGR-Code-examples">PyFLAGR Code examples<a class="anchor-link" href="#PyFLAGR-Code-examples">&#182;</a></h1><p>The following examples demonstrate the usage of all PyFLAGR rank aggregation methods.</p>
-<p>We use an example data file that contains the input lists to be aggregated. More specifically, <code>testdata.csv</code> includes the lists that were submitted by $50$ voters for $20$ queries. Each input list contains $30$ elements. Therefore, the number of rows in this file is equal to $50 \cdot 20 \cdot 30 = 30000$.</p>
-<p>In addition, the user may provide a second input file (we call it the <em>Rels</em> file) that contains relevance judgments for the preference list elements of the primary input file for each query.</p>
+<p>Initially, we declare the two files of our sample dataset: <code>testdata.csv</code> that contains the input lists to be aggregated and <code>testdata_qrels.csv</code> that stores relevance judgments for the elements of the input preference lists.</p>
 
 </div>
 </div>
@@ -14750,10 +14803,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># The input data file with the input lists to be aggregated.</span>
-<span class="n">lists</span> <span class="o">=</span> <span class="s1">&#39;testdata.csv&#39;</span>
+<span class="n">lists</span> <span class="o">=</span> <span class="s1">&#39;../testdata/testdata.csv&#39;</span>
 
 <span class="c1"># The input data file with the relevance judgements.</span>
-<span class="n">qrels</span> <span class="o">=</span> <span class="s1">&#39;testdata_qrels.csv&#39;</span>
+<span class="n">qrels</span> <span class="o">=</span> <span class="s1">&#39;../testdata/testdata_qrels.csv&#39;</span>
 </pre></div>
 
      </div>
@@ -14768,7 +14821,24 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Linear-combination-methods">Linear combination methods<a class="anchor-link" href="#Linear-combination-methods">&#182;</a></h2><h3 id="CombSUM"><code>CombSUM</code><a class="anchor-link" href="#CombSUM">&#182;</a></h3><p>Member of <code>pyflagr.Linear</code>.</p>
+<h2 id="Linear-combination-methods">Linear combination methods<a class="anchor-link" href="#Linear-combination-methods">&#182;</a></h2><p>In linear combination methods, the score of each element is computed by summing up the partial scores of that element with respect to its rankings in each input preference list. The <code>Linear()</code> function triggers the execution of two such combination methods: <code>CombSUM</code> and <code>CombMNZ</code>. Both of them are implemented in accordance to the following paper:</p>
+<ul>
+<li>Renda E., Straccia U., "Web metasearch: rank vs. score based rank aggregation methods", In Proceedings of the 2003 ACM symposium on Applied computing, pp. 841-846, 2003.</li>
+</ul>
+<p>Each method is accompanied by an element rank/score normalization technique, as it is described in the paper above. These techniques are: Rank normalization, Borda normalization, Score normalization and Z-Score normalization. In FLAGR there is a fifth normalization technique, called Simple Borda. In contrast to the traditional Borda normalization, Simple Borda assigns zero partial scores in case an element has not been ranked by an input preference list.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="CombSUM"><code>CombSUM</code><a class="anchor-link" href="#CombSUM">&#182;</a></h3><p>Member of <code>pyflagr.Linear</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/5/linear-module">Linear Module</a>.</p>
 <p>The <code>CombSUM</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -14847,143 +14917,143 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E39</td>
+      <td>1</td>
       <td>13.466667</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
       <td>PyFLAGR</td>
       <td>Q1-E48</td>
+      <td>2</td>
       <td>12.933333</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E23</td>
+      <td>3</td>
       <td>11.933333</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E85</td>
+      <td>4</td>
       <td>11.400000</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E95</td>
+      <td>5</td>
       <td>11.366667</td>
     </tr>
     <tr>
-      <th>5</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E94</td>
+      <td>6</td>
       <td>11.300000</td>
     </tr>
     <tr>
-      <th>6</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E33</td>
+      <td>7</td>
       <td>11.000000</td>
     </tr>
     <tr>
-      <th>7</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E63</td>
+      <td>8</td>
       <td>10.700000</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E100</td>
+      <td>9</td>
       <td>10.666667</td>
     </tr>
     <tr>
-      <th>9</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E5</td>
+      <td>10</td>
       <td>10.433333</td>
     </tr>
     <tr>
-      <th>10</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E43</td>
+      <td>11</td>
       <td>10.300000</td>
     </tr>
     <tr>
-      <th>11</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E32</td>
+      <td>12</td>
       <td>10.000000</td>
     </tr>
     <tr>
-      <th>12</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E35</td>
+      <td>13</td>
       <td>9.933333</td>
     </tr>
     <tr>
-      <th>13</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E88</td>
+      <td>14</td>
       <td>9.933333</td>
     </tr>
     <tr>
-      <th>14</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E16</td>
+      <td>15</td>
       <td>9.666667</td>
     </tr>
     <tr>
-      <th>15</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E56</td>
+      <td>16</td>
       <td>9.566667</td>
     </tr>
     <tr>
-      <th>16</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E84</td>
+      <td>17</td>
       <td>9.533333</td>
     </tr>
     <tr>
-      <th>17</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E3</td>
+      <td>18</td>
       <td>9.466667</td>
     </tr>
     <tr>
-      <th>18</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E89</td>
+      <td>19</td>
       <td>9.400000</td>
     </tr>
     <tr>
-      <th>19</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E62</td>
+      <td>20</td>
       <td>9.400000</td>
     </tr>
   </tbody>
@@ -14991,30 +15061,56 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>recall_1</th>
+      <th>recall_2</th>
+      <th>recall_3</th>
+      <th>recall_4</th>
+      <th>recall_5</th>
+      <th>dcg_cut_1</th>
+      <th>dcg_cut_2</th>
+      <th>dcg_cut_3</th>
+      <th>dcg_cut_4</th>
+      <th>dcg_cut_5</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>Topic 1</td>
+      <td>100</td>
+      <td>48</td>
+      <td>48</td>
       <td>0.534255</td>
       <td>1.00</td>
       <td>1.000</td>
       <td>0.666667</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.020833</td>
+      <td>0.041667</td>
+      <td>0.041667</td>
+      <td>0.041667</td>
+      <td>0.041667</td>
+      <td>1.00</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
       <td>1.00</td>
       <td>1.000000</td>
       <td>0.765361</td>
@@ -15024,12 +15120,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>1</th>
       <td>Topic 2</td>
+      <td>100</td>
+      <td>46</td>
+      <td>46</td>
       <td>0.539673</td>
       <td>0.00</td>
       <td>0.500</td>
       <td>0.666667</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.021739</td>
+      <td>0.043478</td>
+      <td>0.043478</td>
+      <td>0.043478</td>
+      <td>0.00</td>
+      <td>0.630930</td>
+      <td>1.130930</td>
+      <td>1.130930</td>
+      <td>1.130930</td>
       <td>0.00</td>
       <td>0.386853</td>
       <td>0.530721</td>
@@ -15039,12 +15148,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>2</th>
       <td>Topic 3</td>
+      <td>100</td>
+      <td>40</td>
+      <td>40</td>
       <td>0.442181</td>
       <td>1.00</td>
       <td>1.000</td>
       <td>0.666667</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.025000</td>
+      <td>0.050000</td>
+      <td>0.050000</td>
+      <td>0.050000</td>
+      <td>0.050000</td>
+      <td>1.00</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
       <td>1.00</td>
       <td>1.000000</td>
       <td>0.765361</td>
@@ -15054,12 +15176,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>3</th>
       <td>Topic 4</td>
+      <td>100</td>
+      <td>40</td>
+      <td>40</td>
       <td>0.427771</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.000000</td>
       <td>0.25</td>
       <td>0.20</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.025000</td>
+      <td>0.025000</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.430677</td>
+      <td>0.430677</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -15069,12 +15204,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>4</th>
       <td>Topic 5</td>
+      <td>100</td>
+      <td>54</td>
+      <td>54</td>
       <td>0.656236</td>
       <td>1.00</td>
       <td>1.000</td>
       <td>1.000000</td>
       <td>1.00</td>
       <td>1.00</td>
+      <td>0.018519</td>
+      <td>0.037037</td>
+      <td>0.055556</td>
+      <td>0.074074</td>
+      <td>0.092593</td>
+      <td>1.00</td>
+      <td>1.630930</td>
+      <td>2.130930</td>
+      <td>2.561606</td>
+      <td>2.948459</td>
       <td>1.00</td>
       <td>1.000000</td>
       <td>1.000000</td>
@@ -15084,12 +15232,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>5</th>
       <td>Topic 6</td>
+      <td>100</td>
+      <td>50</td>
+      <td>50</td>
       <td>0.496233</td>
       <td>0.00</td>
       <td>0.500</td>
       <td>0.333333</td>
       <td>0.25</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.020000</td>
+      <td>0.020000</td>
+      <td>0.020000</td>
+      <td>0.040000</td>
+      <td>0.00</td>
+      <td>0.630930</td>
+      <td>0.630930</td>
+      <td>0.630930</td>
+      <td>1.017783</td>
       <td>0.00</td>
       <td>0.386853</td>
       <td>0.296082</td>
@@ -15099,12 +15260,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>6</th>
       <td>Topic 7</td>
+      <td>100</td>
+      <td>48</td>
+      <td>48</td>
       <td>0.413981</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.000000</td>
       <td>0.00</td>
       <td>0.20</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.020833</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.386853</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -15114,12 +15288,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>7</th>
       <td>Topic 8</td>
+      <td>100</td>
+      <td>48</td>
+      <td>48</td>
       <td>0.487902</td>
       <td>1.00</td>
       <td>0.500</td>
       <td>0.666667</td>
       <td>0.75</td>
       <td>0.60</td>
+      <td>0.020833</td>
+      <td>0.020833</td>
+      <td>0.041667</td>
+      <td>0.062500</td>
+      <td>0.062500</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+      <td>1.500000</td>
+      <td>1.930677</td>
+      <td>1.930677</td>
       <td>1.00</td>
       <td>0.613147</td>
       <td>0.703918</td>
@@ -15129,12 +15316,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>8</th>
       <td>Topic 9</td>
+      <td>100</td>
+      <td>48</td>
+      <td>48</td>
       <td>0.415008</td>
       <td>0.00</td>
       <td>0.500</td>
       <td>0.333333</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.020833</td>
+      <td>0.020833</td>
+      <td>0.041667</td>
+      <td>0.041667</td>
+      <td>0.00</td>
+      <td>0.630930</td>
+      <td>0.630930</td>
+      <td>1.061606</td>
+      <td>1.061606</td>
       <td>0.00</td>
       <td>0.386853</td>
       <td>0.296082</td>
@@ -15144,12 +15344,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>9</th>
       <td>Topic 10</td>
+      <td>100</td>
+      <td>50</td>
+      <td>50</td>
       <td>0.480995</td>
       <td>0.00</td>
       <td>0.500</td>
       <td>0.333333</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.020000</td>
+      <td>0.020000</td>
+      <td>0.040000</td>
+      <td>0.040000</td>
+      <td>0.00</td>
+      <td>0.630930</td>
+      <td>0.630930</td>
+      <td>1.061606</td>
+      <td>1.061606</td>
       <td>0.00</td>
       <td>0.386853</td>
       <td>0.296082</td>
@@ -15159,12 +15372,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>10</th>
       <td>Topic 11</td>
+      <td>100</td>
+      <td>51</td>
+      <td>51</td>
       <td>0.536177</td>
       <td>1.00</td>
       <td>0.500</td>
       <td>0.333333</td>
       <td>0.50</td>
       <td>0.60</td>
+      <td>0.019608</td>
+      <td>0.019608</td>
+      <td>0.019608</td>
+      <td>0.039216</td>
+      <td>0.058824</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.430677</td>
+      <td>1.817529</td>
       <td>1.00</td>
       <td>0.613147</td>
       <td>0.469279</td>
@@ -15174,12 +15400,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>11</th>
       <td>Topic 12</td>
+      <td>100</td>
+      <td>38</td>
+      <td>38</td>
       <td>0.406823</td>
       <td>1.00</td>
       <td>0.500</td>
       <td>0.333333</td>
       <td>0.25</td>
       <td>0.20</td>
+      <td>0.026316</td>
+      <td>0.026316</td>
+      <td>0.026316</td>
+      <td>0.026316</td>
+      <td>0.026316</td>
+      <td>1.00</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
       <td>1.00</td>
       <td>0.613147</td>
       <td>0.469279</td>
@@ -15189,12 +15428,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>12</th>
       <td>Topic 13</td>
+      <td>100</td>
+      <td>43</td>
+      <td>43</td>
       <td>0.487894</td>
       <td>1.00</td>
       <td>1.000</td>
       <td>0.666667</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.023256</td>
+      <td>0.046512</td>
+      <td>0.046512</td>
+      <td>0.046512</td>
+      <td>0.046512</td>
+      <td>1.00</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
       <td>1.00</td>
       <td>1.000000</td>
       <td>0.765361</td>
@@ -15204,12 +15456,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>13</th>
       <td>Topic 14</td>
+      <td>100</td>
+      <td>45</td>
+      <td>45</td>
       <td>0.470907</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.000000</td>
       <td>0.25</td>
       <td>0.20</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022222</td>
+      <td>0.022222</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.430677</td>
+      <td>0.430677</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -15219,12 +15484,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>14</th>
       <td>Topic 15</td>
+      <td>100</td>
+      <td>48</td>
+      <td>48</td>
       <td>0.420168</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.000000</td>
       <td>0.00</td>
       <td>0.20</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.020833</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.386853</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -15234,12 +15512,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>15</th>
       <td>Topic 16</td>
+      <td>100</td>
+      <td>52</td>
+      <td>52</td>
       <td>0.506824</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.333333</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.019231</td>
+      <td>0.038462</td>
+      <td>0.038462</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>0.930677</td>
+      <td>0.930677</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.234639</td>
@@ -15249,12 +15540,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>16</th>
       <td>Topic 17</td>
+      <td>100</td>
+      <td>48</td>
+      <td>48</td>
       <td>0.557906</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.333333</td>
       <td>0.25</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.020833</td>
+      <td>0.020833</td>
+      <td>0.041667</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>0.500000</td>
+      <td>0.886853</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.234639</td>
@@ -15264,12 +15568,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>17</th>
       <td>Topic 18</td>
+      <td>100</td>
+      <td>39</td>
+      <td>39</td>
       <td>0.509445</td>
       <td>1.00</td>
       <td>1.000</td>
       <td>0.666667</td>
       <td>0.75</td>
       <td>0.80</td>
+      <td>0.025641</td>
+      <td>0.051282</td>
+      <td>0.051282</td>
+      <td>0.076923</td>
+      <td>0.102564</td>
+      <td>1.00</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>2.061606</td>
+      <td>2.448459</td>
       <td>1.00</td>
       <td>1.000000</td>
       <td>0.765361</td>
@@ -15279,12 +15596,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>18</th>
       <td>Topic 19</td>
+      <td>100</td>
+      <td>45</td>
+      <td>45</td>
       <td>0.426503</td>
       <td>0.00</td>
       <td>0.000</td>
       <td>0.333333</td>
       <td>0.50</td>
       <td>0.40</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.022222</td>
+      <td>0.044444</td>
+      <td>0.044444</td>
+      <td>0.00</td>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>0.930677</td>
+      <td>0.930677</td>
       <td>0.00</td>
       <td>0.000000</td>
       <td>0.234639</td>
@@ -15294,12 +15624,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     <tr>
       <th>19</th>
       <td>Topic 20</td>
+      <td>100</td>
+      <td>45</td>
+      <td>45</td>
       <td>0.492781</td>
       <td>1.00</td>
       <td>1.000</td>
       <td>0.666667</td>
       <td>0.75</td>
       <td>0.80</td>
+      <td>0.022222</td>
+      <td>0.044444</td>
+      <td>0.044444</td>
+      <td>0.066667</td>
+      <td>0.088889</td>
+      <td>1.00</td>
+      <td>1.630930</td>
+      <td>1.630930</td>
+      <td>2.061606</td>
+      <td>2.448459</td>
       <td>1.00</td>
       <td>1.000000</td>
       <td>0.765361</td>
@@ -15308,13 +15651,26 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.485483</td>
       <td>0.45</td>
       <td>0.475</td>
       <td>0.416667</td>
       <td>0.45</td>
       <td>0.44</td>
+      <td>0.010111</td>
+      <td>0.021014</td>
+      <td>0.027182</td>
+      <td>0.038999</td>
+      <td>0.047423</td>
+      <td>0.45</td>
+      <td>0.765465</td>
+      <td>0.915465</td>
+      <td>1.152337</td>
+      <td>1.307078</td>
       <td>0.45</td>
       <td>0.469343</td>
       <td>0.429608</td>
@@ -15381,143 +15737,143 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E39</td>
+      <td>1</td>
       <td>13.206937</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
       <td>PyFLAGR</td>
       <td>Q1-E48</td>
+      <td>2</td>
       <td>12.517291</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E23</td>
+      <td>3</td>
       <td>11.551781</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E95</td>
+      <td>4</td>
       <td>11.137948</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E85</td>
+      <td>5</td>
       <td>11.103479</td>
     </tr>
     <tr>
-      <th>5</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E94</td>
+      <td>6</td>
       <td>10.965562</td>
     </tr>
     <tr>
-      <th>6</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E33</td>
+      <td>7</td>
       <td>10.689677</td>
     </tr>
     <tr>
-      <th>7</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E63</td>
+      <td>8</td>
       <td>10.379323</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E100</td>
+      <td>9</td>
       <td>10.344844</td>
     </tr>
     <tr>
-      <th>9</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E5</td>
+      <td>10</td>
       <td>10.241416</td>
     </tr>
     <tr>
-      <th>10</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E43</td>
+      <td>11</td>
       <td>10.103458</td>
     </tr>
     <tr>
-      <th>11</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E88</td>
+      <td>12</td>
       <td>9.689687</td>
     </tr>
     <tr>
-      <th>12</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E35</td>
+      <td>13</td>
       <td>9.689687</td>
     </tr>
     <tr>
-      <th>13</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E32</td>
+      <td>14</td>
       <td>9.620729</td>
     </tr>
     <tr>
-      <th>14</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E16</td>
+      <td>15</td>
       <td>9.413802</td>
     </tr>
     <tr>
-      <th>15</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E56</td>
+      <td>16</td>
       <td>9.379333</td>
     </tr>
     <tr>
-      <th>16</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E84</td>
+      <td>17</td>
       <td>9.241396</td>
     </tr>
     <tr>
-      <th>17</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E3</td>
+      <td>18</td>
       <td>9.206927</td>
     </tr>
     <tr>
-      <th>18</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E89</td>
+      <td>19</td>
       <td>9.206917</td>
     </tr>
     <tr>
-      <th>19</th>
-      <td>1</td>
+      <th>1</th>
       <td>PyFLAGR</td>
       <td>Q1-E62</td>
+      <td>20</td>
       <td>9.103500</td>
     </tr>
   </tbody>
@@ -15546,6 +15902,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="BordaCount-and-SimpleBordaCount"><code>BordaCount</code> and <code>SimpleBordaCount</code><a class="anchor-link" href="#BordaCount-and-SimpleBordaCount">&#182;</a></h3><p>Member of <code>pyflagr.Linear</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/5/linear-module">Linear Module</a>.</p>
 <p><code>BordaCount</code> is equivalent to <code>CombSUM</code> with <code>borda</code> normalization. Its constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -15620,36 +15977,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.48364</td>
       <td>0.5</td>
       <td>0.475</td>
       <td>0.416667</td>
       <td>0.425</td>
       <td>0.42</td>
-      <td>0.45</td>
-      <td>0.442857</td>
+      <td>...</td>
+      <td>1.282464</td>
+      <td>1.496188</td>
+      <td>1.629522</td>
       <td>0.5</td>
       <td>0.480657</td>
       <td>0.438268</td>
@@ -15660,6 +16027,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -15721,36 +16089,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.485026</td>
       <td>0.55</td>
       <td>0.5</td>
       <td>0.466667</td>
       <td>0.4375</td>
       <td>0.44</td>
-      <td>0.483333</td>
-      <td>0.464286</td>
+      <td>...</td>
+      <td>1.358739</td>
+      <td>1.608084</td>
+      <td>1.724751</td>
       <td>0.55</td>
       <td>0.511315</td>
       <td>0.485196</td>
@@ -15761,6 +16139,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -15823,36 +16202,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.48364</td>
       <td>0.5</td>
       <td>0.475</td>
       <td>0.416667</td>
       <td>0.425</td>
       <td>0.42</td>
-      <td>0.45</td>
-      <td>0.442857</td>
+      <td>...</td>
+      <td>1.282464</td>
+      <td>1.496188</td>
+      <td>1.629522</td>
       <td>0.5</td>
       <td>0.480657</td>
       <td>0.438268</td>
@@ -15863,6 +16252,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -15880,6 +16270,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="CombMNZ"><code>CombMNZ</code><a class="anchor-link" href="#CombMNZ">&#182;</a></h3><p>Member of <code>pyflagr.Linear</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/5/linear-module">Linear Module</a>.</p>
 <p>The <code>CombMNZ</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -15960,36 +16351,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.485262</td>
       <td>0.5</td>
       <td>0.5</td>
       <td>0.416667</td>
       <td>0.4375</td>
       <td>0.41</td>
-      <td>0.45</td>
-      <td>0.45</td>
+      <td>...</td>
+      <td>1.271859</td>
+      <td>1.503394</td>
+      <td>1.653394</td>
       <td>0.5</td>
       <td>0.5</td>
       <td>0.44134</td>
@@ -16000,6 +16401,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16016,7 +16418,21 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Majoritarian-methods">Majoritarian methods<a class="anchor-link" href="#Majoritarian-methods">&#182;</a></h2><h3 id="CondorcetWinners"><code>CondorcetWinners</code><a class="anchor-link" href="#CondorcetWinners">&#182;</a></h3><p>Member of <code>pyflagr.Majoritarian</code>.</p>
+<h2 id="Majoritarian-methods">Majoritarian methods<a class="anchor-link" href="#Majoritarian-methods">&#182;</a></h2><p>These methods are based on the majority criterion, that under several circumstances, identify the “winning” elements. The module includes three classes which are described below: <code>CondorcetWinners</code>, <code>CopelandWinners</code> and <code>OutrankingApproach</code>. Each method implements different scenarios for the majority criterion.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="CondorcetWinners"><code>CondorcetWinners</code><a class="anchor-link" href="#CondorcetWinners">&#182;</a></h3><p>Member of <code>pyflagr.Majoritarian</code>.</p>
+<p>In the Condorcet Winners method, the score of an element $r_i$ is determined by the number of its "victories" against all the other involved elements. A victory for $r_i$ is achieved if the majority of the voters rank $r_i$ higher than another element $r_j$.</p>
+<p>Documentation: <a href="https://flagr.site/docs/35/majoritarian-module">Majoritarian Module</a>.</p>
 <p>The <code>CondorcetWinners</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -16091,36 +16507,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>916</td>
       <td>0.480078</td>
       <td>0.5</td>
       <td>0.475</td>
       <td>0.433333</td>
       <td>0.4125</td>
       <td>0.43</td>
-      <td>0.466667</td>
-      <td>0.471429</td>
+      <td>...</td>
+      <td>1.303082</td>
+      <td>1.534616</td>
+      <td>1.701283</td>
       <td>0.5</td>
       <td>0.480657</td>
       <td>0.45</td>
@@ -16131,6 +16557,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16148,6 +16575,8 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="CopelandWinners"><code>CopelandWinners</code><a class="anchor-link" href="#CopelandWinners">&#182;</a></h3><p>Member of <code>pyflagr.Majoritarian</code>.</p>
+<p>In Copeland Winners, the score of an element $r_i$ is determined by the number of its "victories" against all the other involved elements. A victory for $r_i$ is achieved if the majority of the voters rank $r_i$ higher than another element $r_j$. In contrast to the Condorcet method, Copeland Winners assign "half" a victory (i.e. a score of 0.5) to each element of a pair $(r_i,r_j)$ in the case of tie. A tie happens when exactly half of the voters rank $r_i$ higher than $r_j$ and the other half voters rank $r_j$ higher than $r_i$.</p>
+<p>Documentation: <a href="https://flagr.site/docs/35/majoritarian-module">Majoritarian Module</a>.</p>
 <p>The <code>CopelandWinners</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -16222,36 +16651,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>922</td>
       <td>0.481959</td>
       <td>0.5</td>
       <td>0.45</td>
       <td>0.416667</td>
       <td>0.4</td>
       <td>0.41</td>
-      <td>0.45</td>
-      <td>0.464286</td>
+      <td>...</td>
+      <td>1.252192</td>
+      <td>1.483727</td>
+      <td>1.66706</td>
       <td>0.5</td>
       <td>0.461315</td>
       <td>0.435196</td>
@@ -16262,6 +16701,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16279,6 +16719,12 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="OutrankingApproach"><code>OutrankingApproach</code><a class="anchor-link" href="#OutrankingApproach">&#182;</a></h3><p>Member of <code>pyflagr.Majoritarian</code>.</p>
+<p>The Outranking Approach of Farah and Vanderpooten is a majoritarian method that identifies the "winning" elements by performing pairwise comparisons of their individual rankings. The method is implemented in accordance to the following paper:</p>
+<ul>
+<li>Farah, M., Vanderpooten, D., "An outranking approach for rank aggregation in information retrieval", In Proceedings of the 30th ACM Conference on Research and Development in Information Retrieval, pp. 591-598, 2007.</li>
+</ul>
+<p>The algorithm is based on four threshold values which introduce different perspectives of the majority criterion. These values are the concordance, discordance, preference, and veto thresholds. The user may pass all of them to FLAGR as hyper-parameters, through the input arguments of the OutrankingApproach() function (see below).</p>
+<p>Documentation: <a href="https://flagr.site/docs/35/majoritarian-module">Majoritarian Module</a>.</p>
 <p>The <code>OutrankingApproach</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -16296,7 +16742,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <td style="text-align:left">Determines the elements in the aggregate list on which the evaluation measures (i.e. Precision, and nDCG) will be computed. For example, for <code>eval_pts=10</code> FLAGR will compute $P@1, P@2, ... P@10$, and $N@1, N@2, ..., N@10$.</td>
 </tr>
 <tr>
-<td style="text-align:left"><code>pref</code></td>
+<td style="text-align:left"><code>preference</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0</td>
 <td style="text-align:left">Preference threshold.</td>
@@ -16308,13 +16754,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <td style="text-align:left">Veto threshold.</td>
 </tr>
 <tr>
-<td style="text-align:left"><code>conc</code></td>
+<td style="text-align:left"><code>concordance</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0</td>
 <td style="text-align:left">Concordance threshold.</td>
 </tr>
 <tr>
-<td style="text-align:left"><code>disc</code></td>
+<td style="text-align:left"><code>discordance</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0.25</td>
 <td style="text-align:left">Discordance threshold.</td>
@@ -16377,36 +16823,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.481719</td>
       <td>0.5</td>
       <td>0.425</td>
       <td>0.433333</td>
       <td>0.4125</td>
       <td>0.44</td>
-      <td>0.441667</td>
-      <td>0.45</td>
+      <td>...</td>
+      <td>1.309331</td>
+      <td>1.469624</td>
+      <td>1.636291</td>
       <td>0.5</td>
       <td>0.441972</td>
       <td>0.443856</td>
@@ -16417,6 +16873,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16433,7 +16890,27 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Markov-Chain-methods">Markov Chain methods<a class="anchor-link" href="#Markov-Chain-methods">&#182;</a></h2><h3 id="MC1,-MC2,-MC3,-MC4,-and-MCT"><code>MC1</code>, <code>MC2</code>, <code>MC3</code>, <code>MC4</code>, and <code>MCT</code><a class="anchor-link" href="#MC1,-MC2,-MC3,-MC4,-and-MCT">&#182;</a></h3><p>Members of <code>pyflagr.MarkovChains</code>.</p>
+<h2 id="Markov-Chain-methods">Markov Chain methods<a class="anchor-link" href="#Markov-Chain-methods">&#182;</a></h2><p>The Markov Chains methods constitute a well-established family of rank aggregation methods. Originally proposed by Dwork et al., (2001), they consider an aggregate list as a system that moves from one state to another with respect to a particular criterion. Dwork et al. (2001) introduced four such methods in the following article:</p>
+<ul>
+<li>C. Dwork, R. Kumar, M. Naor, D. Sivakumar, "Rank Aggregation Methods for the Web", In Proceedings of the 10th International Conference on World Wide Web, pp. 613-622, 2001.</li>
+</ul>
+<p>In addition, DeConde et al. (2006) introduced MCT, a variant that constructs the transition matrix by considering the proportion of lists which prefer an element over another.</p>
+<ul>
+<li>R.P. DeConde, S. Hawley, S. Falcon, N. Clegg, B. Knudsen, R. Etzioni, "Combining results of microarray experiments: a rank aggregation approach", Statistical Applications in Genetics and Molecular Biology, vol. 5, no. 1, 2006.</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="MC1,-MC2,-MC3,-MC4,-and-MCT"><code>MC1</code>, <code>MC2</code>, <code>MC3</code>, <code>MC4</code>, and <code>MCT</code><a class="anchor-link" href="#MC1,-MC2,-MC3,-MC4,-and-MCT">&#182;</a></h3><p>Members of <code>pyflagr.MarkovChains</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/39/markovchains-module">MarkovChains Module</a>.</p>
 <p>The class constructors supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -16520,36 +16997,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.487571</td>
       <td>0.65</td>
       <td>0.575</td>
       <td>0.5</td>
       <td>0.475</td>
       <td>0.46</td>
-      <td>0.466667</td>
-      <td>0.464286</td>
+      <td>...</td>
+      <td>1.467477</td>
+      <td>1.64558</td>
+      <td>1.79558</td>
       <td>0.65</td>
       <td>0.591972</td>
       <td>0.535196</td>
@@ -16560,6 +17047,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16621,36 +17109,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.487571</td>
       <td>0.65</td>
       <td>0.575</td>
       <td>0.5</td>
       <td>0.475</td>
       <td>0.46</td>
-      <td>0.466667</td>
-      <td>0.464286</td>
+      <td>...</td>
+      <td>1.467477</td>
+      <td>1.64558</td>
+      <td>1.79558</td>
       <td>0.65</td>
       <td>0.591972</td>
       <td>0.535196</td>
@@ -16661,6 +17159,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16722,36 +17221,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.505721</td>
       <td>0.5</td>
       <td>0.475</td>
       <td>0.566667</td>
       <td>0.525</td>
       <td>0.52</td>
-      <td>0.533333</td>
-      <td>0.528571</td>
+      <td>...</td>
+      <td>1.524615</td>
+      <td>1.73834</td>
+      <td>1.905006</td>
       <td>0.5</td>
       <td>0.480657</td>
       <td>0.543856</td>
@@ -16762,6 +17271,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16823,36 +17333,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.481005</td>
       <td>0.5</td>
       <td>0.5</td>
       <td>0.416667</td>
       <td>0.4125</td>
       <td>0.42</td>
-      <td>0.425</td>
-      <td>0.442857</td>
+      <td>...</td>
+      <td>1.286819</td>
+      <td>1.447112</td>
+      <td>1.630446</td>
       <td>0.5</td>
       <td>0.5</td>
       <td>0.44134</td>
@@ -16863,6 +17383,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16924,36 +17445,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.481263</td>
       <td>0.45</td>
       <td>0.5</td>
       <td>0.466667</td>
       <td>0.5</td>
       <td>0.48</td>
-      <td>0.475</td>
-      <td>0.492857</td>
+      <td>...</td>
+      <td>1.410158</td>
+      <td>1.570452</td>
+      <td>1.770452</td>
       <td>0.45</td>
       <td>0.488685</td>
       <td>0.467876</td>
@@ -16964,6 +17495,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -16980,7 +17512,12 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="RRA:-Robust-Rank-Aggregation"><code>RRA</code>: Robust Rank Aggregation<a class="anchor-link" href="#RRA:-Robust-Rank-Aggregation">&#182;</a></h2><p>Member of <code>pyflagr.RRA</code>.</p>
+<h2 id="RRA:-Robust-Rank-Aggregation"><code>RRA</code>: Robust Rank Aggregation<a class="anchor-link" href="#RRA:-Robust-Rank-Aggregation">&#182;</a></h2><p>Robust Rank Aggregation (RRA) is mostly used in bio-informatics applications to aggregate gene lists. It is based on a probabilistic model (beta distribution) that makes the algorithm parameter free and robust to outliers, noise and errors. The method is implemented in accordance to the following paper:</p>
+<ul>
+<li>R. Kolde, S. Laur, P. Adler, J. Vilo, "Robust rank aggregation for gene list integration and meta-analysis", Bioinformatics, vol. 28, no. 4, pp. 573-580, 2012.</li>
+</ul>
+<p>Member of <code>pyflagr.RRA</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/57/rra-module">RRA Module</a>.</p>
 <p>The <code>RRA</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -17061,46 +17598,57 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
-      <td>0.466412</td>
-      <td>0.25</td>
-      <td>0.25</td>
-      <td>0.316667</td>
-      <td>0.35</td>
-      <td>0.4</td>
-      <td>0.433333</td>
-      <td>0.421429</td>
-      <td>0.6</td>
-      <td>0.503287</td>
-      <td>0.490784</td>
-      <td>0.483927</td>
-      <td>0.499156</td>
-      <td>0.510026</td>
-      <td>0.495364</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>904</td>
+      <td>0.437941</td>
+      <td>0.05</td>
+      <td>0.15</td>
+      <td>0.183333</td>
+      <td>0.2625</td>
+      <td>0.28</td>
+      <td>...</td>
+      <td>1.530184</td>
+      <td>1.690477</td>
+      <td>1.857144</td>
+      <td>0.55</td>
+      <td>0.588685</td>
+      <td>0.544412</td>
+      <td>0.536945</td>
+      <td>0.518977</td>
+      <td>0.511542</td>
+      <td>0.510485</td>
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -17117,7 +17665,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Weighted-methods">Weighted methods<a class="anchor-link" href="#Weighted-methods">&#182;</a></h2><h3 id="PreferenceRelationsGraph"><code>PreferenceRelationsGraph</code><a class="anchor-link" href="#PreferenceRelationsGraph">&#182;</a></h3><p>Member of <code>pyflagr.Weighted</code>.</p>
+<h2 id="Weighted-methods">Weighted methods<a class="anchor-link" href="#Weighted-methods">&#182;</a></h2><p>The weighted rank aggregation methods employ exploratory analysis techniques to automatically identify the expert voters in an unsupervised fashion. Then, they assign higher weights to the voters who were identified as experts, thus boosting the scores of their submitted elements.</p>
+<p>There are three such methods implemented in FLAGR. Preference Relations Graph, Agglomerative and DIBRA.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="PreferenceRelationsGraph"><code>PreferenceRelationsGraph</code><a class="anchor-link" href="#PreferenceRelationsGraph">&#182;</a></h3><p>This method constructs a preference relations graph which contains the individual elements as vertices and their weights as edges. It has been implemented in accordance to the following paper:</p>
+<ul>
+<li>M.S. Desarkar, S. Sarkar, P. Mitra, "Preference relations based unsupervised rank aggregation for metasearch", Expert Systems with Applications, vol. 49, pp. 86-98, 2016.</li>
+</ul>
+<p>Member of <code>pyflagr.Weighted</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/41/weighted-module">Weigthed Module</a>.</p>
 <p>The <code>PreferenceRelationsGraph</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -17204,36 +17770,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
-      <td>0.484971</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
+      <td>0.485022</td>
       <td>0.55</td>
       <td>0.5</td>
       <td>0.466667</td>
       <td>0.4375</td>
       <td>0.44</td>
-      <td>0.483333</td>
-      <td>0.464286</td>
+      <td>...</td>
+      <td>1.358739</td>
+      <td>1.608084</td>
+      <td>1.724751</td>
       <td>0.55</td>
       <td>0.511315</td>
       <td>0.485196</td>
@@ -17244,6 +17820,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -17260,7 +17837,12 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Agglomerative"><code>Agglomerative</code><a class="anchor-link" href="#Agglomerative">&#182;</a></h3><p>Member of <code>pyflagr.Weighted</code>.</p>
+<h3 id="Agglomerative"><code>Agglomerative</code><a class="anchor-link" href="#Agglomerative">&#182;</a></h3><p>This method works very similarly to the well-established agglomerative clustering algorithm. Specifically, it repeatedly merges the two most similar input lists into a temporary aggregate list. During list merging, it modifies the weights of the respective voters, thus affecting the future merges. It has been implemented in accordance to the following paper:</p>
+<ul>
+<li>S. Chatterjee, A. Mukhopadhyay, M. Bhattacharyya, "A weighted rank aggregation approach towards crowd opinion analysis", Knowledge-Based Systems, vol. 149, pp. 47-60, 2018.</li>
+</ul>
+<p>Member of <code>pyflagr.Weighted</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/41/weighted-module">Weigthed Module</a>.</p>
 <p>The <code>Agglomerative</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -17347,36 +17929,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>456</td>
       <td>0.256305</td>
       <td>0.4</td>
       <td>0.4</td>
       <td>0.4</td>
       <td>0.425</td>
       <td>0.47</td>
-      <td>0.458333</td>
-      <td>0.492857</td>
+      <td>...</td>
+      <td>1.319165</td>
+      <td>1.461647</td>
+      <td>1.694981</td>
       <td>0.4</td>
       <td>0.4</td>
       <td>0.4</td>
@@ -17387,6 +17979,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -17403,7 +17996,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="DIBRA:-Iterative-Distance-Based-Aggregation"><code>DIBRA</code>: Iterative Distance-Based Aggregation<a class="anchor-link" href="#DIBRA:-Iterative-Distance-Based-Aggregation">&#182;</a></h3><p>Member of <code>pyflagr.Weighted</code>.</p>
+<h3 id="DIBRA:-Iterative-Distance-Based-Aggregation"><code>DIBRA</code>: Iterative Distance-Based Aggregation<a class="anchor-link" href="#DIBRA:-Iterative-Distance-Based-Aggregation">&#182;</a></h3><p>DIBRA first employs a standard non-weighted method to generate an initial aggregate ranking (see the <code>aggregator</code> parameter in the following table for a list of the supported non-weighted methods). In the sequel, it repeatedly assigns higher weights to the input lists which have smaller distances from the aggregate lists. The process terminates when the voter weights converge and a stable aggregate list is obtained.</p>
+<p>The algorithm also includes an optional list pruning mechanism which arranges the input list lengths according to the respective voter weights. DIBRA has been implemented in accordance to the following paper:</p>
+<ul>
+<li>L. Akritidis, A. Fevgas, P. Bozanis, Y. Manolopoulos, "An Unsupervised Distance-Based Model for Weighted Rank Aggregation with List Pruning", Expert Systems with Applications, vol. 202, pp. 117435, 2022.</li>
+</ul>
+<p>Member of <code>pyflagr.Weighted</code>.</p>
+<p>Documentation: <a href="https://flagr.site/docs/41/weighted-module">Weigthed Module</a>.</p>
 <p>The <code>DIBRA</code> constructor supports the following parameters:</p>
 <table>
 <thead><tr>
@@ -17424,7 +18023,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <td style="text-align:left"><code>aggregator</code></td>
 <td style="text-align:left">Hyperparameter, String, Optional.</td>
 <td style="text-align:left"><code>combsum:borda</code></td>
-<td style="text-align:left">The baseline aggregation method. An extended weighted variant of the baseline method is applied internally by plugging the computed voter weights.<br> The list of the supported values includes:<br><ul><li>`combsum:borda`: CombSUM with Borda rank normalization.</li><li>`combsum:rank`: CombSUM with rankings normalization.</li><li>`combsum:score`: CombSUM with score min-max normalization.</li><li>`combsum:z-score`: CombSUM with score z-normalization.</li><li>`combmnz:borda`: CombMNZ with Borda rank normalization.</li><li>`combmnz:rank`: CombMNZ with rankings normalization.</li><li>`combmnz:score`: CombMNZ with score min-max normalization.</li><li>`combmnz:z-score`: CombMNZ with score z-normalization.</li><li>`condorcet`: The Condorcet Winners method.</li><li>`outrank`: The Outranking Approach.</li></ul></td>
+<td style="text-align:left">The baseline aggregation method. An extended weighted variant of the baseline method is applied internally by plugging the computed voter weights.<br>The list of the supported values includes:<br><ul><li>`combsum:borda`: CombSUM with Borda rank normalization.</li><li>`combsum:rank`: CombSUM with rankings normalization.</li><li>`combsum:score`: CombSUM with score min-max normalization.</li><li>`combsum:z-score`: CombSUM with score z-normalization.</li><li>`combsum:simple-borda`: CombSUM with simple Borda normalization.</li><li>`combmnz:borda`: CombMNZ with Borda rank normalization.</li><li>`combmnz:rank`: CombMNZ with rankings normalization.</li><li>`combmnz:score`: CombMNZ with score min-max normalization.</li><li>`combmnz:z-score`: CombMNZ with score z-normalization.</li><li>`combmnz:simple-borda`: CombMNZ with simple Borda normalization.</li><li>`condorcet`: The Condorcet Winners method.</li><li>`copeland`: The Copeland Winners method.</li><li>`outrank`: The Outranking Approach.</li></ul></td>
 </tr>
 <tr>
 <td style="text-align:left"><code>w_norm</code></td>
@@ -17442,7 +18041,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <td style="text-align:left"><code>gamma</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">1.50</td>
-<td style="text-align:left">Regulates the weight convergence speed.</td>
+<td style="text-align:left">The $\gamma$ hyper-parameter that determines the steplength of weight learning.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>prune</code></td>
@@ -17454,13 +18053,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <td style="text-align:left"><code>d1</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional. Used only when <code>prune=True</code></td>
 <td style="text-align:left">0.4</td>
-<td style="text-align:left">The hyperparameter $\delta_1$ of the weight-dependant list pruning mechanism.</td>
+<td style="text-align:left">The hyperparameter $\delta_1$ of the weight-dependant list pruning mechanism. Applies only if <code>prune=True</code>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>d2</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional. Used only when <code>prune=True</code></td>
 <td style="text-align:left">0.1</td>
-<td style="text-align:left">The hyperparameter $\delta_2$ of the weight-dependant list pruning mechanism.</td>
+<td style="text-align:left">The hyperparameter $\delta_2$ of the weight-dependant list pruning mechanism. Applies only if <code>prune=True</code>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>tol</code></td>
@@ -17478,25 +18077,25 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <td style="text-align:left"><code>pref</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0</td>
-<td style="text-align:left">Preference threshold.</td>
+<td style="text-align:left">Preference threshold. Applies only if <code>aggregator=outrank</code>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>veto</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0.75</td>
-<td style="text-align:left">Veto threshold.</td>
+<td style="text-align:left">Veto threshold. Applies only if <code>aggregator=outrank</code>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>conc</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0</td>
-<td style="text-align:left">Concordance threshold.</td>
+<td style="text-align:left">Concordance threshold. Applies only if <code>aggregator=outrank</code>.</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>disc</code></td>
 <td style="text-align:left">Hyperparameter, Float, Optional.</td>
 <td style="text-align:left">0.25</td>
-<td style="text-align:left">Discordance threshold.</td>
+<td style="text-align:left">Discordance threshold. Applies only if <code>aggregator=outrank</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -17512,7 +18111,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">method_1</span> <span class="o">=</span> <span class="n">Weighted</span><span class="o">.</span><span class="n">DIBRA</span><span class="p">(</span><span class="n">aggregator</span><span class="o">=</span><span class="s1">&#39;combsum:rank&#39;</span><span class="p">,</span> <span class="n">eval_pts</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">method_1</span> <span class="o">=</span> <span class="n">Weighted</span><span class="o">.</span><span class="n">DIBRA</span><span class="p">(</span><span class="n">aggregator</span><span class="o">=</span><span class="s1">&#39;outrank&#39;</span><span class="p">,</span> <span class="n">eval_pts</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
 
 <span class="n">df_out</span><span class="p">,</span> <span class="n">df_eval</span> <span class="o">=</span> <span class="n">method_1</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">input_file</span><span class="o">=</span><span class="n">lists</span><span class="p">,</span> <span class="n">rels_file</span><span class="o">=</span><span class="n">qrels</span><span class="p">)</span>
 <span class="n">df_eval</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -17556,46 +18155,57 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
-      <td>0.494075</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
+      <td>0.493753</td>
       <td>0.55</td>
-      <td>0.575</td>
-      <td>0.516667</td>
-      <td>0.5125</td>
+      <td>0.525</td>
+      <td>0.533333</td>
+      <td>0.5</td>
       <td>0.47</td>
-      <td>0.466667</td>
-      <td>0.464286</td>
+      <td>...</td>
+      <td>1.448134</td>
+      <td>1.590617</td>
+      <td>1.77395</td>
       <td>0.55</td>
-      <td>0.569343</td>
-      <td>0.529608</td>
-      <td>0.52463</td>
-      <td>0.495158</td>
-      <td>0.49029</td>
-      <td>0.486599</td>
+      <td>0.530657</td>
+      <td>0.535196</td>
+      <td>0.512466</td>
+      <td>0.491149</td>
+      <td>0.481324</td>
+      <td>0.487617</td>
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -17657,36 +18267,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>1986</td>
+      <td>926</td>
+      <td>922</td>
       <td>0.502947</td>
       <td>0.55</td>
       <td>0.55</td>
       <td>0.583333</td>
       <td>0.5875</td>
       <td>0.61</td>
-      <td>0.591667</td>
-      <td>0.557143</td>
+      <td>...</td>
+      <td>1.751214</td>
+      <td>1.929318</td>
+      <td>2.045985</td>
       <td>0.55</td>
       <td>0.55</td>
       <td>0.573464</td>
@@ -17697,6 +18317,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 
@@ -17758,36 +18379,46 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Query</th>
-      <th>AvgPrecision</th>
-      <th>P@1</th>
-      <th>P@2</th>
-      <th>P@3</th>
-      <th>P@4</th>
-      <th>P@5</th>
-      <th>P@6</th>
-      <th>P@7</th>
-      <th>N@1</th>
-      <th>N@2</th>
-      <th>N@3</th>
-      <th>N@4</th>
-      <th>N@5</th>
-      <th>N@6</th>
-      <th>N@7</th>
+      <th>q</th>
+      <th>num_ret</th>
+      <th>num_rel</th>
+      <th>num_rel_ret</th>
+      <th>map</th>
+      <th>P_1</th>
+      <th>P_2</th>
+      <th>P_3</th>
+      <th>P_4</th>
+      <th>P_5</th>
+      <th>...</th>
+      <th>dcg_cut_5</th>
+      <th>dcg_cut_6</th>
+      <th>dcg_cut_7</th>
+      <th>ndcg_cut_1</th>
+      <th>ndcg_cut_2</th>
+      <th>ndcg_cut_3</th>
+      <th>ndcg_cut_4</th>
+      <th>ndcg_cut_5</th>
+      <th>ndcg_cut_6</th>
+      <th>ndcg_cut_7</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>20</th>
-      <td>MEAN</td>
+      <td>all</td>
+      <td>2000</td>
+      <td>926</td>
+      <td>926</td>
       <td>0.493753</td>
       <td>0.55</td>
       <td>0.525</td>
       <td>0.533333</td>
       <td>0.5</td>
       <td>0.47</td>
-      <td>0.458333</td>
-      <td>0.471429</td>
+      <td>...</td>
+      <td>1.448134</td>
+      <td>1.590617</td>
+      <td>1.77395</td>
       <td>0.55</td>
       <td>0.530657</td>
       <td>0.535196</td>
@@ -17798,6 +18429,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
     </tr>
   </tbody>
 </table>
+<p>1 rows × 33 columns</p>
 </div>
 </div>
 

@@ -14579,17 +14579,50 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Comparing-rank-aggregation-algorithms-with-PyFLAGR">Comparing rank aggregation algorithms with PyFLAGR<a class="anchor-link" href="#Comparing-rank-aggregation-algorithms-with-PyFLAGR">&#182;</a></h1><h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h2><p>The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.</p>
+<h1 id="Comparing-rank-aggregation-algorithms-with-PyFLAGR">Comparing rank aggregation algorithms with PyFLAGR<a class="anchor-link" href="#Comparing-rank-aggregation-algorithms-with-PyFLAGR">&#182;</a></h1><p>The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.</p>
 <p>FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Installation">Installation<a class="anchor-link" href="#Installation">&#182;</a></h2><p>PyFLAGR is a Python library built on top of FLAGR library core. It can be easily installed with pip:</p>
 <p><code>pip install pyflagr</code></p>
 <p>After installation, PyFLAGR can be used in standard Python programs and Jupyter notebooks. Representative code examples can be found on this notebook.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Downloads,-Documentation,-Version-and-License">Downloads, Documentation, Version and License<a class="anchor-link" href="#Downloads,-Documentation,-Version-and-License">&#182;</a></h2><ul>
 <li>The source code of FLAGR and PyFLAGR is available through the <a href="https://github.com/lakritidis/FLAGR">official GitHub repository</a>.</li>
 <li>The library is fully documented at <a href="https://flagr.site/">https://flagr.site/</a>.</li>
 <li>The current (Py)FLAGR version is 1.0.8.</li>
 <li>Both libraries are licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, version 2</a>.</li>
 </ul>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Importing-and-using-PyFLAGR">Importing and using PyFLAGR<a class="anchor-link" href="#Importing-and-using-PyFLAGR">&#182;</a></h2><p>PyFLAGR groups its supported rank aggregation methods in 6 modules:</p>
 <ol>
 <li><code>Linear</code>: This module contains the <code>CombSUM</code>, <code>CombMNZ</code>, <code>Borda</code> and <code>SimpleBorda</code> classes. <code>CombSUM</code> and <code>CombMNZ</code> support five normalization methods (see Renda et al., 2003). <code>Borda</code> and <code>SimpleBorda</code> are just wrappers of <code>CombSUM</code> with <code>borda</code> and <code>simple-borda</code> normalization.</li>
@@ -14638,9 +14671,28 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Input/Output-files">Input/Output files<a class="anchor-link" href="#Input/Output-files">&#182;</a></h2><p>Please refer to <a href="http://flagr.site/docs/38/input-and-output-files">this article</a> for a detailed description of the format of the input and output files.</p>
-<p>Here we use an example data file that contains the input lists to be aggregated. More specifically, <code>testdata.csv</code> includes the lists that were submitted by $v=50$ voters for $Q=20$ queries. Each input list contains $k=30$ elements. Therefore, the number of rows in this file is equal to $50 \cdot 20 \cdot 30 = 30000$.</p>
-<p>In addition, the user must provide a second input file (we call it the <em>Rels</em> file) that contains relevance judgments for the preference list elements of the primary input file for each query. This file is essential for evaluatingrank aggregation methods.</p>
+<h2 id="Input/Output-files">Input/Output files<a class="anchor-link" href="#Input/Output-files">&#182;</a></h2><p>A rank aggregation application involves a set of queries $Q=\{q_1,q_2,...,q_N\}$ and a set of rankers $R=\{r_1,r_2,...r_m\}$. Each query $q\in{Q}$ is submitted to all rankers in $R$, who respond by returning a ranked list of preference items sorted in decreasing importance, or relevance order. For example, in the context of recommendation systems, a set of users may be asked to enlist their preferences as a response to the hypothetical query "<em>which are your favorite games?</em>". Then, a rank aggregation algorithm must merge all the submitted preference lists, discover any important latent information, and generate a single output list with improved element ordering.</p>
+<p>For the requirements of this notebook, we use a sample dataset that was created by employing <a href="https://github.com/lakritidis/RASDaGen">RASDaGen</a>, a synthetic dataset generator for rank aggregation applications. The dataset includes two files: <code>testdata.csv</code> and <code>testdata_qrels.csv</code>.</p>
+<p>The former contains preference lists that were submitted by 50 voters for 20 queries. Each input list contains 30 elements. Therefore, the number of rows in this file is equal to $50 \times 20 \times 30=30000$. The columns of this CSV file must be organized in the following manner:</p>
+<p><code>Query, Voter Name, Item Code, Item Score, Algorithm/Dataset</code></p>
+<p>where</p>
+<ul>
+<li><code>Query</code> represents the topic for which the preference list is submitted,</li>
+<li><code>Voter</code> is the name of the ranker who submitted a preference list for a particular <code>Query</code>,</li>
+<li><code>Item Code</code> is a unique name that identifies each element of the preference lists,</li>
+<li><code>Item Score</code> is the preference score assigned to an item by a <code>Voter</code>, and</li>
+<li><code>Algorithm/Dataset</code> is a user-defined string that represents the origin of a particular preference list.</li>
+</ul>
+<p>On the other hand, <code>testdata_qrels.csv</code> contains relevance judgments for the preference list elements of the primary input file for each query. It is organized in the following fashion:</p>
+<p><code>Query, 0, Item Code, Relevance</code></p>
+<p>where:</p>
+<ul>
+<li><code>Query</code> represents the topic for which the preference list is submitted,</li>
+<li><code>0</code>: unused. This value must be always 0.</li>
+<li><code>Item Code</code> is a unique name that identifies each element of the preference lists,</li>
+<li><code>Relevance</code> is nn integer value that represents the relevance of the item with respect to the mentioned <code>Query</code>. Typically, zero values represent irrelevant and incorrect elements; negative values represent spam elements; and positive values represent relevant, correct and informative elements.</li>
+</ul>
+<p>Please refer to <a href="http://flagr.site/docs/38/input-and-output-files">this article</a> for more details.</p>
 
 </div>
 </div>
@@ -14654,10 +14706,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># The input data file with the input lists to be aggregated.</span>
-<span class="n">lists</span> <span class="o">=</span> <span class="s1">&#39;testdata.csv&#39;</span>
+<span class="n">lists</span> <span class="o">=</span> <span class="s1">&#39;../testdata/testdata.csv&#39;</span>
 
 <span class="c1"># The input data file with the relevance judgements.</span>
-<span class="n">qrels</span> <span class="o">=</span> <span class="s1">&#39;testdata_qrels.csv&#39;</span>
+<span class="n">qrels</span> <span class="o">=</span> <span class="s1">&#39;../testdata/testdata_qrels.csv&#39;</span>
 </pre></div>
 
      </div>
@@ -14673,7 +14725,19 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="The-Comparator-class">The <code>Comparator</code> class<a class="anchor-link" href="#The-Comparator-class">&#182;</a></h2><p>This notebook demonstrates the PyFLAGR's tools for testing and comparing rank aggregation methods. Code examples that show how each method can be executed and evaluated individually are presented in the first notebook entitled <code>CodeExamples.ipynb</code>. Here we present the <code>Comparator</code> class and its member methods.</p>
-<h3 id="Constructor">Constructor<a class="anchor-link" href="#Constructor">&#182;</a></h3><p>The constructor receives a single argument that represents the cutoff point (termed <em>evaluation points</em>) at which the evaluation metrics will be computed. In the following example, we determine that the cutoff point is $10$, therefore, the following metrics will be computed:</p>
+<p>This class allows the researchers to perform head-to-head comparisons of the performance of various rank aggregation algorithms.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Class-constructor">Class constructor<a class="anchor-link" href="#Class-constructor">&#182;</a></h3><p>The constructor receives a single argument that represents the cutoff point (termed <em>evaluation points</em>) at which the evaluation metrics will be computed. In the following example, we determine that the cutoff point is $10$, therefore, the following metrics will be computed:</p>
 <ul>
 <li>Mean Average Precision (MAP),</li>
 <li>Precision at points $1,2,...10$ (namely, $P@1,P@2,...P@N$),</li>
@@ -14710,8 +14774,8 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="The-aggregators-array-and-the-add_aggregator-member-function">The <code>aggregators</code> array and the <code>add_aggregator</code> member function<a class="anchor-link" href="#The-aggregators-array-and-the-add_aggregator-member-function">&#182;</a></h3><p>The class contains an <code>aggregators</code> array that stores the rank aggregation methods to be compared. Each method is handled by a particular object that is passed to <code>Comparator</code> through the <code>add_aggregator</code> method.</p>
-<p>Notice that the <code>eval_pts</code> parameter that is passed to each class constructor must be equal to the aforementioned value of the cutoff parameter. In the following example, we pass 20 rank aggregation methods to <code>Comparator</code>:</p>
+<h3 id="The-aggregators-array-and-the-add_aggregator-member-function">The <code>aggregators</code> array and the <code>add_aggregator</code> member function<a class="anchor-link" href="#The-aggregators-array-and-the-add_aggregator-member-function">&#182;</a></h3><p>The <code>Comparator</code> class contains an <code>aggregators</code> array that stores the rank aggregation methods to be compared. Each rank aggregation method is handled by a particular object that is passed to <code>Comparator</code>, through the <code>add_aggregator</code> member function.</p>
+<p>Notice that the <code>eval_pts</code> parameter that is passed to each class constructor must be equal to the aforementioned value of the cutoff parameter. In the following example, we pass 20 rank aggregation methods to <code>Comparator</code>. This means that all these methods will be included in the forthcoming evaluation tests.</p>
 
 </div>
 </div>
@@ -14761,10 +14825,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="The-aggregate-member-function">The <code>aggregate</code> member function<a class="anchor-link" href="#The-aggregate-member-function">&#182;</a></h3><p>Then, the <code>aggregate</code> method is called by passing:</p>
+<h3 id="The-aggregate()-member-function">The <code>aggregate()</code> member function<a class="anchor-link" href="#The-aggregate()-member-function">&#182;</a></h3><p>After the <code>Comparator</code> class has been initialized and the algorithms to be evaluated have been determined, the <code>aggregate()</code> member function must be called to start the evaluation process. The <code>aggregate()</code> method accepts the two following arguments:</p>
 <ul>
-<li>The input data file that contains the preference lists to be aggregated, and</li>
-<li>The Rels file that contains relevance judgments for the elements of the preference lists. This is the ground truth file that will be used to evaluate the generated aggregate lists.</li>
+<li>The input data file that contains the preference lists to be aggregated (in our case <code>testdata.csv</code>), and</li>
+<li>The Rels file that contains relevance judgments for the elements of the preference lists (in our case <code>testdata_qrels.csv</code>). This is the ground truth file that will be used to evaluate the generated aggregate lists.</li>
 </ul>
 <p>Again, please refer to <a href="http://flagr.site/docs/38/input-and-output-files">this article</a> for a detailed description of the format of the input and output files.</p>
 
@@ -14859,7 +14923,7 @@ Running DIBRA-Prune ...
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmp</span><span class="o">.</span><span class="n">results</span>
@@ -14880,7 +14944,7 @@ Running DIBRA-Prune ...
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
 
 
 
@@ -15220,7 +15284,7 @@ Running DIBRA-Prune ...
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">cutoff</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">,</span> <span class="s2">&quot;ndcg&quot;</span><span class="p">],</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
@@ -15256,28 +15320,28 @@ Running DIBRA-Prune ...
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 
 
 
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
 <style type="text/css">
 </style>
-<table id="T_b5374">
+<table id="T_b616b">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_b5374_level0_col0" class="col_heading level0 col0" >Mean Average Precision (MAP)</th>
-      <th id="T_b5374_level0_col1" class="col_heading level0 col1" >P_1</th>
-      <th id="T_b5374_level0_col2" class="col_heading level0 col2" >P_2</th>
-      <th id="T_b5374_level0_col3" class="col_heading level0 col3" >P_3</th>
-      <th id="T_b5374_level0_col4" class="col_heading level0 col4" >P_4</th>
-      <th id="T_b5374_level0_col5" class="col_heading level0 col5" >P_5</th>
-      <th id="T_b5374_level0_col6" class="col_heading level0 col6" >ndcg_cut_1</th>
-      <th id="T_b5374_level0_col7" class="col_heading level0 col7" >ndcg_cut_2</th>
-      <th id="T_b5374_level0_col8" class="col_heading level0 col8" >ndcg_cut_3</th>
-      <th id="T_b5374_level0_col9" class="col_heading level0 col9" >ndcg_cut_4</th>
-      <th id="T_b5374_level0_col10" class="col_heading level0 col10" >ndcg_cut_5</th>
+      <th id="T_b616b_level0_col0" class="col_heading level0 col0" >Mean Average Precision (MAP)</th>
+      <th id="T_b616b_level0_col1" class="col_heading level0 col1" >P_1</th>
+      <th id="T_b616b_level0_col2" class="col_heading level0 col2" >P_2</th>
+      <th id="T_b616b_level0_col3" class="col_heading level0 col3" >P_3</th>
+      <th id="T_b616b_level0_col4" class="col_heading level0 col4" >P_4</th>
+      <th id="T_b616b_level0_col5" class="col_heading level0 col5" >P_5</th>
+      <th id="T_b616b_level0_col6" class="col_heading level0 col6" >ndcg_cut_1</th>
+      <th id="T_b616b_level0_col7" class="col_heading level0 col7" >ndcg_cut_2</th>
+      <th id="T_b616b_level0_col8" class="col_heading level0 col8" >ndcg_cut_3</th>
+      <th id="T_b616b_level0_col9" class="col_heading level0 col9" >ndcg_cut_4</th>
+      <th id="T_b616b_level0_col10" class="col_heading level0 col10" >ndcg_cut_5</th>
     </tr>
     <tr>
       <th class="index_name level0" >Method</th>
@@ -15296,284 +15360,284 @@ Running DIBRA-Prune ...
   </thead>
   <tbody>
     <tr>
-      <th id="T_b5374_level0_row0" class="row_heading level0 row0" >CombSUM-Rank</th>
-      <td id="T_b5374_row0_col0" class="data row0 col0" >0.4855</td>
-      <td id="T_b5374_row0_col1" class="data row0 col1" >0.4500</td>
-      <td id="T_b5374_row0_col2" class="data row0 col2" >0.4750</td>
-      <td id="T_b5374_row0_col3" class="data row0 col3" >0.4167</td>
-      <td id="T_b5374_row0_col4" class="data row0 col4" >0.4500</td>
-      <td id="T_b5374_row0_col5" class="data row0 col5" >0.4400</td>
-      <td id="T_b5374_row0_col6" class="data row0 col6" >0.4500</td>
-      <td id="T_b5374_row0_col7" class="data row0 col7" >0.4693</td>
-      <td id="T_b5374_row0_col8" class="data row0 col8" >0.4296</td>
-      <td id="T_b5374_row0_col9" class="data row0 col9" >0.4498</td>
-      <td id="T_b5374_row0_col10" class="data row0 col10" >0.4433</td>
+      <th id="T_b616b_level0_row0" class="row_heading level0 row0" >CombSUM-Rank</th>
+      <td id="T_b616b_row0_col0" class="data row0 col0" >0.4855</td>
+      <td id="T_b616b_row0_col1" class="data row0 col1" >0.4500</td>
+      <td id="T_b616b_row0_col2" class="data row0 col2" >0.4750</td>
+      <td id="T_b616b_row0_col3" class="data row0 col3" >0.4167</td>
+      <td id="T_b616b_row0_col4" class="data row0 col4" >0.4500</td>
+      <td id="T_b616b_row0_col5" class="data row0 col5" >0.4400</td>
+      <td id="T_b616b_row0_col6" class="data row0 col6" >0.4500</td>
+      <td id="T_b616b_row0_col7" class="data row0 col7" >0.4693</td>
+      <td id="T_b616b_row0_col8" class="data row0 col8" >0.4296</td>
+      <td id="T_b616b_row0_col9" class="data row0 col9" >0.4498</td>
+      <td id="T_b616b_row0_col10" class="data row0 col10" >0.4433</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row1" class="row_heading level0 row1" >CombSUM-Borda</th>
-      <td id="T_b5374_row1_col0" class="data row1 col0" >0.4836</td>
-      <td id="T_b5374_row1_col1" class="data row1 col1" >0.5000</td>
-      <td id="T_b5374_row1_col2" class="data row1 col2" >0.4750</td>
-      <td id="T_b5374_row1_col3" class="data row1 col3" >0.4167</td>
-      <td id="T_b5374_row1_col4" class="data row1 col4" >0.4250</td>
-      <td id="T_b5374_row1_col5" class="data row1 col5" >0.4200</td>
-      <td id="T_b5374_row1_col6" class="data row1 col6" >0.5000</td>
-      <td id="T_b5374_row1_col7" class="data row1 col7" >0.4807</td>
-      <td id="T_b5374_row1_col8" class="data row1 col8" >0.4383</td>
-      <td id="T_b5374_row1_col9" class="data row1 col9" >0.4402</td>
-      <td id="T_b5374_row1_col10" class="data row1 col10" >0.4350</td>
+      <th id="T_b616b_level0_row1" class="row_heading level0 row1" >CombSUM-Borda</th>
+      <td id="T_b616b_row1_col0" class="data row1 col0" >0.4836</td>
+      <td id="T_b616b_row1_col1" class="data row1 col1" >0.5000</td>
+      <td id="T_b616b_row1_col2" class="data row1 col2" >0.4750</td>
+      <td id="T_b616b_row1_col3" class="data row1 col3" >0.4167</td>
+      <td id="T_b616b_row1_col4" class="data row1 col4" >0.4250</td>
+      <td id="T_b616b_row1_col5" class="data row1 col5" >0.4200</td>
+      <td id="T_b616b_row1_col6" class="data row1 col6" >0.5000</td>
+      <td id="T_b616b_row1_col7" class="data row1 col7" >0.4807</td>
+      <td id="T_b616b_row1_col8" class="data row1 col8" >0.4383</td>
+      <td id="T_b616b_row1_col9" class="data row1 col9" >0.4402</td>
+      <td id="T_b616b_row1_col10" class="data row1 col10" >0.4350</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row2" class="row_heading level0 row2" >CombSUM-Score</th>
-      <td id="T_b5374_row2_col0" class="data row2 col0" >0.4854</td>
-      <td id="T_b5374_row2_col1" class="data row2 col1" >0.4000</td>
-      <td id="T_b5374_row2_col2" class="data row2 col2" >0.4750</td>
-      <td id="T_b5374_row2_col3" class="data row2 col3" >0.4500</td>
-      <td id="T_b5374_row2_col4" class="data row2 col4" >0.4625</td>
-      <td id="T_b5374_row2_col5" class="data row2 col5" >0.4400</td>
-      <td id="T_b5374_row2_col6" class="data row2 col6" >0.4000</td>
-      <td id="T_b5374_row2_col7" class="data row2 col7" >0.4580</td>
-      <td id="T_b5374_row2_col8" class="data row2 col8" >0.4444</td>
-      <td id="T_b5374_row2_col9" class="data row2 col9" >0.4538</td>
-      <td id="T_b5374_row2_col10" class="data row2 col10" >0.4401</td>
+      <th id="T_b616b_level0_row2" class="row_heading level0 row2" >CombSUM-Score</th>
+      <td id="T_b616b_row2_col0" class="data row2 col0" >0.4854</td>
+      <td id="T_b616b_row2_col1" class="data row2 col1" >0.4000</td>
+      <td id="T_b616b_row2_col2" class="data row2 col2" >0.4750</td>
+      <td id="T_b616b_row2_col3" class="data row2 col3" >0.4500</td>
+      <td id="T_b616b_row2_col4" class="data row2 col4" >0.4625</td>
+      <td id="T_b616b_row2_col5" class="data row2 col5" >0.4400</td>
+      <td id="T_b616b_row2_col6" class="data row2 col6" >0.4000</td>
+      <td id="T_b616b_row2_col7" class="data row2 col7" >0.4580</td>
+      <td id="T_b616b_row2_col8" class="data row2 col8" >0.4444</td>
+      <td id="T_b616b_row2_col9" class="data row2 col9" >0.4538</td>
+      <td id="T_b616b_row2_col10" class="data row2 col10" >0.4401</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row3" class="row_heading level0 row3" >CombMNZ-Rank</th>
-      <td id="T_b5374_row3_col0" class="data row3 col0" >0.4853</td>
-      <td id="T_b5374_row3_col1" class="data row3 col1" >0.5000</td>
-      <td id="T_b5374_row3_col2" class="data row3 col2" >0.5000</td>
-      <td id="T_b5374_row3_col3" class="data row3 col3" >0.4167</td>
-      <td id="T_b5374_row3_col4" class="data row3 col4" >0.4375</td>
-      <td id="T_b5374_row3_col5" class="data row3 col5" >0.4100</td>
-      <td id="T_b5374_row3_col6" class="data row3 col6" >0.5000</td>
-      <td id="T_b5374_row3_col7" class="data row3 col7" >0.5000</td>
-      <td id="T_b5374_row3_col8" class="data row3 col8" >0.4413</td>
-      <td id="T_b5374_row3_col9" class="data row3 col9" >0.4512</td>
-      <td id="T_b5374_row3_col10" class="data row3 col10" >0.4314</td>
+      <th id="T_b616b_level0_row3" class="row_heading level0 row3" >CombMNZ-Rank</th>
+      <td id="T_b616b_row3_col0" class="data row3 col0" >0.4853</td>
+      <td id="T_b616b_row3_col1" class="data row3 col1" >0.5000</td>
+      <td id="T_b616b_row3_col2" class="data row3 col2" >0.5000</td>
+      <td id="T_b616b_row3_col3" class="data row3 col3" >0.4167</td>
+      <td id="T_b616b_row3_col4" class="data row3 col4" >0.4375</td>
+      <td id="T_b616b_row3_col5" class="data row3 col5" >0.4100</td>
+      <td id="T_b616b_row3_col6" class="data row3 col6" >0.5000</td>
+      <td id="T_b616b_row3_col7" class="data row3 col7" >0.5000</td>
+      <td id="T_b616b_row3_col8" class="data row3 col8" >0.4413</td>
+      <td id="T_b616b_row3_col9" class="data row3 col9" >0.4512</td>
+      <td id="T_b616b_row3_col10" class="data row3 col10" >0.4314</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row4" class="row_heading level0 row4" >CombMNZ-Borda</th>
-      <td id="T_b5374_row4_col0" class="data row4 col0" >0.4849</td>
-      <td id="T_b5374_row4_col1" class="data row4 col1" >0.5500</td>
-      <td id="T_b5374_row4_col2" class="data row4 col2" >0.4500</td>
-      <td id="T_b5374_row4_col3" class="data row4 col3" >0.4833</td>
-      <td id="T_b5374_row4_col4" class="data row4 col4" >0.5000</td>
-      <td id="T_b5374_row4_col5" class="data row4 col5" >0.4700</td>
-      <td id="T_b5374_row4_col6" class="data row4 col6" >0.5500</td>
-      <td id="T_b5374_row4_col7" class="data row4 col7" >0.4726</td>
-      <td id="T_b5374_row4_col8" class="data row4 col8" >0.4908</td>
-      <td id="T_b5374_row4_col9" class="data row4 col9" >0.5007</td>
-      <td id="T_b5374_row4_col10" class="data row4 col10" >0.4810</td>
+      <th id="T_b616b_level0_row4" class="row_heading level0 row4" >CombMNZ-Borda</th>
+      <td id="T_b616b_row4_col0" class="data row4 col0" >0.4849</td>
+      <td id="T_b616b_row4_col1" class="data row4 col1" >0.5500</td>
+      <td id="T_b616b_row4_col2" class="data row4 col2" >0.4500</td>
+      <td id="T_b616b_row4_col3" class="data row4 col3" >0.4833</td>
+      <td id="T_b616b_row4_col4" class="data row4 col4" >0.5000</td>
+      <td id="T_b616b_row4_col5" class="data row4 col5" >0.4700</td>
+      <td id="T_b616b_row4_col6" class="data row4 col6" >0.5500</td>
+      <td id="T_b616b_row4_col7" class="data row4 col7" >0.4726</td>
+      <td id="T_b616b_row4_col8" class="data row4 col8" >0.4908</td>
+      <td id="T_b616b_row4_col9" class="data row4 col9" >0.5007</td>
+      <td id="T_b616b_row4_col10" class="data row4 col10" >0.4810</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row5" class="row_heading level0 row5" >CombMNZ-Score</th>
-      <td id="T_b5374_row5_col0" class="data row5 col0" >0.4848</td>
-      <td id="T_b5374_row5_col1" class="data row5 col1" >0.5000</td>
-      <td id="T_b5374_row5_col2" class="data row5 col2" >0.5000</td>
-      <td id="T_b5374_row5_col3" class="data row5 col3" >0.4167</td>
-      <td id="T_b5374_row5_col4" class="data row5 col4" >0.4375</td>
-      <td id="T_b5374_row5_col5" class="data row5 col5" >0.4100</td>
-      <td id="T_b5374_row5_col6" class="data row5 col6" >0.5000</td>
-      <td id="T_b5374_row5_col7" class="data row5 col7" >0.5000</td>
-      <td id="T_b5374_row5_col8" class="data row5 col8" >0.4413</td>
-      <td id="T_b5374_row5_col9" class="data row5 col9" >0.4512</td>
-      <td id="T_b5374_row5_col10" class="data row5 col10" >0.4314</td>
+      <th id="T_b616b_level0_row5" class="row_heading level0 row5" >CombMNZ-Score</th>
+      <td id="T_b616b_row5_col0" class="data row5 col0" >0.4848</td>
+      <td id="T_b616b_row5_col1" class="data row5 col1" >0.5000</td>
+      <td id="T_b616b_row5_col2" class="data row5 col2" >0.5000</td>
+      <td id="T_b616b_row5_col3" class="data row5 col3" >0.4167</td>
+      <td id="T_b616b_row5_col4" class="data row5 col4" >0.4375</td>
+      <td id="T_b616b_row5_col5" class="data row5 col5" >0.4100</td>
+      <td id="T_b616b_row5_col6" class="data row5 col6" >0.5000</td>
+      <td id="T_b616b_row5_col7" class="data row5 col7" >0.5000</td>
+      <td id="T_b616b_row5_col8" class="data row5 col8" >0.4413</td>
+      <td id="T_b616b_row5_col9" class="data row5 col9" >0.4512</td>
+      <td id="T_b616b_row5_col10" class="data row5 col10" >0.4314</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row6" class="row_heading level0 row6" >Condorcet</th>
-      <td id="T_b5374_row6_col0" class="data row6 col0" >0.4801</td>
-      <td id="T_b5374_row6_col1" class="data row6 col1" >0.5000</td>
-      <td id="T_b5374_row6_col2" class="data row6 col2" >0.4750</td>
-      <td id="T_b5374_row6_col3" class="data row6 col3" >0.4333</td>
-      <td id="T_b5374_row6_col4" class="data row6 col4" >0.4125</td>
-      <td id="T_b5374_row6_col5" class="data row6 col5" >0.4300</td>
-      <td id="T_b5374_row6_col6" class="data row6 col6" >0.5000</td>
-      <td id="T_b5374_row6_col7" class="data row6 col7" >0.4807</td>
-      <td id="T_b5374_row6_col8" class="data row6 col8" >0.4500</td>
-      <td id="T_b5374_row6_col9" class="data row6 col9" >0.4332</td>
-      <td id="T_b5374_row6_col10" class="data row6 col10" >0.4420</td>
+      <th id="T_b616b_level0_row6" class="row_heading level0 row6" >Condorcet</th>
+      <td id="T_b616b_row6_col0" class="data row6 col0" >0.4801</td>
+      <td id="T_b616b_row6_col1" class="data row6 col1" >0.5000</td>
+      <td id="T_b616b_row6_col2" class="data row6 col2" >0.4750</td>
+      <td id="T_b616b_row6_col3" class="data row6 col3" >0.4333</td>
+      <td id="T_b616b_row6_col4" class="data row6 col4" >0.4125</td>
+      <td id="T_b616b_row6_col5" class="data row6 col5" >0.4300</td>
+      <td id="T_b616b_row6_col6" class="data row6 col6" >0.5000</td>
+      <td id="T_b616b_row6_col7" class="data row6 col7" >0.4807</td>
+      <td id="T_b616b_row6_col8" class="data row6 col8" >0.4500</td>
+      <td id="T_b616b_row6_col9" class="data row6 col9" >0.4332</td>
+      <td id="T_b616b_row6_col10" class="data row6 col10" >0.4420</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row7" class="row_heading level0 row7" >Copeland</th>
-      <td id="T_b5374_row7_col0" class="data row7 col0" >0.4820</td>
-      <td id="T_b5374_row7_col1" class="data row7 col1" >0.5000</td>
-      <td id="T_b5374_row7_col2" class="data row7 col2" >0.4500</td>
-      <td id="T_b5374_row7_col3" class="data row7 col3" >0.4167</td>
-      <td id="T_b5374_row7_col4" class="data row7 col4" >0.4000</td>
-      <td id="T_b5374_row7_col5" class="data row7 col5" >0.4100</td>
-      <td id="T_b5374_row7_col6" class="data row7 col6" >0.5000</td>
-      <td id="T_b5374_row7_col7" class="data row7 col7" >0.4613</td>
-      <td id="T_b5374_row7_col8" class="data row7 col8" >0.4352</td>
-      <td id="T_b5374_row7_col9" class="data row7 col9" >0.4209</td>
-      <td id="T_b5374_row7_col10" class="data row7 col10" >0.4247</td>
+      <th id="T_b616b_level0_row7" class="row_heading level0 row7" >Copeland</th>
+      <td id="T_b616b_row7_col0" class="data row7 col0" >0.4820</td>
+      <td id="T_b616b_row7_col1" class="data row7 col1" >0.5000</td>
+      <td id="T_b616b_row7_col2" class="data row7 col2" >0.4500</td>
+      <td id="T_b616b_row7_col3" class="data row7 col3" >0.4167</td>
+      <td id="T_b616b_row7_col4" class="data row7 col4" >0.4000</td>
+      <td id="T_b616b_row7_col5" class="data row7 col5" >0.4100</td>
+      <td id="T_b616b_row7_col6" class="data row7 col6" >0.5000</td>
+      <td id="T_b616b_row7_col7" class="data row7 col7" >0.4613</td>
+      <td id="T_b616b_row7_col8" class="data row7 col8" >0.4352</td>
+      <td id="T_b616b_row7_col9" class="data row7 col9" >0.4209</td>
+      <td id="T_b616b_row7_col10" class="data row7 col10" >0.4247</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row8" class="row_heading level0 row8" >Outranking Approach</th>
-      <td id="T_b5374_row8_col0" class="data row8 col0" >0.4817</td>
-      <td id="T_b5374_row8_col1" class="data row8 col1" >0.5000</td>
-      <td id="T_b5374_row8_col2" class="data row8 col2" >0.4250</td>
-      <td id="T_b5374_row8_col3" class="data row8 col3" >0.4333</td>
-      <td id="T_b5374_row8_col4" class="data row8 col4" >0.4125</td>
-      <td id="T_b5374_row8_col5" class="data row8 col5" >0.4400</td>
-      <td id="T_b5374_row8_col6" class="data row8 col6" >0.5000</td>
-      <td id="T_b5374_row8_col7" class="data row8 col7" >0.4420</td>
-      <td id="T_b5374_row8_col8" class="data row8 col8" >0.4439</td>
-      <td id="T_b5374_row8_col9" class="data row8 col9" >0.4281</td>
-      <td id="T_b5374_row8_col10" class="data row8 col10" >0.4441</td>
+      <th id="T_b616b_level0_row8" class="row_heading level0 row8" >Outranking Approach</th>
+      <td id="T_b616b_row8_col0" class="data row8 col0" >0.4817</td>
+      <td id="T_b616b_row8_col1" class="data row8 col1" >0.5000</td>
+      <td id="T_b616b_row8_col2" class="data row8 col2" >0.4250</td>
+      <td id="T_b616b_row8_col3" class="data row8 col3" >0.4333</td>
+      <td id="T_b616b_row8_col4" class="data row8 col4" >0.4125</td>
+      <td id="T_b616b_row8_col5" class="data row8 col5" >0.4400</td>
+      <td id="T_b616b_row8_col6" class="data row8 col6" >0.5000</td>
+      <td id="T_b616b_row8_col7" class="data row8 col7" >0.4420</td>
+      <td id="T_b616b_row8_col8" class="data row8 col8" >0.4439</td>
+      <td id="T_b616b_row8_col9" class="data row8 col9" >0.4281</td>
+      <td id="T_b616b_row8_col10" class="data row8 col10" >0.4441</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row9" class="row_heading level0 row9" >MC1</th>
-      <td id="T_b5374_row9_col0" class="data row9 col0" >0.4876</td>
-      <td id="T_b5374_row9_col1" class="data row9 col1" >0.6500</td>
-      <td id="T_b5374_row9_col2" class="data row9 col2" >0.5750</td>
-      <td id="T_b5374_row9_col3" class="data row9 col3" >0.5000</td>
-      <td id="T_b5374_row9_col4" class="data row9 col4" >0.4750</td>
-      <td id="T_b5374_row9_col5" class="data row9 col5" >0.4600</td>
-      <td id="T_b5374_row9_col6" class="data row9 col6" >0.6500</td>
-      <td id="T_b5374_row9_col7" class="data row9 col7" >0.5920</td>
-      <td id="T_b5374_row9_col8" class="data row9 col8" >0.5352</td>
-      <td id="T_b5374_row9_col9" class="data row9 col9" >0.5125</td>
-      <td id="T_b5374_row9_col10" class="data row9 col10" >0.4977</td>
+      <th id="T_b616b_level0_row9" class="row_heading level0 row9" >MC1</th>
+      <td id="T_b616b_row9_col0" class="data row9 col0" >0.4876</td>
+      <td id="T_b616b_row9_col1" class="data row9 col1" >0.6500</td>
+      <td id="T_b616b_row9_col2" class="data row9 col2" >0.5750</td>
+      <td id="T_b616b_row9_col3" class="data row9 col3" >0.5000</td>
+      <td id="T_b616b_row9_col4" class="data row9 col4" >0.4750</td>
+      <td id="T_b616b_row9_col5" class="data row9 col5" >0.4600</td>
+      <td id="T_b616b_row9_col6" class="data row9 col6" >0.6500</td>
+      <td id="T_b616b_row9_col7" class="data row9 col7" >0.5920</td>
+      <td id="T_b616b_row9_col8" class="data row9 col8" >0.5352</td>
+      <td id="T_b616b_row9_col9" class="data row9 col9" >0.5125</td>
+      <td id="T_b616b_row9_col10" class="data row9 col10" >0.4977</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row10" class="row_heading level0 row10" >MC2</th>
-      <td id="T_b5374_row10_col0" class="data row10 col0" >0.4876</td>
-      <td id="T_b5374_row10_col1" class="data row10 col1" >0.6500</td>
-      <td id="T_b5374_row10_col2" class="data row10 col2" >0.5750</td>
-      <td id="T_b5374_row10_col3" class="data row10 col3" >0.5000</td>
-      <td id="T_b5374_row10_col4" class="data row10 col4" >0.4750</td>
-      <td id="T_b5374_row10_col5" class="data row10 col5" >0.4600</td>
-      <td id="T_b5374_row10_col6" class="data row10 col6" >0.6500</td>
-      <td id="T_b5374_row10_col7" class="data row10 col7" >0.5920</td>
-      <td id="T_b5374_row10_col8" class="data row10 col8" >0.5352</td>
-      <td id="T_b5374_row10_col9" class="data row10 col9" >0.5125</td>
-      <td id="T_b5374_row10_col10" class="data row10 col10" >0.4977</td>
+      <th id="T_b616b_level0_row10" class="row_heading level0 row10" >MC2</th>
+      <td id="T_b616b_row10_col0" class="data row10 col0" >0.4876</td>
+      <td id="T_b616b_row10_col1" class="data row10 col1" >0.6500</td>
+      <td id="T_b616b_row10_col2" class="data row10 col2" >0.5750</td>
+      <td id="T_b616b_row10_col3" class="data row10 col3" >0.5000</td>
+      <td id="T_b616b_row10_col4" class="data row10 col4" >0.4750</td>
+      <td id="T_b616b_row10_col5" class="data row10 col5" >0.4600</td>
+      <td id="T_b616b_row10_col6" class="data row10 col6" >0.6500</td>
+      <td id="T_b616b_row10_col7" class="data row10 col7" >0.5920</td>
+      <td id="T_b616b_row10_col8" class="data row10 col8" >0.5352</td>
+      <td id="T_b616b_row10_col9" class="data row10 col9" >0.5125</td>
+      <td id="T_b616b_row10_col10" class="data row10 col10" >0.4977</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row11" class="row_heading level0 row11" >MC3</th>
-      <td id="T_b5374_row11_col0" class="data row11 col0" >0.5057</td>
-      <td id="T_b5374_row11_col1" class="data row11 col1" >0.5000</td>
-      <td id="T_b5374_row11_col2" class="data row11 col2" >0.4750</td>
-      <td id="T_b5374_row11_col3" class="data row11 col3" >0.5667</td>
-      <td id="T_b5374_row11_col4" class="data row11 col4" >0.5250</td>
-      <td id="T_b5374_row11_col5" class="data row11 col5" >0.5200</td>
-      <td id="T_b5374_row11_col6" class="data row11 col6" >0.5000</td>
-      <td id="T_b5374_row11_col7" class="data row11 col7" >0.4807</td>
-      <td id="T_b5374_row11_col8" class="data row11 col8" >0.5439</td>
-      <td id="T_b5374_row11_col9" class="data row11 col9" >0.5197</td>
-      <td id="T_b5374_row11_col10" class="data row11 col10" >0.5171</td>
+      <th id="T_b616b_level0_row11" class="row_heading level0 row11" >MC3</th>
+      <td id="T_b616b_row11_col0" class="data row11 col0" >0.5057</td>
+      <td id="T_b616b_row11_col1" class="data row11 col1" >0.5000</td>
+      <td id="T_b616b_row11_col2" class="data row11 col2" >0.4750</td>
+      <td id="T_b616b_row11_col3" class="data row11 col3" >0.5667</td>
+      <td id="T_b616b_row11_col4" class="data row11 col4" >0.5250</td>
+      <td id="T_b616b_row11_col5" class="data row11 col5" >0.5200</td>
+      <td id="T_b616b_row11_col6" class="data row11 col6" >0.5000</td>
+      <td id="T_b616b_row11_col7" class="data row11 col7" >0.4807</td>
+      <td id="T_b616b_row11_col8" class="data row11 col8" >0.5439</td>
+      <td id="T_b616b_row11_col9" class="data row11 col9" >0.5197</td>
+      <td id="T_b616b_row11_col10" class="data row11 col10" >0.5171</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row12" class="row_heading level0 row12" >MC4</th>
-      <td id="T_b5374_row12_col0" class="data row12 col0" >0.4810</td>
-      <td id="T_b5374_row12_col1" class="data row12 col1" >0.5000</td>
-      <td id="T_b5374_row12_col2" class="data row12 col2" >0.5000</td>
-      <td id="T_b5374_row12_col3" class="data row12 col3" >0.4167</td>
-      <td id="T_b5374_row12_col4" class="data row12 col4" >0.4125</td>
-      <td id="T_b5374_row12_col5" class="data row12 col5" >0.4200</td>
-      <td id="T_b5374_row12_col6" class="data row12 col6" >0.5000</td>
-      <td id="T_b5374_row12_col7" class="data row12 col7" >0.5000</td>
-      <td id="T_b5374_row12_col8" class="data row12 col8" >0.4413</td>
-      <td id="T_b5374_row12_col9" class="data row12 col9" >0.4344</td>
-      <td id="T_b5374_row12_col10" class="data row12 col10" >0.4364</td>
+      <th id="T_b616b_level0_row12" class="row_heading level0 row12" >MC4</th>
+      <td id="T_b616b_row12_col0" class="data row12 col0" >0.4810</td>
+      <td id="T_b616b_row12_col1" class="data row12 col1" >0.5000</td>
+      <td id="T_b616b_row12_col2" class="data row12 col2" >0.5000</td>
+      <td id="T_b616b_row12_col3" class="data row12 col3" >0.4167</td>
+      <td id="T_b616b_row12_col4" class="data row12 col4" >0.4125</td>
+      <td id="T_b616b_row12_col5" class="data row12 col5" >0.4200</td>
+      <td id="T_b616b_row12_col6" class="data row12 col6" >0.5000</td>
+      <td id="T_b616b_row12_col7" class="data row12 col7" >0.5000</td>
+      <td id="T_b616b_row12_col8" class="data row12 col8" >0.4413</td>
+      <td id="T_b616b_row12_col9" class="data row12 col9" >0.4344</td>
+      <td id="T_b616b_row12_col10" class="data row12 col10" >0.4364</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row13" class="row_heading level0 row13" >MCT</th>
-      <td id="T_b5374_row13_col0" class="data row13 col0" >0.4813</td>
-      <td id="T_b5374_row13_col1" class="data row13 col1" >0.4500</td>
-      <td id="T_b5374_row13_col2" class="data row13 col2" >0.5000</td>
-      <td id="T_b5374_row13_col3" class="data row13 col3" >0.4667</td>
-      <td id="T_b5374_row13_col4" class="data row13 col4" >0.5000</td>
-      <td id="T_b5374_row13_col5" class="data row13 col5" >0.4800</td>
-      <td id="T_b5374_row13_col6" class="data row13 col6" >0.4500</td>
-      <td id="T_b5374_row13_col7" class="data row13 col7" >0.4887</td>
-      <td id="T_b5374_row13_col8" class="data row13 col8" >0.4679</td>
-      <td id="T_b5374_row13_col9" class="data row13 col9" >0.4901</td>
-      <td id="T_b5374_row13_col10" class="data row13 col10" >0.4783</td>
+      <th id="T_b616b_level0_row13" class="row_heading level0 row13" >MCT</th>
+      <td id="T_b616b_row13_col0" class="data row13 col0" >0.4813</td>
+      <td id="T_b616b_row13_col1" class="data row13 col1" >0.4500</td>
+      <td id="T_b616b_row13_col2" class="data row13 col2" >0.5000</td>
+      <td id="T_b616b_row13_col3" class="data row13 col3" >0.4667</td>
+      <td id="T_b616b_row13_col4" class="data row13 col4" >0.5000</td>
+      <td id="T_b616b_row13_col5" class="data row13 col5" >0.4800</td>
+      <td id="T_b616b_row13_col6" class="data row13 col6" >0.4500</td>
+      <td id="T_b616b_row13_col7" class="data row13 col7" >0.4887</td>
+      <td id="T_b616b_row13_col8" class="data row13 col8" >0.4679</td>
+      <td id="T_b616b_row13_col9" class="data row13 col9" >0.4901</td>
+      <td id="T_b616b_row13_col10" class="data row13 col10" >0.4783</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row14" class="row_heading level0 row14" >RRA-Exact</th>
-      <td id="T_b5374_row14_col0" class="data row14 col0" >0.4379</td>
-      <td id="T_b5374_row14_col1" class="data row14 col1" >0.0500</td>
-      <td id="T_b5374_row14_col2" class="data row14 col2" >0.1500</td>
-      <td id="T_b5374_row14_col3" class="data row14 col3" >0.1833</td>
-      <td id="T_b5374_row14_col4" class="data row14 col4" >0.2625</td>
-      <td id="T_b5374_row14_col5" class="data row14 col5" >0.2800</td>
-      <td id="T_b5374_row14_col6" class="data row14 col6" >0.5500</td>
-      <td id="T_b5374_row14_col7" class="data row14 col7" >0.5887</td>
-      <td id="T_b5374_row14_col8" class="data row14 col8" >0.5444</td>
-      <td id="T_b5374_row14_col9" class="data row14 col9" >0.5369</td>
-      <td id="T_b5374_row14_col10" class="data row14 col10" >0.5190</td>
+      <th id="T_b616b_level0_row14" class="row_heading level0 row14" >RRA-Exact</th>
+      <td id="T_b616b_row14_col0" class="data row14 col0" >0.4379</td>
+      <td id="T_b616b_row14_col1" class="data row14 col1" >0.0500</td>
+      <td id="T_b616b_row14_col2" class="data row14 col2" >0.1500</td>
+      <td id="T_b616b_row14_col3" class="data row14 col3" >0.1833</td>
+      <td id="T_b616b_row14_col4" class="data row14 col4" >0.2625</td>
+      <td id="T_b616b_row14_col5" class="data row14 col5" >0.2800</td>
+      <td id="T_b616b_row14_col6" class="data row14 col6" >0.5500</td>
+      <td id="T_b616b_row14_col7" class="data row14 col7" >0.5887</td>
+      <td id="T_b616b_row14_col8" class="data row14 col8" >0.5444</td>
+      <td id="T_b616b_row14_col9" class="data row14 col9" >0.5369</td>
+      <td id="T_b616b_row14_col10" class="data row14 col10" >0.5190</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row15" class="row_heading level0 row15" >RRA</th>
-      <td id="T_b5374_row15_col0" class="data row15 col0" >0.4906</td>
-      <td id="T_b5374_row15_col1" class="data row15 col1" >0.5500</td>
-      <td id="T_b5374_row15_col2" class="data row15 col2" >0.6250</td>
-      <td id="T_b5374_row15_col3" class="data row15 col3" >0.5333</td>
-      <td id="T_b5374_row15_col4" class="data row15 col4" >0.4875</td>
-      <td id="T_b5374_row15_col5" class="data row15 col5" >0.4800</td>
-      <td id="T_b5374_row15_col6" class="data row15 col6" >0.5500</td>
-      <td id="T_b5374_row15_col7" class="data row15 col7" >0.6080</td>
-      <td id="T_b5374_row15_col8" class="data row15 col8" >0.5475</td>
-      <td id="T_b5374_row15_col9" class="data row15 col9" >0.5143</td>
-      <td id="T_b5374_row15_col10" class="data row15 col10" >0.5058</td>
+      <th id="T_b616b_level0_row15" class="row_heading level0 row15" >RRA</th>
+      <td id="T_b616b_row15_col0" class="data row15 col0" >0.4906</td>
+      <td id="T_b616b_row15_col1" class="data row15 col1" >0.5500</td>
+      <td id="T_b616b_row15_col2" class="data row15 col2" >0.6250</td>
+      <td id="T_b616b_row15_col3" class="data row15 col3" >0.5333</td>
+      <td id="T_b616b_row15_col4" class="data row15 col4" >0.4875</td>
+      <td id="T_b616b_row15_col5" class="data row15 col5" >0.4800</td>
+      <td id="T_b616b_row15_col6" class="data row15 col6" >0.5500</td>
+      <td id="T_b616b_row15_col7" class="data row15 col7" >0.6080</td>
+      <td id="T_b616b_row15_col8" class="data row15 col8" >0.5475</td>
+      <td id="T_b616b_row15_col9" class="data row15 col9" >0.5143</td>
+      <td id="T_b616b_row15_col10" class="data row15 col10" >0.5058</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row16" class="row_heading level0 row16" >PrefRel</th>
-      <td id="T_b5374_row16_col0" class="data row16 col0" >0.4850</td>
-      <td id="T_b5374_row16_col1" class="data row16 col1" >0.5500</td>
-      <td id="T_b5374_row16_col2" class="data row16 col2" >0.5000</td>
-      <td id="T_b5374_row16_col3" class="data row16 col3" >0.4667</td>
-      <td id="T_b5374_row16_col4" class="data row16 col4" >0.4375</td>
-      <td id="T_b5374_row16_col5" class="data row16 col5" >0.4400</td>
-      <td id="T_b5374_row16_col6" class="data row16 col6" >0.5500</td>
-      <td id="T_b5374_row16_col7" class="data row16 col7" >0.5113</td>
-      <td id="T_b5374_row16_col8" class="data row16 col8" >0.4852</td>
-      <td id="T_b5374_row16_col9" class="data row16 col9" >0.4625</td>
-      <td id="T_b5374_row16_col10" class="data row16 col10" >0.4608</td>
+      <th id="T_b616b_level0_row16" class="row_heading level0 row16" >PrefRel</th>
+      <td id="T_b616b_row16_col0" class="data row16 col0" >0.4850</td>
+      <td id="T_b616b_row16_col1" class="data row16 col1" >0.5500</td>
+      <td id="T_b616b_row16_col2" class="data row16 col2" >0.5000</td>
+      <td id="T_b616b_row16_col3" class="data row16 col3" >0.4667</td>
+      <td id="T_b616b_row16_col4" class="data row16 col4" >0.4375</td>
+      <td id="T_b616b_row16_col5" class="data row16 col5" >0.4400</td>
+      <td id="T_b616b_row16_col6" class="data row16 col6" >0.5500</td>
+      <td id="T_b616b_row16_col7" class="data row16 col7" >0.5113</td>
+      <td id="T_b616b_row16_col8" class="data row16 col8" >0.4852</td>
+      <td id="T_b616b_row16_col9" class="data row16 col9" >0.4625</td>
+      <td id="T_b616b_row16_col10" class="data row16 col10" >0.4608</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row17" class="row_heading level0 row17" >Agglomerative</th>
-      <td id="T_b5374_row17_col0" class="data row17 col0" >0.2563</td>
-      <td id="T_b5374_row17_col1" class="data row17 col1" >0.4000</td>
-      <td id="T_b5374_row17_col2" class="data row17 col2" >0.4000</td>
-      <td id="T_b5374_row17_col3" class="data row17 col3" >0.4000</td>
-      <td id="T_b5374_row17_col4" class="data row17 col4" >0.4250</td>
-      <td id="T_b5374_row17_col5" class="data row17 col5" >0.4700</td>
-      <td id="T_b5374_row17_col6" class="data row17 col6" >0.4000</td>
-      <td id="T_b5374_row17_col7" class="data row17 col7" >0.4000</td>
-      <td id="T_b5374_row17_col8" class="data row17 col8" >0.4000</td>
-      <td id="T_b5374_row17_col9" class="data row17 col9" >0.4168</td>
-      <td id="T_b5374_row17_col10" class="data row17 col10" >0.4474</td>
+      <th id="T_b616b_level0_row17" class="row_heading level0 row17" >Agglomerative</th>
+      <td id="T_b616b_row17_col0" class="data row17 col0" >0.2563</td>
+      <td id="T_b616b_row17_col1" class="data row17 col1" >0.4000</td>
+      <td id="T_b616b_row17_col2" class="data row17 col2" >0.4000</td>
+      <td id="T_b616b_row17_col3" class="data row17 col3" >0.4000</td>
+      <td id="T_b616b_row17_col4" class="data row17 col4" >0.4250</td>
+      <td id="T_b616b_row17_col5" class="data row17 col5" >0.4700</td>
+      <td id="T_b616b_row17_col6" class="data row17 col6" >0.4000</td>
+      <td id="T_b616b_row17_col7" class="data row17 col7" >0.4000</td>
+      <td id="T_b616b_row17_col8" class="data row17 col8" >0.4000</td>
+      <td id="T_b616b_row17_col9" class="data row17 col9" >0.4168</td>
+      <td id="T_b616b_row17_col10" class="data row17 col10" >0.4474</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row18" class="row_heading level0 row18" >DIBRA</th>
-      <td id="T_b5374_row18_col0" class="data row18 col0" >0.4919</td>
-      <td id="T_b5374_row18_col1" class="data row18 col1" >0.5000</td>
-      <td id="T_b5374_row18_col2" class="data row18 col2" >0.4750</td>
-      <td id="T_b5374_row18_col3" class="data row18 col3" >0.5667</td>
-      <td id="T_b5374_row18_col4" class="data row18 col4" >0.5625</td>
-      <td id="T_b5374_row18_col5" class="data row18 col5" >0.5400</td>
-      <td id="T_b5374_row18_col6" class="data row18 col6" >0.5000</td>
-      <td id="T_b5374_row18_col7" class="data row18 col7" >0.4807</td>
-      <td id="T_b5374_row18_col8" class="data row18 col8" >0.5439</td>
-      <td id="T_b5374_row18_col9" class="data row18 col9" >0.5449</td>
-      <td id="T_b5374_row18_col10" class="data row18 col10" >0.5324</td>
+      <th id="T_b616b_level0_row18" class="row_heading level0 row18" >DIBRA</th>
+      <td id="T_b616b_row18_col0" class="data row18 col0" >0.4919</td>
+      <td id="T_b616b_row18_col1" class="data row18 col1" >0.5000</td>
+      <td id="T_b616b_row18_col2" class="data row18 col2" >0.4750</td>
+      <td id="T_b616b_row18_col3" class="data row18 col3" >0.5667</td>
+      <td id="T_b616b_row18_col4" class="data row18 col4" >0.5625</td>
+      <td id="T_b616b_row18_col5" class="data row18 col5" >0.5400</td>
+      <td id="T_b616b_row18_col6" class="data row18 col6" >0.5000</td>
+      <td id="T_b616b_row18_col7" class="data row18 col7" >0.4807</td>
+      <td id="T_b616b_row18_col8" class="data row18 col8" >0.5439</td>
+      <td id="T_b616b_row18_col9" class="data row18 col9" >0.5449</td>
+      <td id="T_b616b_row18_col10" class="data row18 col10" >0.5324</td>
     </tr>
     <tr>
-      <th id="T_b5374_level0_row19" class="row_heading level0 row19" >DIBRA-Prune</th>
-      <td id="T_b5374_row19_col0" class="data row19 col0" >0.5021</td>
-      <td id="T_b5374_row19_col1" class="data row19 col1" >0.5500</td>
-      <td id="T_b5374_row19_col2" class="data row19 col2" >0.5500</td>
-      <td id="T_b5374_row19_col3" class="data row19 col3" >0.5500</td>
-      <td id="T_b5374_row19_col4" class="data row19 col4" >0.5625</td>
-      <td id="T_b5374_row19_col5" class="data row19 col5" >0.5900</td>
-      <td id="T_b5374_row19_col6" class="data row19 col6" >0.5500</td>
-      <td id="T_b5374_row19_col7" class="data row19 col7" >0.5500</td>
-      <td id="T_b5374_row19_col8" class="data row19 col8" >0.5500</td>
-      <td id="T_b5374_row19_col9" class="data row19 col9" >0.5584</td>
-      <td id="T_b5374_row19_col10" class="data row19 col10" >0.5770</td>
+      <th id="T_b616b_level0_row19" class="row_heading level0 row19" >DIBRA-Prune</th>
+      <td id="T_b616b_row19_col0" class="data row19 col0" >0.5021</td>
+      <td id="T_b616b_row19_col1" class="data row19 col1" >0.5500</td>
+      <td id="T_b616b_row19_col2" class="data row19 col2" >0.5500</td>
+      <td id="T_b616b_row19_col3" class="data row19 col3" >0.5500</td>
+      <td id="T_b616b_row19_col4" class="data row19 col4" >0.5625</td>
+      <td id="T_b616b_row19_col5" class="data row19 col5" >0.5900</td>
+      <td id="T_b616b_row19_col6" class="data row19 col6" >0.5500</td>
+      <td id="T_b616b_row19_col7" class="data row19 col7" >0.5500</td>
+      <td id="T_b616b_row19_col8" class="data row19 col8" >0.5500</td>
+      <td id="T_b616b_row19_col9" class="data row19 col9" >0.5584</td>
+      <td id="T_b616b_row19_col10" class="data row19 col10" >0.5770</td>
     </tr>
   </tbody>
 </table>
@@ -15603,7 +15667,7 @@ Running DIBRA-Prune ...
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">latex_code</span> <span class="o">=</span> <span class="n">cmp</span><span class="o">.</span><span class="n">convert_to_latex</span><span class="p">(</span><span class="n">dec_pts</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">EV_PTS</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">,</span> <span class="s2">&quot;ndcg&quot;</span><span class="p">],</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
@@ -15656,7 +15720,7 @@ Running DIBRA-Prune ...
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmp</span><span class="o">.</span><span class="n">plot_average_precision</span><span class="p">((</span><span class="mi">16</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
@@ -15720,7 +15784,7 @@ jp-needs-light-background
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmp</span><span class="o">.</span><span class="n">plot_metric</span><span class="p">(</span><span class="n">EV_PTS</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">show_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
@@ -15778,7 +15842,7 @@ jp-needs-light-background
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmp</span><span class="o">.</span><span class="n">plot_metric</span><span class="p">(</span><span class="n">EV_PTS</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">show_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
