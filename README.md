@@ -24,11 +24,11 @@ FLAGR can be compiled from its C++ sources by using the provided building script
 There are two building scripts, one for Linux and one for Windows. Specifically:
 
 * In Linux: type `make` in Terminal to build the binaries from the C++ sources. The FLAGR binaries include:
- * the executable program `FLAGR`, and
- * the shared `flagr.so` library. Third-party programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
+  * the executable program `FLAGR`, and
+  * the shared `flagr.so` library. Third-party programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
 * In Windows: type `makefile.bat` in Windows CLI or Windows Powershell. The batch file will build the binaries from the C++ sources by generating two files:
- * the executable program `FLAGR.exe`, and
- * the Dynamic Link Library `flagr.dll`. Third-party Windows programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
+  * the executable program `FLAGR.exe`, and
+  * the Dynamic Link Library `flagr.dll`. Third-party Windows programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
 
 All the binary outputs of the building scripts (i.e., executables and libraries) will be created by default into the `bin/Release/` directory of the package.
 
