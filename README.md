@@ -1,6 +1,6 @@
 # (Py)FLAGR
 
-*Fuse, Learn, AGgregate, Rerank
+*Fuse, Learn, AGgregate, Rerank*
 
 The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.
 
