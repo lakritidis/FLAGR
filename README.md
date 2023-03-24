@@ -8,12 +8,11 @@ PyFLAGR is a Python library built on top of FLAGR library core. It uses the FLAG
 
 The current FLAGR version is 1.0.8.
 
-Both libraries are licensed under the [http://www.apache.org/licenses/LICENSE-2.0](Apache License, version 2).
+Both libraries are licensed under the [Apache License, version 2](http://www.apache.org/licenses/LICENSE-2.0).
 
-Detailed documentation on the FLAGR and PyFLAGR components can be found in the `docs/` directory.
+Detailed documentation on the FLAGR and PyFLAGR components can be found in the `docs/` directory. Code examples in C++ and Python are provided in the `examples/` directory.
 
-Code examples in C++ and Python exist in the `examples/` directory.
-
+Official web site: [https://flagr.site](https://flagr.site)
 
 ## Compiling from Sources
 
