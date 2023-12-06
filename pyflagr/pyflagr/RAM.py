@@ -51,7 +51,7 @@ class RAM:
 
         elif df is not None:
             self.input_file = tempfile.gettempdir() + "/temp_input.csv"
-            df.to_csv(self.input_file, index=False)
+            df.to_csv(self.input_file, index=False, header=None)
 
         else:
             print("Error! No input data was passed")
@@ -67,7 +67,7 @@ class RAM:
 
         elif rdf is not None:
             self.rels_file = tempfile.gettempdir() + "/temp_input_rels.csv"
-            rdf.to_csv(self.rels_file, index=False)
+            rdf.to_csv(self.rels_file, index=False, header=None)
 
         else:
             self.rels_file = ""
