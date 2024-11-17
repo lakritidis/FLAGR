@@ -6,7 +6,7 @@ FLAGR is a high performance, modular, open source C++ library for rank aggregati
 
 PyFLAGR is a Python library built on top of FLAGR library core. It uses the FLAGR algorithm implementations by linking to the associated shared library. It can be easily installed with pip and used in standard Python programs and Jupyter notebooks.
 
-The current FLAGR version is 1.0.8.
+The current FLAGR version is 1.0.14.
 
 Both libraries are licensed under the [Apache License, version 2](http://www.apache.org/licenses/LICENSE-2.0).
 
@@ -26,6 +26,9 @@ There are two building scripts, one for Linux and one for Windows. Specifically:
 * In Windows: type `makefile.bat` in Windows CLI or Windows Powershell. The batch file will build the binaries from the C++ sources by generating two files:
   * the executable program `FLAGR.exe`, and
   * the Dynamic Link Library `flagr.dll`. Third-party Windows programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
+* In macOS: The Linux makefile must be changed as follows:
+  * replace `flagr.so` with `flagr.dylib` to build the shared library.
+  * the executable is built similarly to Linux.
 
 All the binary outputs of the building scripts (i.e., executables and libraries) will be created by default into the `bin/Release/` directory of the package.
 
