@@ -4,7 +4,7 @@
 
 The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied problem with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.
 
-FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept multiple ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.
+FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and state-of-the-art algorithms that accept multiple ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.
 
 PyFLAGR is a Python library built on top of FLAGR library core. It uses the FLAGR algorithm implementations by linking to the associated shared library. It can be easily installed with pip and used in standard Python programs and Jupyter notebooks.
 
