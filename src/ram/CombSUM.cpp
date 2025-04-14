@@ -16,6 +16,7 @@ void MergedList::CombSUM(class InputList ** inlists, class SimpleScoreStats * s,
 	/// For each element in MergedList, compute the score w.r.t to the selected normalization method
 	for (rank_t i = 0; i < this->num_nodes; i++) {
 		q = this->item_list[i];
+		// q->display();
 
 		for (uint32_t j = 0; j < q->get_num_alloc_rankings(); j++) {
 			r = q->get_ranking(j);
@@ -39,8 +40,8 @@ void MergedList::CombSUM(class InputList ** inlists, class SimpleScoreStats * s,
 
 			/// Compute the element scores. Case A: The element has been ranked in list l
 			if(l && r->get_rank() != NOT_RANKED_ITEM_RANK) {
-//				printf("Real Voter weight: %5.3f - Normalized: %5.3f\n",
-//							l->get_voter()->get_weight(), voter_weight);
+				// printf("Real %s Voter weight: %5.3f - Normalized: %5.3f\n",
+				//		l->get_voter()->get_name(), l->get_voter()->get_weight(), voter_weight);
 
 				/// Borda normalization: Eq: 4 (first branch) of [1]
 				if(ram == 100 || ram == 5100) {
@@ -49,6 +50,7 @@ void MergedList::CombSUM(class InputList ** inlists, class SimpleScoreStats * s,
 				/// Rank normalization: Eq: 3 of [1]
 				} else if (ram == 101 || ram == 5101) {
 					score = (l->get_num_items() - r->get_rank() + 1.0) / (score_t)l->get_num_items();
+					// printf("Rank: %d, Score: %5.5f\n", r->get_rank(), score);
 
 				/// Score normalization: Eq: 1 of [1]
 				} else if (ram == 102 || ram == 5102) {

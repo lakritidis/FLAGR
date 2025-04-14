@@ -16,21 +16,22 @@ struct UserParams {
 
 	float tol = 0.0;
 	int max_iter = 0;
-	bool prune = false;
-	bool exact = false;
+	uint32_t item_selection = 0; /// All weighted methods: Post-Processing Item Selection method
+	bool exact = false;  	/// Robust Rank Aggregation (Exact method)
 
-	score_t pref_thr = 0.0;
-	score_t veto_thr = 0.0;
-	score_t conc_thr = 0.0;
-	score_t disc_thr = 0.0;
+	score_t pref_thr = 0.0; /// Outranking approach: Preference Threshold
+	score_t veto_thr = 0.0;	/// Outranking approach: Veto Threshold
+	score_t conc_thr = 0.0;	/// Outranking approach: Concordance Threshold
+	score_t disc_thr = 0.0;	/// Outranking approach: Discordance Threshold
 
-	score_t alpha = 0.0;
-	score_t beta = 0.0;
-	score_t gamma = 0.0;
-	score_t delta1 = 0.0;
-	score_t delta2 = 0.0;
-	score_t c1 = 0.0;
-	score_t c2 = 0.0;
+	score_t alpha = 0.0;	/// Preference Relations Method: Parameter alpha
+	score_t beta = 0.0;		/// Preference Relations Method: Parameter beta
+	score_t gamma = 0.0;	/// DIBRA: gamma parameter
+	score_t delta1 = 0.0;   /// All weighted methods: List pruning parameter d1
+	score_t delta2 = 0.0;	/// All weighted methods: List pruning parameter d2
+	uint32_t num_buckets = 0;/// All weighted methods: Number of voter buckets
+	score_t c1 = 0.0;		/// Agglomerative Method: parameter c1
+	score_t c2 = 0.0;		/// Agglomerative Method: parameter c2
 };
 
 
@@ -96,24 +97,25 @@ class InputParams {
 		uint32_t aggregation_method;
 		uint32_t correlation_method;
 		uint32_t weights_normalization;
-		int32_t max_iterations;
+		int32_t max_iterations;		/// DIBRA/Markov Chains: Maximum number of iterations
 		uint32_t max_list_items;
 		rank_t eval_points;
-		bool list_pruning;
+		uint32_t item_selection;
 		bool exact;
 
-		score_t convergence_precision;
-		score_t alpha;
-		score_t beta;
-		score_t gamma;
-		score_t delta1;
-		score_t delta2;
-		score_t c1;
-		score_t c2;
-		score_t pref_thr;
-		score_t veto_thr;
-		score_t conc_thr;
-		score_t disc_thr;
+		score_t convergence_precision;	/// DIBRA/Markov Chains: Convergence Precision
+		score_t alpha;		/// Preference Relations Method: Parameter alpha
+		score_t beta;		/// Preference Relations Method: Parameter beta
+		score_t gamma;		/// DIBRA: gamma parameter
+		score_t delta1;		/// All weighted methods: List pruning parameter d1
+		score_t delta2;		/// All weighted methods: List pruning parameter d1
+		uint32_t num_buckets;/// All weighted methods: Number of voter buckets
+		score_t c1;			/// Agglomerative Method: parameter c1
+		score_t c2;			/// Agglomerative Method: parameter c2
+		score_t pref_thr;	/// Outranking approach: Preference Threshold
+		score_t veto_thr;	/// Outranking approach: Veto Threshold
+		score_t conc_thr;	/// Outranking approach: Concordance Threshold
+		score_t disc_thr;	/// Outranking approach: Discordance Threshold
 
 	private:
 		void generate_random_string(size_t);
@@ -140,7 +142,7 @@ class InputParams {
 		int32_t get_iterations();
 		uint32_t get_max_list_items();
 		rank_t get_eval_points();
-		bool get_list_pruning();
+		uint32_t get_item_selection();
 		bool get_exact();
 
 		score_t get_convergence_precision();
@@ -149,6 +151,7 @@ class InputParams {
 		score_t get_gamma();
 		score_t get_delta1();
 		score_t get_delta2();
+		uint32_t get_num_buckets();
 		score_t get_c1();
 		score_t get_c2();
 		score_t get_pref_thr();
@@ -170,7 +173,7 @@ class InputParams {
 		void set_iterations(int32_t);
 		void set_max_list_items(uint32_t);
 		void set_eval_points(rank_t);
-		void set_list_pruning(bool);
+		void set_item_selection(uint32_t);
 
 		void set_convergence_precision(score_t);
 		void set_alpha(score_t);
@@ -178,6 +181,7 @@ class InputParams {
 		void set_gamma(score_t);
 		void set_delta1(score_t);
 		void set_delta2(score_t);
+		void set_num_buckets(uint32_t);
 		void set_c1(score_t);
 		void set_c2(score_t);
 		void set_pref_thr(score_t);

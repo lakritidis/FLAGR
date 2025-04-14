@@ -16,7 +16,7 @@ LONG_DESCRIPTION = 'The fusion of multiple ranked lists of elements into a singl
 
 setup(
     name='pyflagr',
-    version='1.0.8',
+    version='1.0.18',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -32,5 +32,5 @@ setup(
         "rank aggregation", "rank fusion", "data fusion", "unsupervised learning", "information retrieval",
         "metasearch", "metasearch engines", "borda count", "condorcet", "kendall", "spearman"],
     py_modules=["flagr"],
-    package_data={'': ['flagr.so', 'flagr.dll', 'libgcc_s_seh-1.dll', 'libstdc++-6.dll']}
+    package_data={'': ['flagr.so', 'flagr.dylib', 'flagr.dll', 'libgcc_s_seh-1.dll', 'libstdc++-6.dll']}
 )

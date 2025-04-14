@@ -68,10 +68,12 @@ cmp.add_aggregator("RRA-Exact", RRA.RRA(exact=True, eval_pts=EV_PTS))
 cmp.add_aggregator("RRA", RRA.RRA(exact=False, eval_pts=EV_PTS))
 cmp.add_aggregator("PrefRel", Weighted.PreferenceRelationsGraph(alpha=0.1, beta=0.5, eval_pts=EV_PTS))
 cmp.add_aggregator("Agglomerative", Weighted.Agglomerative(c1=0.1, c2=0.2, eval_pts=EV_PTS))
-cmp.add_aggregator("DIBRA", Weighted.DIBRA(aggregator='combsum:borda', gamma=1.2, prune=False, w_norm='minmax',
+cmp.add_aggregator("DIBRA", Weighted.DIBRA(aggregator='combsum:borda', gamma=1.2, prune=None, w_norm='minmax',
                                            eval_pts=EV_PTS))
-cmp.add_aggregator("DIBRA-Prune", Weighted.DIBRA(aggregator='combsum:borda', gamma=1.2, prune=True, w_norm='minmax',
+cmp.add_aggregator("DIBRA-Prune", Weighted.DIBRA(aggregator='combsum:borda', gamma=1.2, prune='low', w_norm='minmax',
                                                  d1=0.3, d2=0.05, eval_pts=EV_PTS))
+cmp.add_aggregator("DIBRA-Prune-WIRE", Weighted.DIBRA(aggregator='combsum:borda', gamma=1.2, prune='wire', w_norm='minmax',
+                                                 num_buckets=5, d1=0.5, d2=1.0, eval_pts=EV_PTS))
 
 
 # After the  Comparator  class  has  been  initialized  and  the  algorithms  to be evaluated have been determined, the

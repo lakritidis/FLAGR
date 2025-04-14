@@ -148,8 +148,6 @@ class Voter ** Aggregator::aggregate(char * topic, class InputParams * params) {
 		this->output_list->CustomMethod2(this->input_lists, &s, params);
 	}
 
-
-
 	this->output_list->write_to_CSV(topic, params);
 //	this->output_list->display_list(); getchar();
 //	printf("topic %s - ok\n", topic); fflush(NULL);

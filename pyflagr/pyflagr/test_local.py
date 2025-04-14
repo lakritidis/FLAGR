@@ -21,7 +21,7 @@ import pandas as pd
 if __name__ == '__main__':
     base_path = ''
     if platform == "linux" or platform == "linux2":
-        base_path = '/media/leo/B65266EC5266B133/phd_Research/08 - Datasets/TREC/Synthetic/'
+        base_path = '/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/'
     elif platform == "win32":
         base_path = 'D:/phd_Research/08 - Datasets/TREC/Synthetic/'
     else:

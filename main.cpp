@@ -19,23 +19,62 @@ int main(int argc, char *argv[]) {
 	int cut_off = 0;
 
 	if (argc == 1) {
-		input_file = new char[strlen("../../examples/testdata/testdata.csv") + 1];
-		strcpy(input_file, "../../examples/testdata/testdata.csv");
+// FELO (5100 - 2 BUCKETS - DIBRA SCORES)
+// FESO (5100 - 3 BUCKETS - DIBRA SCORES)
+// MAMO (5100 - 15 BUCKETS - DIBRA SCORES)
+// MOSO2 (5100 - 4 BUCKETS - DIBRA SCORES)
 
-		qrels_file = new char[strlen("../../examples/testdata/testdata_qrels.csv") + 1];
-		strcpy(qrels_file, "../../examples/testdata/testdata_qrels.csv");
+#ifdef __linux__
+/*
+		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc.csv") + 1];
+		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc.csv");
 
+		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc_prels.csv") + 1];
+		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc_prels.csv");
+*/
+		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO.csv") + 1];
+		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO.csv");
+
+		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv") + 1];
+		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv");
+
+		output_dir = new char[strlen("/home/leo/Desktop/dev/cpp/FLAGR/output/") + 1];
+		strcpy(output_dir, "/home/leo/Desktop/dev/cpp/FLAGR/output/");
+
+#elif _WIN32
+
+		input_file = new char[strlen("C:/Users/Owner/Documents/cpp/Synthetic/FELO.csv") + 1];
+		strcpy(input_file, "C:/Users/Owner/Documents/cpp/Synthetic/FELO.csv");
+
+		qrels_file = new char[strlen("C:/Users/Owner/Documents/cpp/Synthetic/FELO_qrels.csv") + 1];
+		strcpy(qrels_file, "C:/Users/Owner/Documents/cpp/Synthetic/FELO_qrels.csv");
+/*
+		input_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO.csv") + 1];
+		strcpy(input_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO.csv");
+
+		qrels_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv") + 1];
+		strcpy(qrels_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv");
+*/
 		output_dir = new char[strlen("output") + 1];
 		strcpy(output_dir, "output");
+#endif
 
 		cut_off = 10;
 
 	} else if (argc == 2) {
-		input_file = new char[strlen("../../examples/testdata/testdata.csv") + 1];
-		strcpy(input_file, "../../examples/testdata/testdata.csv");
+#ifdef __linux__
+		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO.csv") + 1];
+		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO.csv");
 
-		qrels_file = new char[strlen("../../examples/testdata/testdata_qrels.csv") + 1];
-		strcpy(qrels_file, "../../examples/testdata/testdata_qrels.csv");
+		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv") + 1];
+		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv");
+#elif _WIN32
+		input_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO.csv") + 1];
+		strcpy(input_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO.csv");
+
+		qrels_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv") + 1];
+		strcpy(qrels_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv");
+#endif
 
 		output_dir = new char[strlen("output") + 1];
 		strcpy(output_dir, "output");
@@ -79,11 +118,12 @@ int main(int argc, char *argv[]) {
 		cut_off = atoi(argv[1]);
 	}
 
+
 	printf("Aggregating with linear combination (rank normalization)...\n"); fflush(NULL);
-	Linear(input_file, qrels_file, cut_off, 101, "Linear_out", output_dir);
+	Linear(input_file, qrels_file, cut_off, 100, "Linear_out", output_dir);
 
 	printf("Aggregating with Borda Count...\n"); fflush(NULL);
-	Linear(input_file, qrels_file, cut_off, 100, "Borda_out", output_dir);
+	Linear(input_file, qrels_file, cut_off, 101, "Borda_out", output_dir);
 
 	printf("Aggregating with Condorcet Winners...\n"); fflush(NULL);
 	Condorcet(input_file, qrels_file, cut_off, "Condorcet_out", output_dir);
@@ -103,20 +143,26 @@ int main(int argc, char *argv[]) {
 	RobustRA(input_file, qrels_file, cut_off, "RRA", output_dir, false);
 
 	printf("Aggregating with the Preference Relations Method...\n"); fflush(NULL);
-	PrefRel(input_file, qrels_file, cut_off, "PrefRel_out", output_dir, 0.3, 0.2);
+	PrefRel(input_file, qrels_file, cut_off, "PrefRel_out", output_dir, 0.3, 0.2, 1, 0, 0.7, 0.2);
 
-	printf("Aggregating with the Agglomerative Method...\n"); fflush(NULL);
-	Agglomerative(input_file, qrels_file, cut_off, "Agglomerative_out", output_dir, 2.5, 1.5);
+	//printf("Aggregating with the Agglomerative Method...\n"); fflush(NULL);
+	//Agglomerative(input_file, qrels_file, cut_off, "Agglomerative_out", output_dir, 2.5, 1.5, 0, 0, 0.7, 0.2);
 
-	printf("Aggregating with DIBRA + Outranking Approach...\n"); fflush(NULL);
-	DIBRA(input_file, qrels_file, cut_off, 5300, "DIBRA_out", output_dir, 2, 3, false, 1.5, 0.4, 0.1, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5100, "DIBRA_BC_out", output_dir, 2, 3, 0, 1.5, 0, 0.7, 0.2, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+	printf("Aggregating with DIBRA + Borda Count + List Pruning...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5100, "DIBRA_BC_LP_out",  output_dir, 2, 3, 1, 1.5, 0,   0.7, 0.2, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5100, "DIBRA_BC_WIS_out", output_dir, 2, 3, 2, 1.5, 5,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
 
 	delete [] input_file;
 	delete [] qrels_file;
 	delete [] output_dir;
 
-	printf("\n\nDone. Press any key to exit...\n"); fflush(NULL);
-	getchar();
+	//printf("\n\nDone. Press any key to exit...\n"); fflush(NULL);
+	//getchar();
 	return 0;
 }
 

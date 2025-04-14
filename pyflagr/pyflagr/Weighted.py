@@ -8,6 +8,10 @@ from pyflagr.RAM import RAM
 class PreferenceRelationsGraph(RAM):
     Alpha = 0.1
     Beta = 0.5
+    list_pruning = 0
+    d_1 = 0.0
+    d_2 = 0.0
+    num_buckets = 0
 
     def __init__(self, eval_pts=10, alpha=Alpha, beta=Beta):
         RAM.__init__(self, eval_pts)
@@ -22,7 +26,11 @@ class PreferenceRelationsGraph(RAM):
             ctypes.c_char_p,  # Random string to be embedded into the output file names
             ctypes.c_char_p,  # The directory where the output files will be written
             ctypes.c_float,   # alpha parameter
-            ctypes.c_float    # beta parameter
+            ctypes.c_float,   # beta parameter
+            ctypes.c_int,     # List pruning method
+            ctypes.c_int,     # Number of voter buckets for the list pruning method
+            ctypes.c_float,   # d1 parameter for the list pruning method
+            ctypes.c_float    # d2 parameter for the list pruning method
         ]
 
         self.flagr_lib.PrefRel.restype = None
@@ -51,7 +59,11 @@ class PreferenceRelationsGraph(RAM):
             bytes(ran_str, 'ASCII'),
             bytes(self.output_dir, 'ASCII'),
             self.Alpha,
-            self.Beta
+            self.Beta,
+            self.list_pruning,
+            self.num_buckets,
+            self.d_1,
+            self.d_2
         )
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
@@ -62,6 +74,10 @@ class PreferenceRelationsGraph(RAM):
 class Agglomerative(RAM):
     C1 = 0.1
     C2 = 0.5
+    list_pruning = 0
+    d_1 = 0.0
+    d_2 = 0.0
+    num_buckets = 0
 
     def __init__(self, eval_pts=10, c1=C1, c2=C2):
         RAM.__init__(self, eval_pts)
@@ -76,7 +92,11 @@ class Agglomerative(RAM):
             ctypes.c_char_p,  # Random string to be embedded into the output file names
             ctypes.c_char_p,  # The directory where the output files will be written
             ctypes.c_float,   # c1 parameter
-            ctypes.c_float    # c2 parameter
+            ctypes.c_float,   # c2 parameter
+            ctypes.c_int,     # List pruning method
+            ctypes.c_int,     # Number of voter buckets for the list pruning method
+            ctypes.c_float,   # d1 parameter for the list pruning method
+            ctypes.c_float    # d2 parameter for the list pruning method
         ]
 
         self.flagr_lib.Agglomerative.restype = None
@@ -105,7 +125,11 @@ class Agglomerative(RAM):
             bytes(ran_str, 'ASCII'),
             bytes(self.output_dir, 'ASCII'),
             self.C1,
-            self.C2
+            self.C2,
+            self.list_pruning,
+            self.num_buckets,
+            self.d_1,
+            self.d_2
         )
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
@@ -117,10 +141,11 @@ class DIBRA(RAM):
     agg = 5100
     weight_norm = 2
     distance_metric = 3
-    list_pruning = False,
+    list_pruning = 0
     g = 1.2,
     d_1 = 0.4
     d_2 = 0.1
+    num_buckets = 3
     tolerance = 0.01
     miter = 50
     preference_t = 0.0
@@ -128,8 +153,8 @@ class DIBRA(RAM):
     concordance_t = 0.0
     discordance_t = 0.25
 
-    def __init__(self, eval_pts=10, aggregator='combsum:borda', w_norm='minmax', dist='cosine', prune=False,
-                 gamma=1.5, d1=0.4, d2=0.1, tol=0.01, max_iter=50, pref=0.0, veto=0.75, conc=0.0, disc=0.25):
+    def __init__(self, eval_pts=10, aggregator='combsum:borda', w_norm='minmax', dist='cosine', prune=0, gamma=1.5,
+                 num_buckets=3, d1=0.4, d2=0.1, tol=0.01, max_iter=50, pref=0.0, veto=0.75, conc=0.0, disc=0.25):
 
         RAM.__init__(self, eval_pts)
 
@@ -182,10 +207,17 @@ class DIBRA(RAM):
         elif dist == "tau":
             self.distance_metric = 5
 
-        self.list_pruning = prune
+        # Set the list pruning method
+        self.prune = 0
+        if prune == 'low':
+            self.list_pruning = 1
+        elif prune == 'wire':
+            self.list_pruning = 2
+
         self.g = gamma
         self.d_1 = d1
         self.d_2 = d2
+        self.num_buckets = num_buckets
         self.tolerance = tol
         self.miter = max_iter
         self.preference_t = pref
@@ -202,8 +234,9 @@ class DIBRA(RAM):
             ctypes.c_char_p,  # The directory where the output files will be written
             ctypes.c_int,     # Voter weights normalization
             ctypes.c_int,     # List distance function
-            ctypes.c_bool,    # List pruning algorithm
+            ctypes.c_int,     # List pruning method
             ctypes.c_float,   # gamma parameter
+            ctypes.c_int,     # Number of voter buckets for the list pruning method
             ctypes.c_float,   # d1 parameter
             ctypes.c_float,   # d2 parameter
             ctypes.c_float,   # convergence precision tolerance
@@ -232,7 +265,7 @@ class DIBRA(RAM):
 
         ran_str = self.get_random_string(16)
 
-        # Call the exposed Agglomerative C function
+        # Call the exposed DIBRA C function
         self.flagr_lib.DIBRA(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -244,6 +277,7 @@ class DIBRA(RAM):
             self.distance_metric,
             self.list_pruning,
             self.g,
+            self.num_buckets,
             self.d_1,
             self.d_2,
             self.tolerance,

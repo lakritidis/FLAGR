@@ -21,7 +21,10 @@ void Voter::display() {
 }
 
 /// Mutators
-void Voter::set_weight(score_t v) { this->weight = v; }
+void Voter::set_weight(score_t v) {
+	this->weight = v;
+}
+
 void Voter::set_name(char * v) {
 	this->name = new char[strlen(v) + 1];
 	strcpy(this->name, v);

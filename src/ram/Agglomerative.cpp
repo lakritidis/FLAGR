@@ -34,7 +34,7 @@ void MergedList::insert_merge(class MergedItem * item, score_t list_weight) {
 
 					if (rnk->get_rank() != NOT_RANKED_ITEM_RANK) {
 //						printf("\t\t\tThe item was ranked by list %d at rank %d\n", rnk->get_input_list()->get_id(), rnk->get_rank());
-						q->insert_ranking(rnk->get_input_list(), rnk->get_rank(), rnk->get_score());
+						q->insert_ranking(rnk->get_input_list(), rnk->get_idx(), rnk->get_rank(), rnk->get_score());
 //						printf("\t\t\tNew list node is\n"); q->display();
 					}
 				}

@@ -44,6 +44,10 @@ InputData::InputData(class InputParams * pr) :
 
 			if (pr->get_rels_file()) {
 				this->eval_file = fopen(pr->get_eval_file(), "w+");
+				if (!this->eval_file) {
+					printf("Error creating evaluation file: %s\n\n", pr->get_eval_file());
+					exit(-1);
+				}
 				this->initialize_stats();
 			} else {
 				this->eval_file = NULL;
@@ -53,7 +57,6 @@ InputData::InputData(class InputParams * pr) :
 			FILE * datafile = fopen(this->params->get_input_file(), "r");
 			if (datafile) {
 				out = this->read_file(datafile, &file_size);
-
 				this->preprocess_CSV(out, file_size);
 				this->construct_CSV_lists(out, file_size);
 
@@ -126,22 +129,21 @@ void InputData::destroy_output_lists() {
 
 /// Read the contents of a file into a char buffer
 char * InputData::read_file(FILE * source, long * file_size) {
-	fseek(source , 0L, SEEK_END);
+	fseek(source, 0L, SEEK_END);
 	*file_size = ftell(source);
 	rewind(source);
 
 	char * out = (char *)malloc((*file_size + 1) * sizeof(char));
 
-	if (fread(out, *file_size, 1 , source) != 1) {
-		fclose(source);
-		free(out);
-		fputs("entire read fails",stderr);
-		exit(1);
+	int nread = 0, c;
+	while ((c = fgetc(source)) != EOF) {
+		out[nread] = c;
+		nread++;
 	}
-	out[*file_size - 1] = 0;
+    out[nread - 1] = 0;
+    *file_size = nread;
 
-//	printf("contents: %s", out); getchar();
-
+	// printf(out);
 	return out;
 }
 
@@ -191,11 +193,17 @@ void InputData::print_header() {
 	if (this->params->get_aggregation_method() == 5 || this->params->get_aggregation_method() == 6 ||
 		this->params->get_aggregation_method() == 7 || this->params->get_aggregation_method() == 8) {
 
-		if (params->get_correlation_method() == 1) { strcpy(m3, "Spearman's Rho correlation"); } else
-		if (params->get_correlation_method() == 2) { strcpy(m3, "Scaled Footrule Distance"); } else
-		if (params->get_correlation_method() == 3) { strcpy(m3, "Weighted Cosine Distance"); } else
-		if (params->get_correlation_method() == 4) { strcpy(m3, "Local Scaled Footrule Distance"); } else
-		if (params->get_correlation_method() == 5) { strcpy(m3, "Kendall's Tau correlation"); }
+		if (params->get_correlation_method() == 1) {
+			strcpy(m3, "Spearman's Rho correlation");
+		} else if (params->get_correlation_method() == 2) {
+			strcpy(m3, "Scaled Footrule Distance");
+		} else if (params->get_correlation_method() == 3) {
+			strcpy(m3, "Weighted Cosine Distance");
+		} else if (params->get_correlation_method() == 4) {
+			strcpy(m3, "Local Scaled Footrule Distance");
+		} else if (params->get_correlation_method() == 5) {
+			strcpy(m3, "Kendall's Tau correlation");
+		}
 
 		sprintf(m4, " - %s  - g = %3.1f)", m3, this->params->get_gamma());
 
@@ -205,10 +213,10 @@ void InputData::print_header() {
 		strcpy(m4, ")");
 	}
 
-	if (params->get_list_pruning() == 1) {
-		strcpy(m5, "List Pruning Enabled.");
+	if (params->get_item_selection() == 0) {
+		strcpy(m5, "Post processing Weight-Based Item Selection Disabled.");
 	} else {
-		strcpy(m5, "List Pruning Disabled.");
+		strcpy(m5, "Post processing Weight-Based Item Selection Enabled");
 	}
 	printf("%s - %s\n", m4, m5); fflush(NULL);
 

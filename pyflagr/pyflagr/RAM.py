@@ -51,7 +51,7 @@ class RAM:
 
         elif df is not None:
             self.input_file = tempfile.gettempdir() + "/temp_input.csv"
-            df.to_csv(self.input_file, index=False, header=None)
+            df.to_csv(self.input_file, index=False, header=False)
 
         else:
             print("Error! No input data was passed")
@@ -67,8 +67,7 @@ class RAM:
 
         elif rdf is not None:
             self.rels_file = tempfile.gettempdir() + "/temp_input_rels.csv"
-            rdf.to_csv(self.rels_file, index=False, header=None)
-
+            rdf.to_csv(self.rels_file, index=False, header=False)
         else:
             self.rels_file = ""
 
@@ -88,7 +87,8 @@ class RAM:
         eval_file = od + "/eval_" + ran + ".csv"
 
         if os.path.isfile(out_file):
-            df_out = pd.read_csv(out_file, engine='c')
+            df_out = pd.read_csv(out_file, engine='c', header=None,
+                                 names=['Query', 'Voter', 'ItemID', 'Rank', 'Score', 'Aggregator'])
             if od == tempfile.gettempdir():
                 os.remove(out_file)
 

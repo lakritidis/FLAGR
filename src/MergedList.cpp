@@ -115,7 +115,7 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 		for (q = this->hash_table[HashValue]; q != NULL; q = q->get_next()) {
 			if (strcmp(q->get_code(), n->get_code()) == 0) {
 
-				q->insert_ranking( l[x], n->get_rank(), n->get_inscore() );
+				q->insert_ranking( l[x], n->get_idx(), n->get_rank(), n->get_inscore() );
 
 				return; /// Return and exit
 			}
@@ -128,7 +128,7 @@ void MergedList::insert(class InputItem * n, uint32_t x, class InputList ** l) {
 
 	/// Create a new record and re-assign the linked list's head
 	class MergedItem * record = new MergedItem(n->get_code(), n->get_rank(), this->num_input_lists, l);
-	record->insert_ranking( l[x], n->get_rank(), n->get_inscore() );
+	record->insert_ranking( l[x], n->get_idx(), n->get_rank(), n->get_inscore() );
 
 	/// Reassign the chain's head
 	record->set_next(this->hash_table[HashValue]);
@@ -185,8 +185,8 @@ void MergedList::write_to_CSV(char * topic, class InputParams * params) {
 	FILE * fp = fopen(params->get_output_file(), "a+");
 	if (fp) {
 		for (rank_t i = 0; i < this->num_nodes; i++) {
-			fprintf(fp, "%s,PyFLAGR,%s,%d,%10.6f\n", topic, this->item_list[i]->get_code(), i+1,
-					this->item_list[i]->get_final_score());
+			fprintf(fp, "%s,PyFLAGR,%s,%d,%10.6f,%d\n", topic, this->item_list[i]->get_code(), i+1,
+					this->item_list[i]->get_final_score(), params->get_aggregation_method());
 		}
 		fclose(fp);
 	}
@@ -210,7 +210,7 @@ void MergedList::convert_to_array() {
 }
 
 /// Reset the scores (set to equal to 0) of the merged list elements
-void MergedList::reset_scores() {
+void MergedList::reset_item_scores() {
 	for (rank_t i = 0; i < this->num_nodes; i++) {
 		this->item_list[i]->set_final_score(0.0);
 	}
@@ -219,10 +219,9 @@ void MergedList::reset_scores() {
 /// Search for an item and return its rank
 rank_t MergedList::get_item_rank(char *c) {
 	uint32_t HashValue = this->djb2(c) & this->mask;
+	class MergedItem * q = NULL;
 
 	if (this->hash_table[HashValue] != NULL) {
-		class MergedItem * q;
-
 		for (q = this->hash_table[HashValue]; q != NULL; q = q->get_next()) {
 			if (strcmp(q->get_code(), c) == 0) {
 				return q->get_final_ranking();
@@ -280,9 +279,236 @@ void MergedList::rebuild(class InputList ** inlists) {
 	}
 
 	this->convert_to_array();
-	this->reset_scores();
+	this->reset_item_scores();
 }
 
+
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
+/// ITEM SELECTION/PRUNING POST PROCESSING METHODS ////////////////////////////////////////////////
+/// Weighted Aggregators Only /////////////////////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////////////////////////////////////////////////
+
+/// The list pruning method of Akritidis et al. 2022
+void MergedList::perform_pruning(class InputList ** inlists, class SimpleScoreStats * stats,
+	class InputParams * params) {
+
+		uint32_t ram = params->get_aggregation_method();
+		uint32_t temp = params->get_item_selection();
+
+		uint32_t cutoff = 0, z = 0;
+		score_t w = 0.0;
+
+		score_t min_val = stats->get_min_val();
+		score_t max_val = stats->get_max_val();
+		score_t delta_1 = params->get_delta1();
+		score_t delta_2 = params->get_delta2();
+
+		for (z = 0; z < this->num_input_lists; z++) {
+			w = inlists[z]->get_voter()->get_weight();
+
+			score_t nw = (w - min_val) / (max_val - min_val);
+
+			/// delta_1 and delta_2 represent the hyper-parameters of Eq. 16 of [5]
+			cutoff = (delta_1 + delta_2 * nw) * inlists[z]->get_num_items();
+
+			// printf("Cutoff for voter %d (%5.3f - %s): %d\n", z, nw, inlists[z]->get_voter()->get_name(), cutoff); getchar();
+
+			if (cutoff >= inlists[z]->get_num_items()) {
+				inlists[z]->set_cutoff(inlists[z]->get_num_items());
+			} else {
+				inlists[z]->set_cutoff(cutoff);
+			}
+		}
+
+		this->rebuild(inlists);
+
+		if (ram >= 5100 && ram <= 5109) {
+			this->CombSUM(inlists, stats, params);
+		} else if (ram >= 5110 && ram <= 5119) {
+			this->CombMNZ(inlists, stats, params);
+		} else if (ram == 5200) {
+			this->CondorcetWinners(inlists, stats, params);
+		} else if (ram == 5201) {
+			this->CopelandWinners(inlists, stats, params);
+		} else if (ram == 5300) {
+			this->Outranking(inlists, stats, params);
+		} else if (ram == 600) {
+			params->set_item_selection(0);
+			this->PrefRel(inlists, stats, params);
+			params->set_item_selection(temp);
+		} else if (ram == 700) {
+			params->set_item_selection(0);
+			this->Agglomerative(inlists, stats, params);
+			params->set_item_selection(temp);
+		}
+}
+
+/// Imprementation of the Unsupervised Weighted Item Selector of [11].
+void MergedList::perform_item_selection(class InputList ** inlists, class SimpleScoreStats * stats,
+	class InputParams * params) {
+
+		rank_t z = 0;
+
+		uint32_t i = 0, j = 0;
+		uint32_t ram = params->get_aggregation_method(), temp = params->get_item_selection();
+		uint32_t prot_score = 0.0;
+
+		/// delta_1 represents the number of buckets
+		uint32_t bucket = 0, num_buckets = (uint32_t)params->get_num_buckets();
+		float d1 = params->get_delta1(), d2 = params->get_delta2();
+
+		score_t conf_score = 0.0, pres_score = 0.0;
+		score_t bucket_thres [num_buckets], bucket_thres_ew [num_buckets];
+		score_t min_w = 0.0, max_w = 0.0;
+
+		class Voter * v = NULL;
+		class MergedItem * q = NULL;
+		class InputItem * x = NULL;
+
+		class InputList ** new_lists = new InputList * [this->num_input_lists];
+
+
+//		for (i = 0; i < this->num_input_lists; i++) {
+//		    printf("List: %d - Voter: %s, Weight: %5.4f\n",
+//		    i, inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight());
+//		}
+//		printf("Min weight: %5.3f - Max Weight: %5.3f\n", stats->get_min_val(), stats->get_max_val());
+
+		/// Distribute the voters (i.e. input lists) to buckets and assign bucket-wise weights.
+		/// 1: Normalize the voter weights and sort in descending order
+		for (i = 0; i < this->num_input_lists; i++) {
+			score_t norm_voter_weight = (inlists[i]->get_voter()->get_weight() - stats->get_min_val()) /
+				(stats->get_max_val() - stats->get_min_val());
+
+            inlists[i]->set_voter_weight(norm_voter_weight);
+			// printf("\t weight for voter %d = %5.3f - Normalized: %5.3f\n",
+			//	i, inlists[i]->get_voter()->get_weight(), voter_weights[i]);
+		}
+		qsort(inlists, this->num_input_lists, sizeof(score_t), &MergedList::cmp_voter_scores);
+		min_w = inlists[0]->get_voter()->get_weight();
+		max_w = inlists[this->num_input_lists - 1]->get_voter()->get_weight();
+
+//		for (i = 0; i < this->num_input_lists; i++) {
+//		    printf("List: %d - Voter: %s, Weight: %5.4f\n",
+//               i, inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight());
+//		}
+
+		/// 2. Determine the bucket thresholds
+		for (i = 0; i < num_buckets; i++) {
+			bucket_thres[i] = (score_t)(i) / (score_t)num_buckets;
+			bucket_thres_ew[i] = min_w + i * (max_w - min_w) / (score_t)num_buckets;
+//			printf("Bucket %d: Thr1=%5.3f, Thr2=%5.3f\n", i, bucket_thres[i], bucket_thres_ew[i]);
+		}
+
+		/// 3. Find the voter bucket according to his score; set the confidence scores for each
+		///    voter and their respective preference list.
+		for (i = 0; i < this->num_input_lists; i++) {
+			bucket = num_buckets - 1;
+			for (j = 0; j < num_buckets; j++) {
+				if (inlists[i]->get_voter()->get_weight() > bucket_thres[j]) {
+					bucket = num_buckets - j - 1;
+				}
+			}
+
+			conf_score = d1 + (1 - d1) * exp(-(score_t)bucket * num_buckets / (score_t)this->num_input_lists);
+
+//			printf("List: %d - Voter: %s - Weight: %5.3f - Bucket: %d - Conf: Score: %5.3f\n", i,
+//				inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight(), bucket, conf_score);
+
+			inlists[i]->set_voter_weight(conf_score);
+		}
+
+		/// Set the preservation scores for all the elements of all lists;
+		for (i = 0; i < this->num_slots; i++) {
+			if (this->hash_table[i] != NULL) {
+				for (q = this->hash_table[i]; q != NULL; q = q->get_next()) {
+
+					pres_score = q->get_sum_voter_weights();
+					q->set_individual_preservation_scores(pres_score);
+
+					// q->display();
+					// printf("Item %s score = %5.5f\n", q->get_code(), pres_score); getchar();
+					// q->set_individual_preservation_scores(q->get_final_score());
+				}
+			}
+		}
+
+		/// Set the protection scores for each voter and their respective preference list
+		for (i = 0; i < this->num_input_lists; i++) {
+			v = inlists[i]->get_voter();
+			prot_score = d2 * floor(inlists[i]->get_voter()->get_weight() * inlists[i]->get_num_items());
+
+			// printf("Inlist: %d\n", i);
+			// inlists[i]->display();
+			inlists[i]->sort_by_pscore();
+			// inlists[i]->display();
+
+			new_lists[i] = new InputList(i, v->get_name(), v->get_weight());
+
+			// printf("List %d - Protection Score: %d\n", i, prot_score);
+			for (z = 0; z < inlists[i]->get_num_items(); z++) {
+				x = inlists[i]->get_item(z);
+
+				new_lists[i]->insert_item(x->get_idx(), x->get_code(), x->get_rank(), x->get_inscore());
+				if (z >= prot_score) {
+					break;
+				}
+			}
+			new_lists[i]->sort_by_score();
+			inlists[i]->sort_by_score();
+
+			// printf("Inlist: %d\n", i);
+			// inlists[i]->display();
+
+			// printf("New list: %d\n", i); new_lists[i]->display(); getchar();
+			// printf("List: %d - Voter: %s - Pref Score: %5.3f - Prot Score: %d\n",
+			// i, v->get_name(), v->get_weight(), prot_score);
+		}
+
+		//this->display();
+		this->rebuild(new_lists);
+		//this->display(); getchar();
+
+		if (ram >= 5100 && ram <= 5999) {
+			params->set_item_selection(0);
+			this->DIBRA(new_lists, stats, params);
+			params->set_item_selection(temp);
+		} else if (ram == 600) {
+			params->set_item_selection(0);
+//			this->PrefRel(new_lists, stats, params);
+			params->set_item_selection(temp);
+		} else if (ram == 700) {
+			params->set_item_selection(0);
+//			this->Agglomerative(new_lists, stats, params);
+			params->set_item_selection(temp);
+		}
+
+/*
+		if (ram >= 5100 && ram <= 5109) {
+			this->CombSUM(new_lists, stats, params);
+		} else if (ram >= 5110 && ram <= 5119) {
+			this->CombMNZ(new_lists, stats, params);
+		} else if (ram == 5200) {
+			this->CondorcetWinners(new_lists, stats, params);
+		} else if (ram == 5201) {
+			this->CopelandWinners(new_lists, stats, params);
+		} else if (ram == 5300) {
+			this->Outranking(new_lists, stats, params);
+		} else if (ram == 600) {
+			params->set_item_selection(0);
+			this->PrefRel(new_lists, stats, params);
+			params->set_item_selection(temp);
+		} else if (ram == 700) {
+			params->set_item_selection(0);
+			this->Agglomerative(new_lists, stats, params);
+			params->set_item_selection(temp);
+		}
+*/
+		for (i = 0; i < this->num_input_lists; i++) {
+			delete new_lists[i];
+		}
+		delete [] new_lists;
+}
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////
 /// RANK CORRELATION DISTANCE METHODS /////////////////////////////////////////////////////////////
@@ -506,7 +732,7 @@ int MergedList::cmp_edges(const void *a, const void *b) {
 	class MergedItemPair * x = * (class MergedItemPair **)a;
 	class MergedItemPair * y = * (class MergedItemPair **)b;
 
-	return strcmp (x->get_item2()->get_code(), y->get_item2()->get_code());
+	return strcmp(x->get_item2()->get_code(), y->get_item2()->get_code());
 }
 
 /// Comparator callback function for qsorting vectors of doubles
@@ -560,6 +786,18 @@ int MergedList::cmp_voter(const void *a, const void *b) {
 
 	if (x->get_weight() > y->get_weight()) { return 1; }
 	return -1;
+}
+
+/// Comparator callback function for qsorting a set on InputLists in increasing order of Voter scores
+int MergedList::cmp_voter_scores(const void *a, const void *b) {
+	class InputList *x = *(class InputList **)a;
+	class InputList *y = *(class InputList **)b;
+
+	if (x->get_voter()->get_weight() > y->get_voter()->get_weight()) {
+		return 1;
+	} else {
+		return -1;
+	}
 }
 
 /// Accessors

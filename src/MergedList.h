@@ -24,6 +24,7 @@ class MergedList {
 		static int cmp_voter(const void *, const void *);
 		static int cmp_edges(const void *, const void *);
 		static int cmp_double(const void *, const void *);
+		static int cmp_voter_scores(const void *, const void *);
 
 		score_t * compute_state_matrix(class SimpleScoreStats *, class InputParams * );
 		void matrixvec_multiply(score_t *, score_t *, score_t **);
@@ -50,7 +51,7 @@ class MergedList {
 		void display_list();
 		void write_to_CSV(char *, class InputParams *);
 		void update_weight(char *, score_t);
-		void reset_scores();
+		void reset_item_scores();
 		void reset_weights();
 		void rebuild(class InputList **);
 		void clear_contents();
@@ -73,6 +74,10 @@ class MergedList {
 		/// Custom Algorithm declarations
 		void CustomMethod1(class InputList **,  class SimpleScoreStats *, class InputParams *);
 		void CustomMethod2(class InputList **,  class SimpleScoreStats *, class InputParams *);
+
+		/// Post-Processing methods (Weighted Aggregators only)
+		void perform_pruning(class InputList **, class SimpleScoreStats *, class InputParams *);
+		void perform_item_selection(class InputList **, class SimpleScoreStats *, class InputParams *);
 
 		/// Rank Correlation Methods
 		double SpearmanRho(class InputList *);

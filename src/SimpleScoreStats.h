@@ -14,6 +14,7 @@ class SimpleScoreStats {
 		~SimpleScoreStats();
 
 		void display();
+		void reset();
 
 		/// Accessors
 		score_t get_min_val();
