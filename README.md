@@ -2,30 +2,30 @@
 
 *Fuse, Learn, AGgregate, Rerank*
 
-The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.
+The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied problem with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.
 
-FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.
+FLAGR is a high performance, modular, open source C++ library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept multiple ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.
 
 PyFLAGR is a Python library built on top of FLAGR library core. It uses the FLAGR algorithm implementations by linking to the associated shared library. It can be easily installed with pip and used in standard Python programs and Jupyter notebooks.
 
-The current FLAGR version is 1.0.8.
+The current FLAGR version is 1.0.18.
 
 Both libraries are licensed under the [http://www.apache.org/licenses/LICENSE-2.0](Apache License, version 2).
 
-Detailed documentation on the FLAGR and PyFLAGR components are provided in the user manual, that resides into the `docs/` directory.
+Detailed documentation on the FLAGR and PyFLAGR components are provided in the user manual that resides in the `docs/` directory.
 
-Representative code examples in C++ and Python can be found on the `examples/` directory.
+Representative code examples in C++ and Python can be found in the `examples/` directory.
 
 
 ## Compiling from Sources
 
 FLAGR can be compiled from its C++ sources by using the provided building scripts. These scripts require a working GCC compiler to be installed into the machine that performs the compilation.
 
-There are two building scripts, one for Linux and one for Windows. Specifically:
+There are two building scripts, one for Linux/MacOS and one for Windows. Specifically:
 
-* In Linux: type `make` in Terminal to build the binaries from the C++ sources. The FLAGR binaries include:
+* In Linux/MacOS: type `make` in Terminal to build the binaries from the C++ sources. The FLAGR binaries include:
   * the executable program `FLAGR`, and
-  * the shared `flagr.so` library. Third-party programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
+  * the shared `flagr.so`/`flagr.dylib` libraries. Third-party programs can link to these shared libraries to obtain access to the FLAGR core algorithm implementations.
 * In Windows: type `makefile.bat` in Windows CLI or Windows Powershell. The batch file will build the binaries from the C++ sources by generating two files:
   * the executable program `FLAGR.exe`, and
   * the Dynamic Link Library `flagr.dll`. Third-party Windows programs can link to this shared library to obtain access to the FLAGR algorithm implementations.
