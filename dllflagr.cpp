@@ -5,8 +5,8 @@
 /// C functions that i) wrap around the corresponding C++ functions and ii) are exposed to DLL.
 extern "C" {
 	/// Wrapper for CombSUM/CombMNZ
-	__declspec(dllexport) void __cdecl Linear(const char inf[], const char relf[], const int evpts, const int ram, const char ranstr[], const char out[]) {
-
+	__declspec(dllexport) void __cdecl Linear(const char inf[], const char relf[], const int evpts,
+											const int ram, const char ranstr[], const char out[]) {
 		struct UserParams uParams;
 		srand(time(0));
 
@@ -214,8 +214,9 @@ extern "C" {
 	/// Wrapper the distance-based iterative rank aggregation method of Akritidis et. al [5] - DIBRA
 	__declspec(dllexport) void __cdecl DIBRA
 		(const char inf[], const char relf[], const int evpts, const int agg, const char ranstr[],
-			const char out[], const int wnorm, const int dist, const bool prune, const float gamma,
-			const float d1, const float d2, const float tol, const int iter,
+			const char out[], const int wnorm, const int dist, const uint32_t item_selection,
+			const float gamma, const uint32_t num_buckets, const float d1, const float d2,
+			const float tol, const int iter,
 			const float pref_t, const float veto_t, const float conc_t, const float disc_t) {
 
 				struct UserParams uParams;
@@ -241,10 +242,11 @@ extern "C" {
 				uParams.rank_aggregation_method = agg;
 				uParams.weight_normalization = wnorm;
 				uParams.distance = dist;
-				uParams.prune = prune;
+				uParams.item_selection = item_selection;
 				uParams.gamma = gamma;
 				uParams.delta1 = d1;
 				uParams.delta2 = d2;
+				uParams.num_buckets = num_buckets;
 				uParams.tol = tol;
 				uParams.max_iter = iter;
 				uParams.pref_thr = pref_t;
@@ -262,7 +264,8 @@ extern "C" {
 
 	/// Wrapper the preference relation rank aggregation method of Desarkar et. al, 2016 [3]
 	__declspec(dllexport) void __cdecl PrefRel(const char inf[], const char relf[], const int evpts, const char ranstr[],
-				const char out[], const float alpha, const float beta) {
+				const char out[], const float alpha, const float beta,
+				const uint32_t item_selection, const uint32_t num_buckets, const float d1, const float d2) {
 
 				struct UserParams uParams;
 				srand(time(0));
@@ -285,6 +288,10 @@ extern "C" {
 
 				uParams.eval_points = evpts;
 				uParams.rank_aggregation_method = 600;
+				uParams.item_selection = item_selection;
+				uParams.delta1 = d1;
+				uParams.delta2 = d2;
+				uParams.num_buckets = num_buckets;
 				uParams.alpha = alpha;
 				uParams.beta = beta;
 
@@ -298,7 +305,8 @@ extern "C" {
 
 	/// Wrapper for Agglomerative rank aggregation method of Chatterjee et. al, 2018 [4]
 	__declspec(dllexport) void __cdecl Agglomerative(const char inf[], const char relf[], const int evpts, const char ranstr[],
-				const char out[], const float c1, const float c2) {
+				const char out[], const float c1, const float c2,
+				const uint32_t item_selection, const uint32_t num_buckets, const float d1, const float d2) {
 
 				struct UserParams uParams;
 				srand(time(0));
@@ -321,6 +329,10 @@ extern "C" {
 
 				uParams.eval_points = evpts;
 				uParams.rank_aggregation_method = 700;
+				uParams.item_selection = item_selection;
+				uParams.delta1 = d1;
+				uParams.delta2 = d2;
+				uParams.num_buckets = num_buckets;
 				uParams.c1 = c1;
 				uParams.c2 = c2;
 

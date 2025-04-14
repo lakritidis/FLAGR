@@ -1,7 +1,7 @@
 @echo off
 
 set CC=g++.exe
-set CFLAGS=-Wall -std=gnu++11 -O3 -std=c++11
+set CFLAGS=-Wall -std=gnu++11 -O3 -std=c++11 -Wno-unused-but-set-variable
 set INCDIR=-Isrc\
 set OBJDIR=obj\Release\
 set BINDIR=bin\Release\
