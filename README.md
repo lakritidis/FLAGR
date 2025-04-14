@@ -1,4 +1,4 @@
-# (Py)FLAGR: An efficient C++/Python library for Rank Aggregation
+# (Py)FLAGR: An C++/Python library for Rank Aggregation
 
 *Fuse, Learn, AGgregate, Rerank*
 
