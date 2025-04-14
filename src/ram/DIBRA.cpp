@@ -11,11 +11,13 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 	score_t min_d = 1000.0, max_d = 0.0, sum_w = 0.0, mean_w = 0.0;
 	score_t w[this->num_input_lists], dis[this->num_input_lists];
 
-	uint32_t z = 0, cutoff = 0, max_cutoff = 0;
+	uint32_t z = 0, max_cutoff = 0;
 	uint32_t ram = prms->get_aggregation_method();
 	uint32_t corel = prms->get_correlation_method();
 	int32_t iteration = 0;
 	class Voter ** voters_list = new Voter * [this->num_input_lists];
+
+	s->reset();
 
 	/// Reset the weights of all voters
 	for (z = 0; z < this->num_input_lists; z++) {
@@ -27,24 +29,19 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 	/// Stop the execution when convergence is achieved
 	while (1) {
 		/// Set the scores of all elements to zero
-		this->reset_scores();
+		this->reset_item_scores();
 
 		/// Execute the baseline method (by taking into consideration the current voter weights)
 		if (ram >= 5100 && ram <= 5109) {
 			this->CombSUM(inlists, s, prms);
-
 		} else if (ram >= 5110 && ram <= 5119) {
 			this->CombMNZ(inlists, s, prms);
-
 		} else if (ram == 5200) {
 			this->CondorcetWinners(inlists, s, prms);
-
 		} else if (ram == 5201) {
 			this->CopelandWinners(inlists, s, prms);
-
 		} else if (ram == 5300) {
 			this->Outranking(inlists, s, prms);
-
 		}
 
 		/// Initialize the statistics for the weights and the distances
@@ -71,8 +68,14 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 
 			/// Statistics for normalizing the distances - Generally unneeded, because normalization
 			/// takes place within the distance function itself.
-			if (dis[z] > max_d) { max_d = dis[z]; }
-			if (dis[z] < min_d) { min_d = dis[z]; }
+			if (dis[z] > max_d) {
+				max_d = dis[z];
+			}
+
+			if (dis[z] < min_d) {
+				min_d = dis[z];
+			}
+
 			if (inlists[z]->get_cutoff() > max_cutoff) {
 				max_cutoff = inlists[z]->get_cutoff();
 			}
@@ -100,8 +103,14 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 //				prev_weight, w[z] - prev_weight, tanh( dis[z] ));
 
 			/// Statistics for normalizing the weights
-			if (w[z] > s->get_max_val()) { s->set_max_val(w[z]); }
-			if (w[z] < s->get_min_val()) { s->set_min_val(w[z]); }
+			if (w[z] > s->get_max_val()) {
+				s->set_max_val(w[z]);
+			}
+
+			if (w[z] < s->get_min_val()) {
+				s->set_min_val(w[z]);
+			}
+
 			sum_w += w[z];
 
 			if (w[z] - prev_weight > prms->get_convergence_precision()) {
@@ -119,7 +128,7 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 
 		/// Set the new voter weights
 		for (z = 0; z < this->num_input_lists; z++) {
-//			printf("Voter %d (%s) distance: %5.3f - weight: %5.3f\n", z, inlists[z]->get_voter()->get_name(), dis[z], w[z]);
+			// printf("Voter %d (%s) distance: %5.3f - weight: %5.3f\n", z, inlists[z]->get_voter()->get_name(), dis[z], w[z]); getchar();
 			inlists[z]->set_voter_weight( w[z] );
 
 			voters_list[z] = inlists[z]->get_voter();
@@ -134,53 +143,21 @@ class Voter ** MergedList::DIBRA(class InputList ** inlists, class SimpleScoreSt
 		}
 	}
 
-/*
-	printf("\n");
-	for (z = 0; z < this->num_input_lists; z++) {
-		printf("%s|%5.3f\n", inlists[z]->get_voter()->get_name(), inlists[z]->get_voter()->get_weight());
-	}
-	getchar();
-*/
+
+	//printf("\n");
+	//for (z = 0; z < this->num_input_lists; z++) {
+	//	printf("%s|%5.3f\n", inlists[z]->get_voter()->get_name(), inlists[z]->get_voter()->get_weight());
+	//}
+	//getchar();
+
 
 	/// ///////////////////////////////////////////////////////////////////////////////////////////
-	/// Apply the list pruning post-processing step
+	/// Apply the weighted item selection post-processing step
 	/// ///////////////////////////////////////////////////////////////////////////////////////////
-	if (prms->get_list_pruning()) {
-		for (z = 0; z < this->num_input_lists; z++) {
-
-			score_t nw = (w[z] - s->get_min_val()) / (s->get_max_val() - s->get_min_val());
-
-//			cutoff = (double)this->num_nodes / (double)inlists[z]->get_num_items() +
-//				nw * this->num_input_lists * log10(10.0 + (double)inlists[z]->get_num_items());
-
-			cutoff = (prms->get_delta1() + prms->get_delta2() * nw) * inlists[z]->get_num_items();
-
-//			printf("Cutoff for voter %d (%5.3f - %s): %d\n", z, nw, inlists[z]->get_voter()->get_name(), cutoff); getchar();
-
-			if (cutoff >= inlists[z]->get_num_items()) {
-				inlists[z]->set_cutoff(inlists[z]->get_num_items());
-			} else {
-				inlists[z]->set_cutoff(cutoff);
-			}
-		}
-
-		this->rebuild(inlists);
-
-		if (ram >= 5100 && ram <= 5109) {
-			this->CombSUM(inlists, s, prms);
-
-		} else if (ram >= 5110 && ram <= 5119) {
-			this->CombMNZ(inlists, s, prms);
-
-		} else if (ram == 5200) {
-			this->CondorcetWinners(inlists, s, prms);
-
-		} else if (ram == 5201) {
-			this->CopelandWinners(inlists, s, prms);
-
-		} else if (ram == 5300) {
-			this->Outranking(inlists, s, prms);
-		}
+	if (prms->get_item_selection() == 1) {
+		this->perform_pruning(inlists, s, prms);
+	} else if (prms->get_item_selection() == 2) {
+		this->perform_item_selection(inlists, s, prms);
 	}
 
 //	printf(" Nodes: %d", this->num_nodes);

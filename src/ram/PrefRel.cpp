@@ -8,7 +8,7 @@
 void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s, class InputParams * prms) {
 	uint32_t i = 0, j = 0, p = 0;
 	uint32_t num_pairs = this->num_nodes * (this->num_nodes - 1) / 2;
-	score_t DisagreementScore = 0.0, ListScore = 0.0, ItemScore = 0.0;
+	score_t DisagreementScore = 0.0, ItemScore = 0.0, w[this->num_input_lists];
 
 	class InputList * inlist = NULL;
 	class MergedItemPair * ItemPair = new MergedItemPair();
@@ -31,10 +31,10 @@ void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s,
 		inlist = this->item_list[0]->get_ranking(i)->get_input_list();
 		DisagreementScore = inlist->get_voter()->get_weight();
 
-		ListScore = 1.0 - DisagreementScore / num_pairs;
-		inlist->set_voter_weight ( ListScore );
+		w[i] = 1.0 - DisagreementScore / num_pairs;
+		inlist->set_voter_weight ( w[i] );
 
-//		printf("List %d disagreement score = %2.1f, weight = %12.10f\n", i, DisagreementScore, ListScore);
+//		printf("List %d disagreement score = %2.1f, weight = %12.10f\n", i, DisagreementScore, w[i]);
 	}
 
 	/// Create the edges of the aggregate graph: 2 edges per MergedItem
@@ -85,4 +85,11 @@ void MergedList::PrefRel(class InputList ** inlists, class SimpleScoreStats * s,
 		delete edges[i];
 	}
 	delete [] edges;
+
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	/// Apply the weighted item selection post-processing step
+	/// ///////////////////////////////////////////////////////////////////////////////////////////
+	if (prms->get_item_selection() == 1) {
+		this->perform_pruning(inlists, s, prms);
+	}
 }
