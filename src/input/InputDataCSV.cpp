@@ -29,7 +29,7 @@ void InputData::preprocess_CSV(char * in, uint32_t len) {
 
 				if (strcmp(topic, prev_topic) != 0) {
 					strcpy(prev_topic, topic);
-//					printf("Topic: %s\n", buf); fflush(NULL); getchar();
+					// printf("Voter: %s, Topic: %s\n", voter, buf); fflush(NULL);
 					found = false;
 					for (q = 0; q < this->num_queries; q++) {
 						if (strcmp(buf, query_strings[q]) == 0) {
@@ -127,7 +127,8 @@ void InputData::preprocess_CSV(char * in, uint32_t len) {
 void InputData::construct_CSV_lists(char * in, uint32_t len) {
 	uint32_t i = 0, occ = 0, y = 0, q = 0, v = 0, active_query = 0, active_voter = 0;
 	score_t scr;
-	char buf[100], prev_topic[100], prev_voter[100], topic[100], voter[100], code_c[100];
+	rank_t rnk = 0;
+	char buf[100], prev_topic[100], prev_voter[100], topic[100], voter[100], code_c[100], rnk_c[100];
 	class InputList * inlist = NULL;
 
 	buf[0] = 0;
@@ -191,15 +192,25 @@ void InputData::construct_CSV_lists(char * in, uint32_t len) {
 				occ = 3;
 				y = 0;
 
-			/// Get the fourth column: Item Score
+			/// Get the fourth column: Item Rank
 			} else if (occ == 3) {
+				buf[y] = 0;
+				strcpy(rnk_c, buf);
+				rnk = atoi(rnk_c);
+
+				// printf("buf: %s -- %d\n", rnk_c, rnk);
+				occ = 4;
+				y = 0;
+
+			/// Get the fifth column: Item Score
+			} else if (occ == 4) {
 				buf[y] = 0;
 				scr = strtod(buf, NULL);
 
-//				printf("Inserting %s with score: %5.3f\n", code_c, scr); getchar();
-				inlist->insert_item(code_c, 0, scr);
+				// printf("Inserting %s (score: %5.3f - rank: %d)\n", code_c, scr, rnk);
+				inlist->insert_item(0, code_c, rnk, scr);
 
-				occ = 4;
+				occ = 5;
 				y = 0;
 
 			} else {
@@ -253,7 +264,7 @@ void InputData::read_CSV_qrels() {
 		in[nread] = 0;
 
 
-		for (i = 0; i < file_size; i++) {
+		for (i = 0; i < nread; i++) {
 
 			/// A comma character was found
 			if (in[i] == 44) {
@@ -265,7 +276,6 @@ void InputData::read_CSV_qrels() {
 					occ = 1;
 					y = 0;
 				}
-
 
 				/// Unused column
 				else if (occ == 1) {
