@@ -14,6 +14,13 @@ void SimpleScoreStats::display() {
 		this->min_val, this->max_val, this->mean_val, this->std_val);
 }
 
+void SimpleScoreStats::reset() {
+	this->min_val = 0.0;
+	this->max_val = 1.0;
+	this->mean_val = 0.0;
+	this->std_val = 1.0;
+}
+
 /// Accessors
 score_t SimpleScoreStats::get_min_val() { return this->min_val; }
 score_t SimpleScoreStats::get_max_val() { return this->max_val; }

@@ -13,7 +13,7 @@ InputParams::InputParams() :
 		max_iterations(0),
 		max_list_items(0),
 		eval_points(0),
-		list_pruning(false),
+		item_selection(0),
 		exact(false),
 		convergence_precision(0.0),
 		alpha(0.0),
@@ -21,6 +21,7 @@ InputParams::InputParams() :
 		gamma(0.0),
 		delta1(0.0),
 		delta2(0.0),
+		num_buckets(0),
 		c1(0.0),
 		c2(0.0),
 		pref_thr(0.0),
@@ -41,7 +42,7 @@ InputParams::InputParams(struct UserParams uParams) :
 		max_iterations(uParams.max_iter),
 		max_list_items(0),
 		eval_points(uParams.eval_points),
-		list_pruning(uParams.prune),
+		item_selection(uParams.item_selection),
 		exact(uParams.exact),
 		convergence_precision(uParams.tol),
 		alpha(uParams.alpha),
@@ -49,6 +50,7 @@ InputParams::InputParams(struct UserParams uParams) :
 		gamma(uParams.gamma),
 		delta1(uParams.delta1),
 		delta2(uParams.delta2),
+		num_buckets(uParams.num_buckets),
 		c1(uParams.c1),
 		c2(uParams.c2),
 		pref_thr(uParams.pref_thr),
@@ -100,7 +102,7 @@ void InputParams::display() {
 	printf("\tEvaluation points:  %d\n",	this->eval_points);
 
 	printf("\nAlgorithm hyper-parameters:\n");
-	printf("\tList pruning:       %d\n", 	this->list_pruning);
+	printf("\tItem selection:     %d\n", 	this->item_selection);
 	printf("\tExact computation:  %d\n", 	this->exact);
 	printf("\tConvergence precis: %7.6f\n", this->convergence_precision);
 	printf("\talpha:              %4.3f\n", this->alpha);
@@ -108,6 +110,7 @@ void InputParams::display() {
 	printf("\tc_1:                %4.3f\n", this->c1);
 	printf("\tc_2:                %4.3f\n", this->c2);
 	printf("\tgamma:              %4.3f\n", this->gamma);
+	printf("\tNum voter buckets:  %d\n",	this->num_buckets);
 	printf("\tdelta_1:            %4.3f\n", this->delta1);
 	printf("\tdelta_2:            %4.3f\n", this->delta2);
 	printf("\tPreference thresh:  %4.3f\n", this->pref_thr);
@@ -150,7 +153,7 @@ void InputParams::set_output_files(char * out_dir) {
 	FILE * fp = NULL;
 	fp = fopen(this->output_file, "w+");
 	if (fp) {
-		fprintf(fp, "Query,Voter,ItemID,Score\n");
+		// fprintf(fp, "Query,Voter,ItemID,Rank,Score,Aggregator\n");
 		fclose(fp);
 	}
 
@@ -172,7 +175,7 @@ uint32_t InputParams::get_weights_normalization() { return this->weights_normali
 int32_t InputParams::get_max_iterations() { return this->max_iterations; }
 uint32_t InputParams::get_max_list_items() { return this->max_list_items; }
 rank_t InputParams::get_eval_points() { return this->eval_points; }
-bool InputParams::get_list_pruning() { return this->list_pruning; }
+uint32_t InputParams::get_item_selection() { return this->item_selection; }
 bool InputParams::get_exact() { return this->exact; }
 
 score_t InputParams::get_convergence_precision() { return this->convergence_precision; }
@@ -181,6 +184,7 @@ score_t InputParams::get_beta() { return this->beta; }
 score_t InputParams::get_gamma() { return this->gamma; }
 score_t InputParams::get_delta1() { return this->delta1; }
 score_t InputParams::get_delta2() { return this->delta2; }
+uint32_t InputParams::get_num_buckets() { return this->num_buckets; }
 score_t InputParams::get_c1() { return this->c1; }
 score_t InputParams::get_c2() { return this->c2; }
 score_t InputParams::get_pref_thr() { return this->pref_thr; }
@@ -222,7 +226,7 @@ void InputParams::set_weights_normalization(uint32_t v) { this->weights_normaliz
 void InputParams::set_max_iterations(int32_t v) { this->max_iterations = v; }
 void InputParams::set_max_list_items(uint32_t v) { this->max_list_items = v; }
 void InputParams::set_eval_points(rank_t v) { this->eval_points = v; }
-void InputParams::set_list_pruning(bool v) { this->list_pruning = v; }
+void InputParams::set_item_selection(uint32_t v) { this->item_selection = v; }
 
 void InputParams::set_convergence_precision(score_t v) { this->convergence_precision = v; }
 void InputParams::set_alpha(score_t v) { this->alpha = v; }
@@ -230,6 +234,7 @@ void InputParams::set_beta(score_t v) { this->beta = v; }
 void InputParams::set_gamma(score_t v) { this->gamma = v; }
 void InputParams::set_delta1(score_t v) { this->delta1 = v; }
 void InputParams::set_delta2(score_t v) { this->delta2 = v; }
+void InputParams::set_num_buckets(uint32_t v) { this->num_buckets = v; }
 void InputParams::set_c1(score_t v) { this->c1 = v; }
 void InputParams::set_c2(score_t v) { this->c2 = v; }
 void InputParams::set_pref_thr(score_t v) { this->pref_thr = v; }

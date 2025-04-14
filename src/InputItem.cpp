@@ -1,11 +1,12 @@
 #include "InputItem.h"
 
 /// Default Constructor
-InputItem::InputItem() : code(NULL), rank(0), inscore(0.0) { }
+InputItem::InputItem() : idx(0), code(NULL), rank(0), inscore(0.0), pscore(0.0) { }
 
 /// Constructor 2: overloaded
-InputItem::InputItem(char * c, rank_t r, score_t s) : code(NULL), rank(r), inscore(s) {
-	this->copy_code(c);
+InputItem::InputItem(uint32_t i, char * c, rank_t r, score_t s, score_t p) :
+	idx(i), code(NULL), rank(r), inscore(s), pscore(p) {
+		this->set_code(c);
 }
 
 /// Destructor
@@ -15,23 +16,25 @@ InputItem::~InputItem() {
 	}
 }
 
-/// Copy the input code into the local buffer
-void InputItem::copy_code(char *v) {
-	this->code = new char[strlen(v) + 1];
-	strcpy(this->code, v);
-}
-
 /// Display InputItem Object
 void InputItem::display() {
-	printf("ITEM: %s, RANKING: %d, SCORE: %5.3f\n", this->code, this->rank, this->inscore);
+	printf("Item idx: %d, Code: %s, Ranking: %d, In-Score: %5.3f, Preserv-Score: %5.3f\n",
+		this->idx, this->code, this->rank, this->inscore, this->pscore);
 }
 
 /// Mutators
-void InputItem::set_code(char * v) { this->copy_code(v); }
+void InputItem::set_idx(uint32_t v) { this->idx = v; }
+void InputItem::set_code(char * v) {
+	this->code = new char[strlen(v) + 1];
+	strcpy(this->code, v);
+}
 void InputItem::set_rank(rank_t v) { this->rank = v; }
 void InputItem::set_inscore(score_t v) { this->inscore = v; }
+void InputItem::set_pscore(score_t v) { this->pscore = v; }
 
 /// Accessors
+uint32_t InputItem::get_idx() { return this->idx; }
 char * InputItem::get_code() { return this->code; }
 rank_t InputItem::get_rank() { return this->rank; }
 score_t InputItem::get_inscore() { return this->inscore; }
+score_t InputItem::get_pscore() { return this->pscore; }

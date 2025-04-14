@@ -41,9 +41,9 @@ InputList::~InputList() {
 }
 
 /// Insert an item into the list
-void InputList::insert_item(char * code, rank_t r, score_t s) {
+void InputList::insert_item(uint32_t i, char * code, rank_t r, score_t s) {
 	if (this->num_items <= MAX_LIST_ITEMS) {
-		this->items[this->num_items] = new InputItem(code, r, s);
+		this->items[this->num_items] = new InputItem(i, code, r, s, 0.0);
 		this->num_items++;
 		this->cutoff++;
 
@@ -56,9 +56,9 @@ void InputList::insert_item(char * code, rank_t r, score_t s) {
 }
 
 /// Replace an item of the list
-void InputList::replace_item(char * code, rank_t r, score_t s) {
+void InputList::replace_item(uint32_t i, char * code, rank_t r, score_t s) {
 	delete this->items[r - 1];
-	this->items[r - 1] = new InputItem(code, r, s);
+	this->items[r - 1] = new InputItem(i, code, r, s, 0.0);
 }
 
 /// Search for an item in the list
@@ -111,13 +111,15 @@ void InputList::sort_by_score() {
 
 		qsort(this->items, this->num_items, sizeof(class InputItem *), &InputList::cmp_score);
 
+		// this->display(); getchar();
+
 		/// Set the min/max score values
 		this->stats->set_min_val( this->items[this->num_items - 1]->get_inscore() );
 		this->stats->set_max_val( this->items[0]->get_inscore() );
 
 		/// Compute and set the mean score value
 		for (i = 0; i < this->num_items; i++) {
-			this->items[i]->set_rank(i + 1);
+			this->items[i]->set_idx(i);
 			sum += this->items[i]->get_inscore();
 		}
 		mean = sum / (score_t)this->num_items;
@@ -130,6 +132,19 @@ void InputList::sort_by_score() {
 		}
 
 		this->stats->set_std_val( sqrt(sum / this->num_items) );
+	}
+}
+
+/// Sort the list in decreasing order of its element scores. Then, update the item rankings and
+/// compute four score statistics: min, max, mean, and std.
+void InputList::sort_by_pscore() {
+	if (this->num_items > 0) {
+		qsort(this->items, this->num_items, sizeof(class InputItem *), &InputList::cmp_pscore);
+
+		/// Reset the indices
+		for (rank_t i = 0; i < this->num_items; i++) {
+			this->items[i]->set_idx(i);
+		}
 	}
 }
 
