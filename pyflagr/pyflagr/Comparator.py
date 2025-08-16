@@ -33,7 +33,6 @@ class Comparator:
             print("Running", ram[0], "...")
 
             df_out, df_eval = ram[1].aggregate(input_file, input_df, rels_file, rels_df)
-
             df_eval['Method'] = ram[0]
 
             self.results = pd.concat([self.results, df_eval])
@@ -75,7 +74,7 @@ class Comparator:
         left_columns = 5
         if metric == 'map':
             start_col = 4
-            end_col = 5
+            end_col = start_col + 1
         elif metric == 'precision':
             start_col = left_columns
             end_col = start_col + cutoff
@@ -88,6 +87,9 @@ class Comparator:
         elif metric == 'ndcg':
             start_col = left_columns + 3 * self.ev_pts
             end_col = start_col + cutoff
+        elif metric == 'time':
+            start_col = left_columns + 4 * self.ev_pts
+            end_col = start_col + 1
         else:
             print(metric, ": Not supported metric. Please use one of the following:\n")
             print("\tprecision\n\trecall\n\tdcg\n\tndcg\n")

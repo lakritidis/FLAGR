@@ -1,5 +1,6 @@
 import os.path
 import ctypes
+import time
 
 from pyflagr.RAM import RAM
 
@@ -37,6 +38,7 @@ class CondorcetWinners(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed Condorcet C function
+        st = time.time()
         self.flagr_lib.Condorcet(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -44,8 +46,11 @@ class CondorcetWinners(RAM):
             bytes(ran_str, 'ASCII'),
             bytes(self.output_dir, 'ASCII')
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval
 
 
@@ -82,6 +87,7 @@ class CopelandWinners(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed Copeland C function
+        st = time.time()
         self.flagr_lib.Copeland(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -89,8 +95,11 @@ class CopelandWinners(RAM):
             bytes(ran_str, 'ASCII'),
             bytes(self.output_dir, 'ASCII')
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval
 
 
@@ -140,6 +149,7 @@ class OutrankingApproach(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed OutrankingApproach C function
+        st = time.time()
         self.flagr_lib.OutrankingApproach(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -151,6 +161,9 @@ class OutrankingApproach(RAM):
             float(self.concordance_t),
             float(self.discordance_t)
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval

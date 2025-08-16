@@ -90,4 +90,4 @@ if __name__ == '__main__':
     # cmp.plot_average_precision((10.24, 7.68), True, query='all')
     # cmp.plot_metric(EV_PTS, metric='ndcg', plot_type='bar', dimensions=(10.24, 7.68), show_grid=True, query='all')
     # print(cmp.get_results(cutoff=3, metric=["dcg", "ndcg"], query='Topic 1'))
-    print(cmp.convert_to_latex(dec_pts=4, cutoff=EV_PTS, metric=["map", "precision", "ndcg"], query='all'))
+    print(cmp.convert_to_latex(dec_pts=4, cutoff=EV_PTS, metric=["map", "precision", "ndcg", "time"], query='all'))

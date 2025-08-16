@@ -1,0 +1,26 @@
+Metadata-Version: 2.1
+Name: pyflagr
+Version: 1.0.21
+Summary: PyFLAGR is a Python package for aggregating ranked preference lists from multiple sources.
+Home-page: https://github.com/lakritidis/FLAGR
+Author: Leonidas Akritidis
+Author-email: lakritidis@ihu.gr
+Maintainer: Leonidas Akritidis
+Maintainer-email: lakritidis@ihu.gr
+License: Apache
+Keywords: rank aggregation,rank fusion,data fusion,unsupervised learning,information retrieval,metasearch,metasearch engines,borda count,condorcet,kendall,spearman
+Description-Content-Type: text/markdown
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+
+The fusion of multiple ranked lists of elements into a single aggregate list is a well-studied research field with numerous applications in Bioinformatics, recommendation systems, collaborative filtering, election systems and metasearch engines.
+
+FLAGR is a high performance, modular, open source library for rank aggregation problems. It implements baseline and recent state-of-the-art aggregation algorithms that accept ranked preference lists and generate a single consensus list of elements. A portion of these methods apply exploratory analysis techniques and belong to the broad family of unsupervised learning techniques.
+
+PyFLAGR is a Python library built on top of FLAGR library core. It can be easily installed with pip and used in standard Python programs and Jupyter notebooks.
+
+
+FLAGR Website: [https://flagr.site/](https://flagr.site/)
+
+GitHub repository: [https://github.com/lakritidis/FLAGR](https://github.com/lakritidis/FLAGR)
+

@@ -1,5 +1,6 @@
 import os.path
 import ctypes
+import time
 
 from pyflagr.RAM import RAM
 
@@ -52,6 +53,7 @@ class PreferenceRelationsGraph(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed PrefRel C function
+        st = time.time()
         self.flagr_lib.PrefRel(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -65,8 +67,11 @@ class PreferenceRelationsGraph(RAM):
             self.d_1,
             self.d_2
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval
 
 
@@ -118,6 +123,7 @@ class Agglomerative(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed Agglomerative C function
+        st = time.time()
         self.flagr_lib.Agglomerative(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -131,8 +137,11 @@ class Agglomerative(RAM):
             self.d_1,
             self.d_2
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval
 
 
@@ -266,6 +275,7 @@ class DIBRA(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed DIBRA C function
+        st = time.time()
         self.flagr_lib.DIBRA(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -287,6 +297,9 @@ class DIBRA(RAM):
             self.concordance_t,
             self.discordance_t
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval

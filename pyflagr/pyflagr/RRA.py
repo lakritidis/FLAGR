@@ -1,5 +1,6 @@
 import os.path
 import ctypes
+import time
 
 from pyflagr.RAM import RAM
 
@@ -32,15 +33,16 @@ class RRA(RAM):
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
-            return
+            return None
 
         status = self.check_get_rels_input(rels_file, rels_df)
         if status != 0:
-            return
+            return None
 
         ran_str = self.get_random_string(16)
 
         # Call the exposed RobustRA C function
+        st = time.time()
         self.flagr_lib.RobustRA(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -49,6 +51,9 @@ class RRA(RAM):
             bytes(self.output_dir, 'ASCII'),
             self.exact
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval

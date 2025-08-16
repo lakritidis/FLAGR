@@ -1,5 +1,6 @@
 import os.path
 import ctypes
+import time
 
 from pyflagr.RAM import RAM
 
@@ -50,7 +51,8 @@ class MC(RAM):
 
         ran_str = self.get_random_string(16)
 
-        # Call the exposed Condorcet C function
+        # Call the exposed MC (Markov Chain) C function
+        st = time.time()
         self.flagr_lib.MC(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -62,8 +64,11 @@ class MC(RAM):
             0.0,
             self.niter
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval
 
 

@@ -1,5 +1,6 @@
 import os.path
 import ctypes
+import time
 
 from pyflagr.RAM import RAM
 
@@ -30,12 +31,12 @@ class CombSUM(RAM):
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
-            return
+            return None
 
         status = self.check_get_rels_input(rels_file, rels_df)
 
         if status != 0:
-            return
+            return None
 
         # Rank/Score normalization
         if self.normalization == "borda":
@@ -54,6 +55,7 @@ class CombSUM(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed Linear C function
+        st = time.time()
         self.flagr_lib.Linear(
             bytes(self.input_file, 'ASCII'),
             bytes(self.rels_file, 'ASCII'),
@@ -62,8 +64,11 @@ class CombSUM(RAM):
             bytes(ran_str, 'ASCII'),
             bytes(self.output_dir, 'ASCII')
         )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
+
         return df_out, df_eval
 
 
@@ -105,11 +110,11 @@ class CombMNZ(RAM):
 
         status = self.check_get_input(input_file, input_df)
         if status != 0:
-            return
+            return None
 
         status = self.check_get_rels_input(rels_file, rels_df)
         if status != 0:
-            return
+            return None
 
         # Rank/Score normalization
         if self.normalization == "borda":
@@ -128,6 +133,7 @@ class CombMNZ(RAM):
         ran_str = self.get_random_string(16)
 
         # Call the exposed Linear C function
+        st = time.time()
         self.flagr_lib.Linear(
             ctypes.c_char_p(self.input_file.encode('ascii')),
             ctypes.c_char_p(self.rels_file.encode('ascii')),
@@ -135,8 +141,10 @@ class CombMNZ(RAM):
             ram,
             ctypes.c_char_p(ran_str.encode('ascii')),
             ctypes.c_char_p(self.output_dir.encode('ascii'))
-            )
+        )
+        ed = time.time()
 
         df_out, df_eval = self.get_output(self.output_dir, ran_str)
+        df_eval['time'] = ed - st
 
         return df_out, df_eval
