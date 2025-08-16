@@ -101,8 +101,7 @@ score_t InputList::SpearmanRho(class InputList * in) {
 	return rho;
 }
 
-/// Sort the list in decreasing order of its element scores. Then, update the item rankings and
-/// compute four score statistics: min, max, mean, and std.
+/// Sort the list in decreasing order of its element scores.
 void InputList::sort_by_score() {
 	rank_t i = 0;
 	score_t sum = 0.0, mean = 0.0;
@@ -120,6 +119,7 @@ void InputList::sort_by_score() {
 		/// Compute and set the mean score value
 		for (i = 0; i < this->num_items; i++) {
 			this->items[i]->set_idx(i);
+			// this->items[i]->set_rank(i + 1); <- Don't do that! We do not know whether higher scores represent higher rankings
 			sum += this->items[i]->get_inscore();
 		}
 		mean = sum / (score_t)this->num_items;
@@ -132,6 +132,45 @@ void InputList::sort_by_score() {
 		}
 
 		this->stats->set_std_val( sqrt(sum / this->num_items) );
+	}
+}
+
+/// Sort the list in increasing rank order of its elements (some input lists are not ordered
+/// properly). Then, update four statistics.
+void InputList::sort_by_rank() {
+	rank_t i = 0;
+	score_t sum = 0.0, mean = 0.0;
+
+	if (this->num_items > 0) {
+
+		qsort(this->items, this->num_items, sizeof(class InputItem *), &InputList::cmp_rank);
+
+		/// Set the min/max score values
+		if (this->items[this->num_items - 1]->get_inscore() > this->items[0]->get_inscore()) {
+			this->stats->set_min_val( this->items[this->num_items - 1]->get_inscore() );
+			this->stats->set_max_val( this->items[0]->get_inscore() );
+		} else {
+			this->stats->set_min_val( this->items[0]->get_inscore() );
+			this->stats->set_max_val( this->items[this->num_items - 1]->get_inscore() );
+		}
+
+		/// Compute and set the mean score value
+		for (i = 0; i < this->num_items; i++) {
+			this->items[i]->set_idx(i);
+			this->items[i]->set_rank(i + 1);
+			sum += this->items[i]->get_inscore();
+		}
+		mean = sum / (score_t)this->num_items;
+		this->stats->set_mean_val( mean );
+
+		/// Compute and set the standard deviation of the element scores.
+		sum = 0.0;
+		for (i = 0; i < this->num_items; i++) {
+			sum += (this->items[i]->get_inscore() - mean) * (this->items[i]->get_inscore() - mean);
+		}
+
+		this->stats->set_std_val( sqrt(sum / this->num_items) );
+		// this->display(); getchar();
 	}
 }
 

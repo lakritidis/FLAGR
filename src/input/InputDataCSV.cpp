@@ -207,7 +207,7 @@ void InputData::construct_CSV_lists(char * in, uint32_t len) {
 				buf[y] = 0;
 				scr = strtod(buf, NULL);
 
-				// printf("Inserting %s (score: %5.3f - rank: %d)\n", code_c, scr, rnk);
+				//printf("Inserting %s (score: %5.3f (%s) - rank: %d)\n", code_c, scr, buf, rnk);
 				inlist->insert_item(0, code_c, rnk, scr);
 
 				occ = 5;
@@ -233,7 +233,8 @@ void InputData::construct_CSV_lists(char * in, uint32_t len) {
 	/// Sort the lists in increasing rank order
 	for (q = 0; q < this->num_queries; q++) {
 		for (v = 0; v < this->queries[q]->get_num_input_lists(); v++) {
-			this->queries[q]->get_input_list(v)->sort_by_score();
+//			this->queries[q]->get_input_list(v)->sort_by_score();
+			this->queries[q]->get_input_list(v)->sort_by_rank();
 //			this->queries[q]->get_input_list(v)->display();
 		}
 	}

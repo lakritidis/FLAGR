@@ -36,7 +36,25 @@ class InputList {
 			class InputItem * x = *(class InputItem **)a;
 			class InputItem * y = *(class InputItem **)b;
 
-			if (y->get_pscore() > x->get_pscore()) { return 1; }
+			if (y->get_pscore() > x->get_pscore()) {
+				return 1;
+			}
+			return -1;
+		}
+
+		static int cmp_rank(const void *a, const void *b) {
+			class InputItem * x = *(class InputItem **)a;
+			class InputItem * y = *(class InputItem **)b;
+
+			if (x->get_rank() == y->get_rank()) {
+				if (x->get_idx() > y->get_idx()) {
+					return 1;
+				} else {
+					return -1;
+				}
+			} else if (x->get_rank() > y->get_rank()) {
+				return 1;
+			}
 			return -1;
 		}
 
@@ -67,6 +85,7 @@ class InputList {
 		class InputItem * search_item(char *);
 		void display();
 		void sort_by_score();
+		void sort_by_rank();
 		void sort_by_pscore();
 
 		score_t SpearmanRho(class InputList *);

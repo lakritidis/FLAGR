@@ -345,9 +345,9 @@ void InputData::aggregate() {
 	printf("\n");
 */
 	for (uint32_t m = 0; m < this->num_queries; m++) {
-//		printf("Processing Query %d / %d... [ ", m + 1, this->num_queries); fflush(NULL);
+		printf("Processing Query %d / %d... [ ", m + 1, this->num_queries); fflush(NULL);
 		this->queries[m]->aggregate(this->params);
-//		printf(" OK ]\n"); fflush(NULL);
+		printf(" OK ]\n"); fflush(NULL);
 	}
 }
 

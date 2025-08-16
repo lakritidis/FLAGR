@@ -349,7 +349,7 @@ void MergedList::perform_item_selection(class InputList ** inlists, class Simple
 
 		rank_t z = 0;
 
-		uint32_t i = 0, j = 0;
+		uint32_t i = 0;
 		uint32_t ram = params->get_aggregation_method(), temp = params->get_item_selection();
 		uint32_t prot_score = 0.0;
 
@@ -358,77 +358,55 @@ void MergedList::perform_item_selection(class InputList ** inlists, class Simple
 		float d1 = params->get_delta1(), d2 = params->get_delta2();
 
 		score_t conf_score = 0.0, pres_score = 0.0;
-		score_t bucket_thres [num_buckets], bucket_thres_ew [num_buckets];
-		score_t min_w = 0.0, max_w = 0.0;
 
 		class Voter * v = NULL;
 		class MergedItem * q = NULL;
 		class InputItem * x = NULL;
 
 		class InputList ** new_lists = new InputList * [this->num_input_lists];
-
-
-//		for (i = 0; i < this->num_input_lists; i++) {
-//		    printf("List: %d - Voter: %s, Weight: %5.4f\n",
-//		    i, inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight());
-//		}
-//		printf("Min weight: %5.3f - Max Weight: %5.3f\n", stats->get_min_val(), stats->get_max_val());
-
+/*
+		for (i = 0; i < this->num_input_lists; i++) {
+		    printf("List: %d - Voter: %s, Weight: %5.4f\n",
+		    i, inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight());
+		}
+		printf("Min weight: %5.3f - Max Weight: %5.3f\n", stats->get_min_val(), stats->get_max_val());
+*/
 		/// Distribute the voters (i.e. input lists) to buckets and assign bucket-wise weights.
-		/// 1: Normalize the voter weights and sort in descending order
-		for (i = 0; i < this->num_input_lists; i++) {
-			score_t norm_voter_weight = (inlists[i]->get_voter()->get_weight() - stats->get_min_val()) /
-				(stats->get_max_val() - stats->get_min_val());
-
-            inlists[i]->set_voter_weight(norm_voter_weight);
-			// printf("\t weight for voter %d = %5.3f - Normalized: %5.3f\n",
-			//	i, inlists[i]->get_voter()->get_weight(), voter_weights[i]);
-		}
+		/// 1: Sort the voter weights
 		qsort(inlists, this->num_input_lists, sizeof(score_t), &MergedList::cmp_voter_scores);
-		min_w = inlists[0]->get_voter()->get_weight();
-		max_w = inlists[this->num_input_lists - 1]->get_voter()->get_weight();
-
-//		for (i = 0; i < this->num_input_lists; i++) {
-//		    printf("List: %d - Voter: %s, Weight: %5.4f\n",
-//               i, inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight());
-//		}
-
-		/// 2. Determine the bucket thresholds
-		for (i = 0; i < num_buckets; i++) {
-			bucket_thres[i] = (score_t)(i) / (score_t)num_buckets;
-			bucket_thres_ew[i] = min_w + i * (max_w - min_w) / (score_t)num_buckets;
-//			printf("Bucket %d: Thr1=%5.3f, Thr2=%5.3f\n", i, bucket_thres[i], bucket_thres_ew[i]);
-		}
-
-		/// 3. Find the voter bucket according to his score; set the confidence scores for each
-		///    voter and their respective preference list.
+/*
 		for (i = 0; i < this->num_input_lists; i++) {
-			bucket = num_buckets - 1;
-			for (j = 0; j < num_buckets; j++) {
-				if (inlists[i]->get_voter()->get_weight() > bucket_thres[j]) {
-					bucket = num_buckets - j - 1;
-				}
+		    printf("List: %d - Voter: %s, Weight: %5.4f\n",
+               i, inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight());
+		}
+*/
+		/// 2. Find the voter bucket according to his score; set the confidence scores for each
+		///    voter and their respective preference list.
+		bucket = 1;
+		for (i = 0; i < this->num_input_lists; i++) {
+			if (i > bucket * this->num_input_lists / num_buckets) {
+				bucket++;
 			}
+			conf_score = d1 + (1 - d1) * exp(-(score_t)(num_buckets - bucket) * num_buckets / (score_t)this->num_input_lists);
+			//conf_score = d1 + (1 - d1) * exp(-(score_t)(num_buckets - bucket) / (score_t)num_buckets);
 
-			conf_score = d1 + (1 - d1) * exp(-(score_t)bucket * num_buckets / (score_t)this->num_input_lists);
-
-//			printf("List: %d - Voter: %s - Weight: %5.3f - Bucket: %d - Conf: Score: %5.3f\n", i,
-//				inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight(), bucket, conf_score);
+			//printf("d1=%5.3f, List: %d/%d - Voter: %s - Weight: %5.3f - Bucket: %d/%d - Conf: Score: %5.3f\n",
+			//		d1, i, this->num_input_lists,
+			//		inlists[i]->get_voter()->get_name(), inlists[i]->get_voter()->get_weight(),
+			//		num_buckets - bucket, num_buckets, conf_score);
 
 			inlists[i]->set_voter_weight(conf_score);
 		}
-
-		/// Set the preservation scores for all the elements of all lists;
+		//getchar();
+		/// 3. Set the preservation scores for all the elements of all lists;
 		for (i = 0; i < this->num_slots; i++) {
 			if (this->hash_table[i] != NULL) {
 				for (q = this->hash_table[i]; q != NULL; q = q->get_next()) {
-
 					pres_score = q->get_sum_voter_weights();
 					q->set_individual_preservation_scores(pres_score);
 
 					// q->display();
 					// printf("Item %s score = %5.5f\n", q->get_code(), pres_score); getchar();
-					// q->set_individual_preservation_scores(q->get_final_score());
 				}
 			}
 		}
@@ -436,7 +414,7 @@ void MergedList::perform_item_selection(class InputList ** inlists, class Simple
 		/// Set the protection scores for each voter and their respective preference list
 		for (i = 0; i < this->num_input_lists; i++) {
 			v = inlists[i]->get_voter();
-			prot_score = d2 * floor(inlists[i]->get_voter()->get_weight() * inlists[i]->get_num_items());
+			prot_score = d2 * ceil(inlists[i]->get_voter()->get_weight() * inlists[i]->get_num_items());
 
 			// printf("Inlist: %d\n", i);
 			// inlists[i]->display();
@@ -454,20 +432,23 @@ void MergedList::perform_item_selection(class InputList ** inlists, class Simple
 					break;
 				}
 			}
-			new_lists[i]->sort_by_score();
-			inlists[i]->sort_by_score();
+			new_lists[i]->sort_by_rank();
+			inlists[i]->sort_by_rank();
 
-			// printf("Inlist: %d\n", i);
-			// inlists[i]->display();
-
-			// printf("New list: %d\n", i); new_lists[i]->display(); getchar();
-			// printf("List: %d - Voter: %s - Pref Score: %5.3f - Prot Score: %d\n",
-			// i, v->get_name(), v->get_weight(), prot_score);
+//			printf("Inlist: %d\n", i);
+//			inlists[i]->display();
+//			printf("New list: %d\n", i); new_lists[i]->display(); getchar();
+//			printf("List: %d - Voter: %s - Pref Score: %5.3f - Prot Score: %d\n",
+//				i, v->get_name(), v->get_weight(), prot_score);
 		}
 
 		//this->display();
+		// printf("%d - ", this->num_nodes);
 		this->rebuild(new_lists);
+		// printf("%d\n", this->num_nodes);
 		//this->display(); getchar();
+
+		stats->reset();
 
 		if (ram >= 5100 && ram <= 5999) {
 			params->set_item_selection(0);
@@ -497,11 +478,11 @@ void MergedList::perform_item_selection(class InputList ** inlists, class Simple
 		} else if (ram == 600) {
 			params->set_item_selection(0);
 			this->PrefRel(new_lists, stats, params);
-			params->set_item_selection(temp);
+			params->set_item_selection(params->get_item_selection());
 		} else if (ram == 700) {
 			params->set_item_selection(0);
 			this->Agglomerative(new_lists, stats, params);
-			params->set_item_selection(temp);
+			params->set_item_selection(params->get_item_selection());
 		}
 */
 		for (i = 0; i < this->num_input_lists; i++) {
@@ -572,10 +553,9 @@ double MergedList::CosineSimilarity(uint32_t z, class InputList * in) {
 	for (r = 0; r < R; r++) {
 		if (scenario == 1) { r_score += 1.0 / ( (r + 1.0) * (r + 1.0) ); } else
 		if (scenario == 2) { r_score += (R - r + 1.0) * (R - r + 1.0); } else /// 2
-		if (scenario == 3) { r_score += (double)(R * R) / (double)( (r + R) * (r + R) ); } else
+		if (scenario == 3) { r_score += (double)(R * R) / (double)( (r + R) * (r + R) ); } else  /// Alternative form
 		if (scenario == 4) { r_score += (r + 1.0) * (r + 1.0); } else
 		if (scenario == 5) { r_score += 1.0 / ( (r + 1.0) * (r + 1.0) ); }
-		if (scenario == 6) { r_score += 1.0 / ( (r + 1.0) * (r + 1.0) ); }
 	}
 
 	for (l = 0; l < L; l++) {
