@@ -16,7 +16,7 @@ LONG_DESCRIPTION = 'The fusion of multiple ranked lists of elements into a singl
 
 setup(
     name='pyflagr',
-    version='1.0.18',
+    version='1.0.21',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
