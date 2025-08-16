@@ -62,6 +62,3 @@ Alternatively, PyFLAGR can be installed from the sources by navigating to the di
  - L. Akritidis, A. Fevgas, P. Bozanis, Y. Manolopoulos, "[An Unsupervised Distance-Based Model for Weighted Rank Aggregation with List Pruning](https://www.sciencedirect.com/science/article/abs/pii/S0957417422007710)", Expert Systems with Applications, vol. 202, pp. 117435, 2022.
  - L. Akritidis, P. Bozanis, "[WIRE: A Weighted Item Removal Method for Unsupervised Rank Aggregation](https://www.mdpi.com/1999-4893/18/6/362)", Algorithms, vol. 18, no. 6, pp. 362, 2025.
  - L. Akritidis, A. Fevgas, P. Bozanis, "[An Iterative Distance-Based Model for Unsupervised Weighted Rank Aggregation](https://dl.acm.org/citation.cfm?id=3352547)", In Proccedings of the 2019 IEEE/WIC/ACM International Conference on Web Intelligence (WI), pp. 358-362, 2019. 
-
-
-

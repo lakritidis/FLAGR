@@ -25,35 +25,36 @@ int main(int argc, char *argv[]) {
 // MOSO2 (5100 - 4 BUCKETS - DIBRA SCORES)
 
 #ifdef __linux__
+
+		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2023_NeuCLIRTechnicalDocuments.csv") + 1];
+		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2023_NeuCLIRTechnicalDocuments.csv");
+
+		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2023_NeuCLIRTechnicalDocuments_qrels.csv") + 1];
+		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2023_NeuCLIRTechnicalDocuments_qrels.csv");
+
 /*
-		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc.csv") + 1];
-		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc.csv");
+		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MOSO2.csv") + 1];
+		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MOSO2.csv");
 
-		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc_prels.csv") + 1];
-		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/TREC2014_WebAdhoc_prels.csv");
+		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MOSO2_qrels.csv") + 1];
+		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MOSO2_qrels.csv");
 */
-		input_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO.csv") + 1];
-		strcpy(input_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO.csv");
-
-		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv") + 1];
-		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv");
-
 		output_dir = new char[strlen("/home/leo/Desktop/dev/cpp/FLAGR/output/") + 1];
 		strcpy(output_dir, "/home/leo/Desktop/dev/cpp/FLAGR/output/");
 
 #elif _WIN32
+		input_file = new char[strlen("D:/datasets/rank_aggr/TREC/TREC2022_ClinicalTrials.csv") + 1];
+		strcpy(input_file, "D:/datasets/rank_aggr/TREC/TREC2022_ClinicalTrials.csv");
 
-		input_file = new char[strlen("C:/Users/Owner/Documents/cpp/Synthetic/FELO.csv") + 1];
-		strcpy(input_file, "C:/Users/Owner/Documents/cpp/Synthetic/FELO.csv");
-
-		qrels_file = new char[strlen("C:/Users/Owner/Documents/cpp/Synthetic/FELO_qrels.csv") + 1];
-		strcpy(qrels_file, "C:/Users/Owner/Documents/cpp/Synthetic/FELO_qrels.csv");
+		qrels_file = new char[strlen("D:/datasets/rank_aggr/TREC/TREC2022_ClinicalTrials_qrels.csv") + 1];
+		strcpy(qrels_file, "D:/datasets/rank_aggr/TREC/TREC2022_ClinicalTrials_qrels.csv");
 /*
-		input_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO.csv") + 1];
-		strcpy(input_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO.csv");
 
-		qrels_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv") + 1];
-		strcpy(qrels_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv");
+		input_file = new char[strlen("D:/datasets/rank_aggr/TREC/Synthetic/MOLO.csv") + 1];
+		strcpy(input_file, "D:/datasets/rank_aggr/TREC/Synthetic/MOLO.csv");
+
+		qrels_file = new char[strlen("D:/datasets/rank_aggr/TREC/Synthetic/MOLO_qrels.csv") + 1];
+		strcpy(qrels_file, "D:/datasets/rank_aggr/TREC/Synthetic/MOLO_qrels.csv");
 */
 		output_dir = new char[strlen("output") + 1];
 		strcpy(output_dir, "output");
@@ -69,8 +70,8 @@ int main(int argc, char *argv[]) {
 		qrels_file = new char[strlen("/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv") + 1];
 		strcpy(qrels_file, "/media/leo/7CE54B377BB9B18B/datasets/rank_aggr/TREC/Synthetic/MASO_qrels.csv");
 #elif _WIN32
-		input_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO.csv") + 1];
-		strcpy(input_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO.csv");
+		input_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/FEVLO.csv") + 1];
+		strcpy(input_file, "/datasets/rank_aggr/TREC/Synthetic/FEVLO.csv");
 
 		qrels_file = new char[strlen("/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv") + 1];
 		strcpy(qrels_file, "/datasets/rank_aggr/TREC/Synthetic/MAMO_qrels.csv");
@@ -118,45 +119,111 @@ int main(int argc, char *argv[]) {
 		cut_off = atoi(argv[1]);
 	}
 
+	// gamma = 1.5;
+	float gamma = 0.8;
+//	printf("Aggregating with DIBRA + Borda Count...\n"); fflush(NULL);
+//	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_out",     output_dir, 2, 3, 0, 0.8, 0, 0.0, 0.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
 
 	printf("Aggregating with linear combination (rank normalization)...\n"); fflush(NULL);
-	Linear(input_file, qrels_file, cut_off, 100, "Linear_out", output_dir);
+	Linear(input_file, qrels_file, cut_off, 100, "CombSUM_Borda", output_dir);
 
 	printf("Aggregating with Borda Count...\n"); fflush(NULL);
-	Linear(input_file, qrels_file, cut_off, 101, "Borda_out", output_dir);
-
-	printf("Aggregating with Condorcet Winners...\n"); fflush(NULL);
-	Condorcet(input_file, qrels_file, cut_off, "Condorcet_out", output_dir);
-
-	printf("Aggregating with Copeland Winners...\n"); fflush(NULL);
-	Copeland(input_file, qrels_file, cut_off, "Copeland_out", output_dir);
-
-	printf("Aggregating with the Outranking Approach...\n"); fflush(NULL);
-	OutrankingApproach(input_file, qrels_file, cut_off, "Outrank_out", output_dir, 0.0, 0.75, 0.0, 0.25);
-
-//	Kemeny(input_file, qrels_file, 20, "Kemeny_out", output_dir);
-
-	printf("Aggregating with Markov Chains method 4...\n"); fflush(NULL);
-	MC(input_file, qrels_file, cut_off, 804, "MC_out", output_dir, 0.15, 0.00000001, 200);
+	Linear(input_file, qrels_file, cut_off, 110, "CombMNZ_Borda", output_dir);
 
 	printf("Aggregating with Robust Rank Aggregation...\n"); fflush(NULL);
 	RobustRA(input_file, qrels_file, cut_off, "RRA", output_dir, false);
 
+	printf("Aggregating with DIBRA + Borda Count...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA",     output_dir, 2, 3, 0, gamma, 0, 0.0, 0.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+	printf("Aggregating with DIBRA + Borda Count + List Pruning...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_LP_out",  output_dir, 2, 3, 1, gamma, 0, 0.7, 0.2, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+	printf("Aggregating with Condorcet Winners...\n"); fflush(NULL);
+	Condorcet(input_file, qrels_file, cut_off, "Condorcet", output_dir);
+
+	printf("Aggregating with Copeland Winners...\n"); fflush(NULL);
+	Copeland(input_file, qrels_file, cut_off, "Copeland", output_dir);
+
+	printf("Aggregating with the Outranking Approach...\n"); fflush(NULL);
+	OutrankingApproach(input_file, qrels_file, cut_off, "Outrank", output_dir, 0.0, 0.75, 0.0, 0.25);
+
+//	Kemeny(input_file, qrels_file, 20, "Kemeny_out", output_dir);
+
+	printf("Aggregating with Markov Chains method 1...\n"); fflush(NULL);
+	MC(input_file, qrels_file, cut_off, 801, "MC1", output_dir, 0.15, 0.00000001, 200);
+
+	printf("Aggregating with Markov Chains method 4...\n"); fflush(NULL);
+	MC(input_file, qrels_file, cut_off, 804, "MC4", output_dir, 0.15, 0.00000001, 200);
+
+	printf("Aggregating with Markov Chains method T...\n"); fflush(NULL);
+	MC(input_file, qrels_file, cut_off, 805, "MCT", output_dir, 0.15, 0.00000001, 200);
+
+/*
 	printf("Aggregating with the Preference Relations Method...\n"); fflush(NULL);
 	PrefRel(input_file, qrels_file, cut_off, "PrefRel_out", output_dir, 0.3, 0.2, 1, 0, 0.7, 0.2);
 
-	//printf("Aggregating with the Agglomerative Method...\n"); fflush(NULL);
-	//Agglomerative(input_file, qrels_file, cut_off, "Agglomerative_out", output_dir, 2.5, 1.5, 0, 0, 0.7, 0.2);
-
-	printf("Aggregating with DIBRA + Borda Count...\n"); fflush(NULL);
-	DIBRA(input_file, qrels_file, cut_off, 5100, "DIBRA_BC_out", output_dir, 2, 3, 0, 1.5, 0, 0.7, 0.2, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
-
-	printf("Aggregating with DIBRA + Borda Count + List Pruning...\n"); fflush(NULL);
-	DIBRA(input_file, qrels_file, cut_off, 5100, "DIBRA_BC_LP_out",  output_dir, 2, 3, 1, 1.5, 0,   0.7, 0.2, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with the Agglomerative Method...\n"); fflush(NULL);
+	Agglomerative(input_file, qrels_file, cut_off, "Agglomerative_out", output_dir, 2.5, 1.5, 0, 0, 0.7, 0.2);
+*/
 
 	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
-	DIBRA(input_file, qrels_file, cut_off, 5100, "DIBRA_BC_WIS_out", output_dir, 2, 3, 2, 1.5, 5,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS2-03_out", output_dir, 2, 3, 2, gamma, 2,   0.3, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS2-04_out", output_dir, 2, 3, 2, gamma, 2,   0.4, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS2-05_out", output_dir, 2, 3, 2, gamma, 2,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS2-06_out", output_dir, 2, 3, 2, gamma, 2,   0.6, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS2-07_out", output_dir, 2, 3, 2, gamma, 2,   0.7, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS2-08_out", output_dir, 2, 3, 2, gamma, 2,   0.8, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
 
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS3-03_out", output_dir, 2, 3, 2, gamma, 3,   0.3, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS3-04_out", output_dir, 2, 3, 2, gamma, 3,   0.4, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS3-05_out", output_dir, 2, 3, 2, gamma, 3,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS3-06_out", output_dir, 2, 3, 2, gamma, 3,   0.6, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS3-07_out", output_dir, 2, 3, 2, gamma, 3,   0.7, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS3-08_out", output_dir, 2, 3, 2, gamma, 3,   0.8, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-03_out", output_dir, 2, 3, 2, gamma, 5,   0.3, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-04_out", output_dir, 2, 3, 2, gamma, 5,   0.4, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-05_out", output_dir, 2, 3, 2, gamma, 5,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-06_out", output_dir, 2, 3, 2, gamma, 5,   0.6, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-07_out", output_dir, 2, 3, 2, gamma, 5,   0.7, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-08_out", output_dir, 2, 3, 2, gamma, 5,   0.8, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS7-03_out", output_dir, 2, 3, 2, gamma, 7,   0.3, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS7-04_out", output_dir, 2, 3, 2, gamma, 7,   0.4, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS7-05_out", output_dir, 2, 3, 2, gamma, 7,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS7-06_out", output_dir, 2, 3, 2, gamma, 7,   0.6, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS7-07_out", output_dir, 2, 3, 2, gamma, 7,   0.7, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS7-08_out", output_dir, 2, 3, 2, gamma, 7,   0.8, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+
+/*
+	printf("Aggregating with DIBRA + Borda Count + Item Selection...\n"); fflush(NULL);
+	DIBRA(input_file, qrels_file, cut_off, 5101, "DIBRA_BC_WIS5-05_out", output_dir, 2, 3, 2, gamma, 5,   0.5, 1.0, 0.01, 50, 0.0, 0.75, 0.0, 0.25);
+*/
 	delete [] input_file;
 	delete [] qrels_file;
 	delete [] output_dir;
