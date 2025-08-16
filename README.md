@@ -8,11 +8,11 @@ FLAGR is a high performance, modular, open source C++ library for rank aggregati
 
 PyFLAGR is a Python library built on top of FLAGR library core. It uses the FLAGR algorithm implementations by linking to the associated shared library. It can be easily installed with pip and used in standard Python programs and Jupyter notebooks.
 
-The current FLAGR version is 1.0.18.
+The current FLAGR version is 1.0.21.
 
 Both libraries are licensed under the [Apache License version 2](http://www.apache.org/licenses/LICENSE-2.0).
 
-Detailed documentation on the FLAGR and PyFLAGR components are provided in the user manual that resides in the `docs/` directory.
+Detailed documentation on the FLAGR and PyFLAGR components are provided in the user manual that resides in the `docs/` directory, and the [official site of FLAGR](https://flagr.site).
 
 Representative code examples in C++ and Python can be found in the `examples/` directory.
 
@@ -55,4 +55,13 @@ PyFLAGR can be installed directly by using `pip`:
 Alternatively, PyFLAGR can be installed from the sources by navigating to the directory where `setup.py` resides:
 
 `pip install .`
+
+## Related Papers
+
+ - L. Akritidis, M. Alamaniotis, P. Bozanis, "[FLAGR: A flexible high-performance library for rank aggregation](https://www.sciencedirect.com/science/article/pii/S2352711023000158)", SoftwareX, vol. 21, pp. 101319, 2023.
+ - L. Akritidis, A. Fevgas, P. Bozanis, Y. Manolopoulos, "[An Unsupervised Distance-Based Model for Weighted Rank Aggregation with List Pruning](https://www.sciencedirect.com/science/article/abs/pii/S0957417422007710)", Expert Systems with Applications, vol. 202, pp. 117435, 2022.
+ - L. Akritidis, P. Bozanis, "[WIRE: A Weighted Item Removal Method for Unsupervised Rank Aggregation](https://www.mdpi.com/1999-4893/18/6/362)", Algorithms, vol. 18, no. 6, pp. 362, 2025.
+ - L. Akritidis, A. Fevgas, P. Bozanis, "[An Iterative Distance-Based Model for Unsupervised Weighted Rank Aggregation](https://dl.acm.org/citation.cfm?id=3352547)", In Proccedings of the 2019 IEEE/WIC/ACM International Conference on Web Intelligence (WI), pp. 358-362, 2019. 
+
+
 
