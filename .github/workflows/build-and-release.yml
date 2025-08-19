@@ -1,0 +1,101 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build C++ library
+        run: make
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flagr-so
+          path: pyflagr/pyflagr/flagr.so
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build C++ library
+        run: make
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flagr-dylib
+          path: pyflagr/pyflagr/flagr.dylib
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build C++ library
+        run: .\makefile.bat
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flagr-dlls
+          path: |
+            pyflagr/pyflagr/flagr.dll
+            pyflagr/pyflagr/libgcc_s_seh-1.dll
+            pyflagr/pyflagr/libstdc++-6.dll
+
+  release:
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel build
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Move artifacts
+        run: |
+          mkdir -p pyflagr/pyflagr
+          mv artifacts/flagr-so/flagr.so pyflagr/pyflagr/flagr.so
+          mv artifacts/flagr-dylib/flagr.dylib pyflagr/pyflagr/flagr.dylib
+          mv artifacts/flagr-dlls/* pyflagr/pyflagr/
+
+      - name: Set version from tag
+        run: |
+          TAG_WITH_V=$(basename ${{ github.ref }})
+          echo "PYFLAGR_VERSION=${TAG_WITH_V#v}" >> $GITHUB_ENV
+
+      - name: Build Python package
+        working-directory: ./pyflagr
+        run: python -m build
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            pyflagr/dist/*.whl
+            pyflagr/dist/*.tar.gz
+            pyflagr/pyflagr/flagr.so
+            pyflagr/pyflagr/flagr.dylib
+            pyflagr/pyflagr/flagr.dll
+            pyflagr/pyflagr/libgcc_s_seh-1.dll
+            pyflagr/pyflagr/libstdc++-6.dll
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
