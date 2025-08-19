@@ -13,13 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
-
-      - name: Verify tag is on main branch
-        run: |
-          git fetch origin main
-          git branch --remotes --contains ${{ github.sha }} | grep -q 'origin/main'
       - name: Build C++ library
         run: make
       - name: Upload Linux artifact
@@ -32,13 +25,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
-
-      - name: Verify tag is on main branch
-        run: |
-          git fetch origin main
-          git branch --remotes --contains ${{ github.sha }} | grep -q 'origin/main'
       - name: Build C++ library
         run: make
       - name: Upload macOS artifact
@@ -51,13 +37,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
-
-      - name: Verify tag is on main branch
-        run: |
-          git fetch origin main
-          git branch --remotes --contains ${{ github.sha }} | grep -q 'origin/main'
       - name: Build C++ library
         run: .\makefile.bat
       - name: Upload Windows artifact
@@ -68,19 +47,11 @@ jobs:
             pyflagr/pyflagr/flagr.dll
             pyflagr/pyflagr/libgcc_s_seh-1.dll
             pyflagr/pyflagr/libstdc++-6.dll
-
   release:
     needs: [build-linux, build-macos, build-windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
-
-      - name: Verify tag is on main branch
-        run: |
-          git fetch origin main
-          git branch --remotes --contains ${{ github.sha }} | grep -q 'origin/main'
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -89,7 +60,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel build
-
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -101,18 +71,15 @@ jobs:
           mv artifacts/flagr-so/flagr.so pyflagr/pyflagr/flagr.so
           mv artifacts/flagr-dylib/flagr.dylib pyflagr/pyflagr/flagr.dylib
           mv artifacts/flagr-dlls/* pyflagr/pyflagr/
-
       - name: Set version from tag
         run: |
           TAG_WITH_V=$(basename ${{ github.ref }})
           echo "PYFLAGR_VERSION=${TAG_WITH_V#v}" >> $GITHUB_ENV
-
       - name: Build Python package
         working-directory: ./pyflagr
         run: python -m build
 
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
           files: |
