@@ -3,8 +3,6 @@ name: Main Workflow
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
 
@@ -21,4 +19,4 @@ jobs:
     name: Build and release
     uses: ./.github/workflows/build-and-release.yml
     secrets: inherit
-    if: github.ref == 'refs/heads/main' && startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') && github.base_ref == 'refs/heads/main'
