@@ -19,4 +19,3 @@ jobs:
     name: Build and release
     uses: ./.github/workflows/build-and-release.yml
     secrets: inherit
-    if: github.base_ref == 'refs/heads/main'
