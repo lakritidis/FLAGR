@@ -1,0 +1,5 @@
+include pyflagr/flagr.so
+include pyflagr/flagr.dylib
+include pyflagr/flagr.dll
+include pyflagr/libgcc_s_seh-1.dll
+include pyflagr/libstdc++-6.dll
